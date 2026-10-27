@@ -12,7 +12,7 @@ export function PlatformMenu() {
   return (
     <Menu.Root>
       <Menu.Trigger
-        className="glass flex h-10 items-center gap-2 rounded-full pr-3 pl-3.5 text-sm font-semibold outline-none transition-transform hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring active:scale-95"
+        className="flex h-10 items-center gap-2 rounded-full bg-secondary pr-3 pl-3.5 text-sm font-semibold outline-none transition-[transform,background-color] hover:bg-foreground/15 focus-visible:ring-2 focus-visible:ring-ring active:scale-95"
         aria-label="Change device"
       >
         {platform ? <PlatformIcon platform={platform} /> : <MonitorSmartphone className="size-4" aria-hidden="true" />}
@@ -22,11 +22,13 @@ export function PlatformMenu() {
       <Menu.Portal>
         <Menu.Positioner sideOffset={10} align="end" className="z-50">
           <Menu.Popup className="glass glass-strong w-60 origin-[var(--transform-origin)] rounded-3xl p-1.5 text-foreground outline-none transition-[transform,opacity] duration-200 data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0">
-            <p className="px-3 pt-2 pb-1.5 text-xs font-medium text-muted-foreground">Download builds for</p>
+            <p className="px-3 pt-2 pb-1.5 font-mono text-[11px] tracking-wider text-muted-foreground uppercase">
+              Download builds for
+            </p>
             <Menu.RadioGroup
               value={platform ?? ''}
               onValueChange={(value: unknown) => {
-                if (typeof value === 'string' && isPlatform(value)) setPlatform(value)
+                if (isPlatform(value)) setPlatform(value)
               }}
             >
               {PLATFORMS.map((p) => (
@@ -39,11 +41,11 @@ export function PlatformMenu() {
                   <PlatformIcon platform={p} className="size-[18px]" />
                   <span className="flex-1">{PLATFORM_LABEL[p]}</span>
                   {detected === p && (
-                    <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                      This device
+                    <span className="rounded-full bg-foreground px-2 py-0.5 font-mono text-[10px] text-background">
+                      THIS DEVICE
                     </span>
                   )}
-                  <Menu.RadioItemIndicator className="text-primary">
+                  <Menu.RadioItemIndicator>
                     <Check className="size-4" strokeWidth={3} aria-hidden="true" />
                   </Menu.RadioItemIndicator>
                 </Menu.RadioItem>

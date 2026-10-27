@@ -1,14 +1,15 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 export const metadata: Metadata = {
-  title: 'PikStore — Apps for every device you own',
+  title: 'PikStore — Every app. Every device. Scanned first.',
   description:
-    'PikStore detects your device and delivers the right build for Android, iOS, macOS, or Windows in one tap.',
+    'PikStore detects your device, delivers the right installer for Android, iOS, macOS or Windows, and scans every file for threats before it downloads.',
   generator: 'v0.app',
   applicationName: 'PikStore',
   icons: {
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'dark',
-  themeColor: '#0f1528',
+  themeColor: '#0d0d0d',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -31,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} bg-background`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable} bg-background`}>
       <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}

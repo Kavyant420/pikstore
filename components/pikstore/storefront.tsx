@@ -1,119 +1,106 @@
 'use client'
 
-import { SearchX } from 'lucide-react'
 import { useDeferredValue, useMemo, useState } from 'react'
-import { APPS, CATEGORIES, FEATURED_SLUGS, type StoreApp } from '@/lib/apps'
+import { CATALOG, type Category } from '@/lib/catalog'
 import { AppCard } from './app-card'
 import { AppSheet } from './app-sheet'
 import { CategoryBar } from './category-bar'
 import { DownloadIsland } from './download-island'
-import { FeaturedCarousel } from './featured-carousel'
+import { FeaturedPicks } from './featured-picks'
+import { Hero } from './hero'
 import { MobileTabBar } from './mobile-tab-bar'
-import { PlatformSwitcher } from './platform-switcher'
+import { ScanDialog } from './scan-dialog'
 import { SearchField } from './search-field'
+import { SecuritySection } from './security-section'
 import { SiteFooter } from './site-footer'
 import { SiteHeader } from './site-header'
-import { StoreProvider } from './store-provider'
-import { TopCharts } from './top-charts'
+import { StoreProvider, useStore } from './store-provider'
+import { UniverseResults } from './universe-results'
 
-const featured = FEATURED_SLUGS.map((slug) => APPS.find((a) => a.slug === slug)).filter(
-  (a): a is StoreApp => Boolean(a),
-)
+function Library({ query, onQueryChange }: { query: string; onQueryChange: (v: string) => void }) {
+  const { platform } = useStore()
+  const [category, setCategory] = useState<Category>('All')
+  const [onlyMine, setOnlyMine] = useState(false)
+  const deferredQuery = useDeferredValue(query)
 
-const charted = [...APPS].sort((a, b) => b.rating - a.rating || a.name.localeCompare(b.name))
+  const apps = useMemo(() => {
+    const q = deferredQuery.trim().toLowerCase()
+    return CATALOG.filter((app) => {
+      if (category !== 'All' && app.category !== category) return false
+      if (onlyMine && platform && !app.platforms?.includes(platform)) return false
+      if (!q) return true
+      return [app.name, app.tagline, app.category, app.id].some((v) => v?.toLowerCase().includes(q))
+    })
+  }, [deferredQuery, category, onlyMine, platform])
 
-function matches(app: StoreApp, query: string) {
-  const q = query.trim().toLowerCase()
-  if (!q) return true
-  return [app.name, app.developer, app.category, app.tagline].some((field) => field.toLowerCase().includes(q))
+  return (
+    <section id="library" aria-labelledby="library-title" className="mx-auto flex w-full max-w-6xl scroll-mt-24 flex-col gap-8 px-5 py-20 md:px-8">
+      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col gap-3">
+          <p className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">The library</p>
+          <h2 id="library-title" className="text-balance text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">
+            Built for the device in your hand.
+          </h2>
+        </div>
+        {platform && (
+          <label className="flex cursor-pointer items-center gap-3 text-sm text-muted-foreground">
+            <span>Only show apps for this device</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={onlyMine}
+              onClick={() => setOnlyMine((v) => !v)}
+              className="group relative h-7 w-12 shrink-0 rounded-full bg-secondary outline-none transition-colors focus-visible:ring-2 focus-visible:ring-ring aria-checked:bg-foreground"
+            >
+              <span className="absolute top-1 left-1 size-5 rounded-full bg-foreground transition-[transform,background-color] duration-300 group-aria-checked:translate-x-5 group-aria-checked:bg-background" />
+            </button>
+          </label>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <SearchField value={query} onChange={onQueryChange} className="h-12 md:hidden" />
+        <CategoryBar value={category} onChange={setCategory} />
+      </div>
+
+      {apps.length > 0 ? (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {apps.map((app) => (
+            <AppCard key={app.id} app={app} />
+          ))}
+        </div>
+      ) : (
+        <p role="status" className="rounded-3xl border border-border p-8 text-center text-sm text-muted-foreground">
+          Nothing in the curated library matches. Try the open-source universe below.
+        </p>
+      )}
+
+      <UniverseResults query={query} />
+    </section>
+  )
 }
 
-export function Storefront({ dateLabel }: { dateLabel: string }) {
+export function Storefront() {
   const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>('All')
-  const deferredQuery = useDeferredValue(query)
-  const searching = deferredQuery.trim().length > 0
 
-  const results = useMemo(
-    () =>
-      APPS.filter((app) => (category === 'All' || app.category === category) && matches(app, deferredQuery)),
-    [category, deferredQuery],
-  )
+  function focusLibrary() {
+    document.getElementById('library')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <StoreProvider>
-      <SiteHeader query={query} onQueryChange={setQuery} />
-      <DownloadIsland />
-
-      <main className="mx-auto flex max-w-6xl flex-col gap-14 px-4 pt-28 pb-32 md:gap-20 md:px-6 md:pt-32 md:pb-16">
-        <section id="discover" aria-labelledby="discover-title" className="flex scroll-mt-28 flex-col gap-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div className="animate-rise flex flex-col gap-1">
-              <p className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">{dateLabel}</p>
-              <h1 id="discover-title" className="text-balance text-5xl font-bold tracking-tight md:text-7xl">
-                Discover
-              </h1>
-            </div>
-            <div className="animate-rise [animation-delay:120ms]">
-              <PlatformSwitcher />
-            </div>
-          </div>
-
-          <SearchField value={query} onChange={setQuery} className="h-12 md:hidden" />
-
-          {!searching && (
-            <div className="animate-rise [animation-delay:220ms]">
-              <FeaturedCarousel apps={featured} />
-            </div>
-          )}
-        </section>
-
-        {!searching && <TopCharts apps={charted} />}
-
-        <section id="apps" aria-labelledby="apps-title" className="flex scroll-mt-28 flex-col gap-6">
-          <div className="flex flex-col gap-1">
-            <h2 id="apps-title" className="text-3xl font-bold tracking-tight md:text-4xl">
-              {searching ? `Results for “${deferredQuery.trim()}”` : 'All Apps'}
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {results.length} {results.length === 1 ? 'app' : 'apps'} · downloads match your device automatically
-            </p>
-          </div>
-
-          <CategoryBar value={category} onChange={setCategory} />
-
-          {results.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {results.map((app, i) => (
-                <AppCard key={app.slug} app={app} index={i} />
-              ))}
-            </div>
-          ) : (
-            <div className="glass flex flex-col items-center gap-3 rounded-[2rem] px-6 py-16 text-center">
-              <SearchX className="size-8 text-muted-foreground" aria-hidden="true" />
-              <p className="text-lg font-semibold">No apps found</p>
-              <p className="max-w-sm text-pretty text-sm leading-relaxed text-muted-foreground">
-                Try a different name or category.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  setQuery('')
-                  setCategory('All')
-                }}
-                className="glass-tint mt-2 h-10 rounded-full px-5 text-sm font-semibold text-primary-foreground"
-              >
-                Clear filters
-              </button>
-            </div>
-          )}
-        </section>
-
-        <SiteFooter />
+      <SiteHeader query={query} onQueryChange={setQuery} onSearchSubmit={focusLibrary} />
+      <main>
+        <Hero />
+        <FeaturedPicks />
+        <Library query={query} onQueryChange={setQuery} />
+        <SecuritySection />
       </main>
-
-      <MobileTabBar />
+      <SiteFooter />
       <AppSheet />
+      <ScanDialog />
+      <DownloadIsland />
+      <MobileTabBar />
     </StoreProvider>
   )
 }
