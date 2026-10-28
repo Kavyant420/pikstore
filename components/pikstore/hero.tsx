@@ -17,6 +17,13 @@ export function Hero() {
 
       <div className="pointer-events-none mx-auto flex min-h-svh max-w-6xl flex-col justify-end gap-10 px-5 pt-32 pb-14 md:justify-center md:px-8 md:pb-20">
         <div className="flex max-w-xl flex-col gap-6">
+          <div className="glass sheen animate-rise flex w-fit items-center gap-3 rounded-full px-3 py-2 text-[11px] font-medium tracking-[0.14em] text-muted-foreground uppercase [animation-delay:40ms]">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-foreground/60" />
+              <span className="relative inline-flex size-2 rounded-full bg-foreground" />
+            </span>
+            Live catalog / 180+ verified builds
+          </div>
           <p className="animate-rise font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
             PikStore · Verified distribution
           </p>

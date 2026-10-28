@@ -88,6 +88,56 @@ function Centerpiece() {
   )
 }
 
+function ParticleField() {
+  const points = useMemo(() => {
+    const positions = new Float32Array(180 * 3)
+    for (let i = 0; i < 180; i += 1) {
+      const radius = 4 + Math.random() * 3.8
+      const angle = Math.random() * Math.PI * 2
+      positions[i * 3] = Math.cos(angle) * radius
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 5
+      positions[i * 3 + 2] = Math.sin(angle) * radius - 1
+    }
+    return positions
+  }, [])
+  const ref = useRef<THREE.Points>(null)
+
+  useFrame((state) => {
+    if (!ref.current) return
+    ref.current.rotation.y = state.clock.elapsedTime * 0.018
+    ref.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.12) * 0.04
+  })
+
+  return (
+    <points ref={ref}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" count={points.length / 3} array={points} itemSize={3} />
+      </bufferGeometry>
+      <pointsMaterial color="#ffffff" size={0.025} transparent opacity={0.5} sizeAttenuation />
+    </points>
+  )
+}
+
+function OrbitalShell() {
+  const ref = useRef<THREE.Group>(null)
+  useFrame((state) => {
+    if (!ref.current) return
+    ref.current.rotation.x = state.clock.elapsedTime * 0.08
+    ref.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.2) * 0.18
+  })
+
+  return (
+    <group ref={ref} rotation={[0.7, 0.2, 0]}>
+      {[2.8, 3.25].map((radius, index) => (
+        <mesh key={radius} rotation={[index * 0.8, index * 0.5, 0]}>
+          <torusGeometry args={[radius, 0.012, 8, 180]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.2 - index * 0.05} />
+        </mesh>
+      ))}
+    </group>
+  )
+}
+
 function Halo() {
   const ref = useRef<THREE.Group>(null)
   useFrame((state) => {
@@ -169,6 +219,8 @@ export default function HeroScene() {
       <ambientLight intensity={0.3} />
       <directionalLight position={[4, 6, 5]} intensity={1.6} />
       <Rig>
+        <ParticleField />
+        <OrbitalShell />
         <Halo />
         <Centerpiece />
         <Orbit />
