@@ -58,7 +58,10 @@ async function gh<T>(path: string, revalidate = 3600): Promise<T> {
     'X-GitHub-Api-Version': '2022-11-28',
     'User-Agent': 'PikStore',
   }
-  if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
+  // Optional deployment-time env var only (never committed, never required).
+  // Without it we simply run at the anonymous GitHub rate limit — fully keyless.
+  const ghToken = process.env.GITHUB_TOKEN
+  if (ghToken) headers.Authorization = `Bearer ${ghToken}`
 
   const res = await fetch(`${API}${path}`, { headers, next: { revalidate } })
   if (!res.ok) {

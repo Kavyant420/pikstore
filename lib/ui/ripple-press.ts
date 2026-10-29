@@ -73,12 +73,12 @@ function registerripple_press(handle: FoundryHandle): void {
   window.__uiFoundry['ripple-press'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registerripple_press({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountRipplePress(el)
+    const off = mountRipplePress()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

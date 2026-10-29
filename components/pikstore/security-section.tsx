@@ -14,8 +14,8 @@ const PIPELINE = [
     body: 'Each file’s SHA-256 digest is matched against the fingerprint GitHub computed at upload.',
   },
   {
-    title: '70+ antivirus engines',
-    body: 'The fingerprint is checked against VirusTotal’s multi-engine database before you download.',
+    title: 'AI + signature rule engine',
+    body: 'Every SHA-256 fingerprint is run through our keyless AI analyst and signature rule engine before you download.',
   },
   {
     title: 'Behavioural heuristics',

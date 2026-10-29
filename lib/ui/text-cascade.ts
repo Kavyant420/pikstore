@@ -61,12 +61,12 @@ function registertext_cascade(handle: FoundryHandle): void {
   window.__uiFoundry['text-cascade'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registertext_cascade({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountTextCascade(el)
+    const off = mountTextCascade()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

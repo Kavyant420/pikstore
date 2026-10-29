@@ -63,12 +63,12 @@ function registerparallax_pointer(handle: FoundryHandle): void {
   window.__uiFoundry['parallax-pointer'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registerparallax_pointer({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountParallaxPointer(el)
+    const off = mountParallaxPointer()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

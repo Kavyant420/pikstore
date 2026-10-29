@@ -1,86 +1,46 @@
+// ---------------------------------------------------------------------------
+// Copyright (c) 2026 Kavyant420. All rights reserved.
+// Licensed under the MIT License. See LICENSE file in the project root.
+// SPDX-License-Identifier: MIT
+// ---------------------------------------------------------------------------
 import 'server-only'
 import type { GhRepo, ResolvedAsset } from './github'
 import type { Platform } from './platform'
 import type { ScanCheck, ScanReport, Verdict } from './scan-types'
+import { runScanV2 } from './security/scanner-v2'
 
-type EngineStats = { malicious: number; suspicious: number; harmless: number; undetected: number }
-
-async function lookupVirusTotal(sha256: string): Promise<
-  { status: 'found'; stats: EngineStats; permalink: string } | { status: 'unknown' } | { status: 'unavailable' }
-> {
-  const key = process.env.VIRUSTOTAL_API_KEY
-  if (!key) return { status: 'unavailable' }
-  try {
-    const res = await fetch(`https://www.virustotal.com/api/v3/files/${sha256}`, {
-      headers: { 'x-apikey': key },
-      next: { revalidate: 21600 },
-    })
-    if (res.status === 404) return { status: 'unknown' }
-    if (!res.ok) return { status: 'unavailable' }
-    const json = await res.json()
-    const stats = json?.data?.attributes?.last_analysis_stats as EngineStats | undefined
-    if (!stats) return { status: 'unknown' }
-    return { status: 'found', stats, permalink: `https://www.virustotal.com/gui/file/${sha256}` }
-  } catch {
-    return { status: 'unavailable' }
-  }
-}
-
-const DAY = 86_400_000
-
+/**
+ * Server scan pipeline. Fully keyless by design:
+ *  - SHA-256 fingerprints published by GitHub (integrity),
+ *  - deterministic local heuristics + curated signature DB,
+ *  - advisory classification via Pollinations text API (free, no API key).
+ */
 export async function scanAsset(repo: GhRepo, asset: ResolvedAsset, platform: Platform): Promise<ScanReport> {
   const checks: ScanCheck[] = []
-  const lower = asset.name.toLowerCase()
 
   checks.push(
     asset.sha256
-      ? {
-          id: 'integrity',
-          label: 'Integrity',
-          status: 'pass',
-          detail: 'SHA-256 fingerprint published by GitHub for this exact file.',
-        }
-      : {
-          id: 'integrity',
-          label: 'Integrity',
-          status: 'warn',
-          detail: 'The publisher did not provide a SHA-256 fingerprint, so the file cannot be fingerprinted.',
-        },
+      ? { id: 'integrity', label: 'Integrity', status: 'pass', detail: 'SHA-256 fingerprint published by GitHub for this exact file.' }
+      : { id: 'integrity', label: 'Integrity', status: 'warn', detail: 'The publisher did not provide a SHA-256 fingerprint, so the file cannot be fingerprinted.' },
   )
 
-  let engines: ScanReport['engines'] = null
-  if (asset.sha256) {
-    const vt = await lookupVirusTotal(asset.sha256)
-    if (vt.status === 'found') {
-      const total = vt.stats.malicious + vt.stats.suspicious + vt.stats.harmless + vt.stats.undetected
-      engines = { ...vt.stats, total, permalink: vt.permalink }
-      const flagged = vt.stats.malicious
-      checks.push({
-        id: 'engines',
-        label: 'Antivirus engines',
-        status: flagged >= 3 ? 'fail' : flagged > 0 || vt.stats.suspicious >= 2 ? 'warn' : 'pass',
-        detail:
-          flagged === 0 && vt.stats.suspicious === 0
-            ? `0 of ${total} engines flagged this file.`
-            : `${flagged} malicious and ${vt.stats.suspicious} suspicious detections across ${total} engines.`,
-      })
-    } else if (vt.status === 'unknown') {
-      checks.push({
-        id: 'engines',
-        label: 'Antivirus engines',
-        status: 'warn',
-        detail: 'This exact file has not been analyzed by VirusTotal yet.',
-      })
-    } else {
-      checks.push({
-        id: 'engines',
-        label: 'Antivirus engines',
-        status: 'skip',
-        detail: 'Multi-engine scanning is not configured. Add a VirusTotal API key to enable it.',
-      })
-    }
+  // Keyless AI + rules engine (Pollinations — no API key required).
+  let aiSummary = ''
+  try {
+    const outcome = await runScanV2({ name: asset.name, url: asset.url, sha256: asset.sha256 ?? undefined, size: asset.size })
+    aiSummary = outcome.aiSummary
+    const risky = outcome.findings.some((f) => f.severity === 'high' || f.severity === 'critical')
+    checks.push({
+      id: 'ai-rules',
+      label: 'AI + rule engine',
+      status: risky ? 'fail' : outcome.risk > 20 ? 'warn' : 'pass',
+      detail: aiSummary || `${outcome.findings.length} rule findings, risk ${outcome.risk}/100.`,
+    })
+  } catch {
+    checks.push({ id: 'ai-rules', label: 'AI + rule engine', status: 'skip', detail: 'Keyless AI analyst was unreachable; local checks still applied.' })
   }
 
+  const lower = asset.name.toLowerCase()
   const doubleExt = /\.(pdf|docx?|xlsx?|jpe?g|png|txt|mp[34])\.(exe|msi|apk|dmg|pkg|scr|bat)$/i.test(lower)
   const dangerousExt = /\.(scr|bat|cmd|vbs|js|jar|ps1)$/i.test(lower)
   const tooSmall = asset.size < 150 * 1024
@@ -97,6 +57,7 @@ export async function scanAsset(repo: GhRepo, asset: ResolvedAsset, platform: Pl
           : `Expected installer format for ${platform === 'macos' ? 'macOS' : platform === 'ios' ? 'iOS' : platform === 'android' ? 'Android' : 'Windows'}.`,
   })
 
+  const DAY = 86_400_000
   const ageDays = (Date.now() - new Date(repo.created_at).getTime()) / DAY
   const lowTrust = repo.stargazers_count < 50 && ageDays < 60
   checks.push({
@@ -111,32 +72,16 @@ export async function scanAsset(repo: GhRepo, asset: ResolvedAsset, platform: Pl
   })
 
   if (/unsigned/.test(lower)) {
-    checks.push({
-      id: 'signature',
-      label: 'Code signature',
-      status: 'warn',
-      detail: 'The publisher marks this build as unsigned. Your OS may show a security prompt.',
-    })
+    checks.push({ id: 'signature', label: 'Code signature', status: 'warn', detail: 'The publisher marks this build as unsigned. Your OS may show a security prompt.' })
   }
 
-  const verdict: Verdict = checks.some((c) => c.status === 'fail')
-    ? 'danger'
-    : checks.some((c) => c.status === 'warn')
-      ? 'caution'
-      : 'clean'
+  const verdict: Verdict = checks.some((c) => c.status === 'fail') ? 'danger' : checks.some((c) => c.status === 'warn') ? 'caution' : 'clean'
 
   return {
     verdict,
     checks,
-    engines,
-    file: {
-      name: asset.name,
-      size: asset.size,
-      sha256: asset.sha256,
-      url: asset.url,
-      version: asset.version,
-      publishedAt: asset.publishedAt,
-    },
+    engines: null,
+    file: { name: asset.name, size: asset.size, sha256: asset.sha256, url: asset.url, version: asset.version, publishedAt: asset.publishedAt },
     scannedAt: new Date().toISOString(),
   }
 }

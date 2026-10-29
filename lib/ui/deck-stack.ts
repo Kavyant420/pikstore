@@ -19,7 +19,7 @@ import {
   setVar,
   tween,
 } from './dom'
-import { GLACIAL, SNAPPY, SOFT, Spring, joinPump, smooth } from './spring'
+import { GLACIAL, OVERSHOOT, SNAPPY, SOFT, Spring, joinPump, smooth } from './spring'
 
 const SELECTOR = '[data-ui-deck]'
 const ATTR = 'data-ui-deck'
