@@ -36,8 +36,16 @@
 .ui-pill-rail { scroll-snap-type: x proximity; overscroll-behavior-x: contain; }
 .ui-pill-rail .ui-pill { scroll-snap-align: center; }
 
-/* Reveal cascade when the rail enters view */
-.ui-pill-rail .ui-pill {
+/* Reveal cascade when the rail enters view.
+   FIX (tabs unreachable bug): pills used to sit at opacity:0 until an
+   IntersectionObserver added .is-visible to the rail. When that observer
+   misfired (it happened while sections were on animated 3D planes), the
+   category tabs (Productivity, Gaming…) stayed invisible AND untappable.
+   Now the hidden state only applies when JS is confirmed active via
+   html[data-ui-js] (stamped by lib/ui/scroll-stage.ts on mount), so in
+   every no-JS / early-hydration / observer-failure case the pills are
+   fully visible and clickable. */
+html[data-ui-js] .ui-pill-rail .ui-pill {
   opacity: 0;
   transform: translateY(14px) scale(0.92);
   transition:

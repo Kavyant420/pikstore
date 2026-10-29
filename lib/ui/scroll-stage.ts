@@ -11,6 +11,11 @@ export function mountScrollStage(): () => void {
   if (!IS_BROWSER) return () => {}
 
   const root = document.documentElement
+  // Stamp html so CSS reveal-gated rules (e.g. .ui-pill-rail in
+  // styles/ui/15-category-orbit.css) only hide content once JS is proven
+  // alive. Without this flag the category tabs would sit at opacity:0 and
+  // be untappable whenever the observer below fails to fire.
+  root.setAttribute('data-ui-js', 'true')
   let lastY = window.scrollY
 
   const onScroll = rafThrottle(() => {

@@ -1,45 +1,74 @@
 /* 02 - Scroll-driven 3D stage for the page shell */
 html { scroll-behavior: smooth; }
 
+/* FIX (UI bug): body-level `perspective` + `overflow-x: hidden` turned the
+   document into a scroll container with a 3D vanishing point. Combined with
+   the section advance animation below, clicking "Get" (which mutates the DOM
+   inside #library) triggered scroll anchoring against transformed planes —
+   the whole library/download area jumped down and could not be scrolled back
+   up on touch devices. The body is now a plain, untransformed scroller.
+   NOTE: `overflow-x: hidden` is deliberately NOT re-added here — it makes
+   <body> a scroll container, which detaches position:fixed overlays (the
+   download island / modals) from the viewport and breaks native touch
+   scrolling recovery. Wide content is already clipped by the page's own
+   overflow-x-auto rails; if horizontal overflow ever returns, apply
+   `overflow-x: clip` to <html> (not body) so no scroll container is created. */
 body {
-  perspective: var(--ui-perspective);
-  perspective-origin: 50% 30%;
-  overflow-x: hidden;
+  perspective: none;
+  perspective-origin: initial;
 }
 
-main { transform-style: preserve-3d; }
+/* FIX (UI bug): preserve-3d on <main> propagated each section's animated
+   3D transforms into shared compositing space, which also broke fixed
+   positioning of overlays. Flattened to safe flat stacking. */
+main { transform-style: flat; }
 
-/* Every top-level section lives on its own depth plane and eases
-   forward as it enters the viewport (native scroll timeline). */
+/* FIX (blur / tabs-unreachable bug): the old `ui-section-advance` keyframe
+   ran on `animation-timeline: view()`, so every section re-blurred, shrank
+   and shifted 9vh down whenever you scrolled back up. That scroll-replayed
+   blur pushed the category rail (Productivity, Gaming…) out from under your
+   finger and made the pills impossible to tap mid-animation. The sections
+   are now static layout-wise: entrance is handled once via .is-visible
+   (added by lib/ui/scroll-stage.ts IntersectionObserver) with a plain fade
+   that never reverses on upward scroll and never touches transform/filter. */
 main > section {
-  transform-style: preserve-3d;
-  animation: ui-section-advance linear both;
-  animation-timeline: view();
-  animation-range: entry 0% cover 42%;
+  animation-timeline: unset !important;
+  animation-range: auto !important;
 }
 
 @keyframes ui-section-advance {
-  from {
-    opacity: 0.15;
-    transform: translate3d(0, 9vh, -160px) rotateX(7deg) scale(0.94);
-    filter: blur(6px) saturate(70%);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
-    filter: blur(0) saturate(100%);
-  }
+  /* Neutralized: kept as a no-op so any external references to the name
+     still resolve without producing motion or blur. */
+  from { opacity: 1; transform: none; filter: none; }
+  to   { opacity: 1; transform: none; filter: none; }
 }
 
-#library, #security { animation-range: entry 0% cover 46%; }
+/* One-shot fade-in when JS marks a section visible — no transforms, no
+   blur, plays only forward (sections already visible keep full opacity). */
+main > section:not(.is-visible) { opacity: 1; }
+main > section.is-visible { animation: ui-stage-fade-soft 480ms var(--ui-ease-out) both; }
 
 /* Depth fog helper toggled by JS for distant planes */
 .ui-depth-fog { transition: filter var(--ui-dur-slow) var(--ui-ease-out); }
 .ui-depth-fog[data-far='true'] { filter: blur(2px) brightness(0.75); }
 
-/* Fallback when scroll timelines are unsupported: JS adds .is-visible */
-@supports not (animation-timeline: view()) {
-  main > section { animation: none; opacity: 1; transform: none; filter: none; }
+/* FIX (UI bug): clicking "Get" mutates the DOM inside #library (progress
+   bar, orbit ring, state classes). While sections were animated 3D planes,
+   browsers applied scroll anchoring against those transformed elements and
+   yanked the whole library/download area downward with no way to swipe back
+   up. `overflow-anchor: none` disables that compensation entirely, so DOM
+   changes around the button can never shift the user's scroll position. */
+main > section { overflow-anchor: none; }
+[data-ui-busy-scope] { overflow-anchor: none; }
+
+/* FIX (stuck-scroll hardening): disable smooth scrolling while a download
+   scan is running. A queued smooth-scroll in flight combined with the busy
+   DOM mutations was what left the page stuck below the download tab until
+   the next reload. */
+html:has([data-ui-busy-scope].ui-downloading),
+html:has([data-ui-busy-scope].ui-download-done),
+html:has([data-ui-busy-scope].ui-download-fail) {
+  scroll-behavior: auto;
 }
 
 /* ---- Ambient keyframe vocabulary for this layer ---- */
