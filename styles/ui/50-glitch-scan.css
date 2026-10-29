@@ -1,0 +1,213 @@
+/* ============================================================
+   PikStore UI Foundry · 50 — Glitch Scan Transitions
+   Brief monochrome glitch slices when content swaps.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-glitchscan { --glitchscan: glitchscan; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-glitchscan {
+  --glitchscan-speed: var(--ui-dur-base);
+  --glitchscan-ease: var(--ui-ease-out);
+  --glitchscan-spring: var(--ui-ease-spring);
+  --glitchscan-depth: calc(18px * var(--ui-depth-scale));
+  --glitchscan-lift: calc(-6px * var(--ui-depth-scale));
+  --glitchscan-glow: oklch(1 0 0 / 0.14);
+  --glitchscan-hairline: oklch(1 0 0 / 0.12);
+  --glitchscan-ink: oklch(0.96 0.005 265);
+  --glitchscan-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-glitchscan {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--glitchscan-speed) var(--glitchscan-ease),
+    box-shadow var(--glitchscan-speed) var(--glitchscan-ease),
+    border-color var(--glitchscan-speed) var(--glitchscan-ease),
+    background-color var(--glitchscan-speed) var(--glitchscan-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-glitchscan::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--glitchscan-speed) var(--glitchscan-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-glitchscan::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--glitchscan-speed) var(--glitchscan-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-glitchscan:hover {
+    transform: translate3d(0, var(--glitchscan-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--glitchscan-hairline),
+      0 0 42px -12px var(--glitchscan-glow);
+  }
+  .ui-glitchscan:hover::before { opacity: 1; }
+  .ui-glitchscan:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-glitchscan:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-glitchscan:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes glitchscan-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes glitchscan-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes glitchscan-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes glitchscan-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-glitchscan[data-glitchscan-size="sm"] {
+  --glitchscan-depth: calc(10px * var(--ui-depth-scale));
+  --glitchscan-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-glitchscan[data-glitchscan-size="lg"] {
+  --glitchscan-depth: calc(30px * var(--ui-depth-scale));
+  --glitchscan-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-glitchscan[data-glitchscan-flat="true"] {
+  --glitchscan-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Slice displacement ------------------------------------------------------------- */
+.ui-glitchscan[data-glitching="true"] { animation: glitchscan-shake 0.34s steps(4) 1; }
+@keyframes glitchscan-shake {
+  25% { transform: translate3d(-2px, 1px, 0); clip-path: inset(12% 0 60% 0); }
+  75% { transform: translate3d(2px, -1px, 0); clip-path: inset(55% 0 8% 0); }
+}
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-glitchscan {
+    --glitchscan-depth: calc(var(--glitchscan-depth) * 0.7);
+    --glitchscan-lift: calc(var(--glitchscan-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-glitchscan {
+    --glitchscan-depth: calc(var(--glitchscan-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-glitchscan::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-glitchscan,
+  .ui-glitchscan::before,
+  .ui-glitchscan::after,
+  .ui-glitchscan * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-glitchscan:hover { box-shadow: 0 0 0 1px var(--glitchscan-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-glitchscan {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-glitchscan::before,
+  .ui-glitchscan::after { display: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Layer contract · 50 — Glitch Scan Transitions
+   ------------------------------------------------------------
+   Selectors owned .... .ui-glitchscan and its ::before/::after pseudo stack
+   Custom properties .. --glitchscan-speed, --glitchscan-ease, --glitchscan-depth,
+                        --glitchscan-lift, --glitchscan-glow, --glitchscan-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Owner note ......... generated by scripts/gen-ui-layers.py — edit
+                        the generator, not the artifact, to keep the
+                        80-layer foundry reproducible.
+   ------------------------------------------------------------ */

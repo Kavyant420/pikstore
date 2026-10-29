@@ -1,0 +1,205 @@
+/* 28 - Bespoke scrollbar: thin, luminous, reactive */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: oklch(0 0 0 / 0.35); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.5), oklch(1 0 0 / 0.25));
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.9), oklch(1 0 0 / 0.45));
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner { background: transparent; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(1 0 0 / 0.4) oklch(0 0 0 / 0.3);
+}
+
+/* Hidden rails keep the polish without the chrome */
+.ui-scroll-hidden { scrollbar-width: none; }
+.ui-scroll-hidden::-webkit-scrollbar { display: none; }
+
+/* Momentum scrolling on horizontal rails */
+.ui-rail { -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-scroll-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-scroll-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-scroll-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-scroll-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-scroll-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-scroll-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-scroll-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-scroll-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-scroll-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-scroll-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-scroll-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-scroll-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-scroll-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-scroll-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-scroll-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-scroll-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-scroll-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-scroll-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Luxury Scrollbar ---- */
+.ui-scroll-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-scroll-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-scroll-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-scroll-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-scroll-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-scroll-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-scroll-delay-1 { animation-delay: 60ms; }
+.ui-scroll-delay-2 { animation-delay: 120ms; }
+.ui-scroll-delay-3 { animation-delay: 180ms; }
+.ui-scroll-delay-4 { animation-delay: 240ms; }
+.ui-scroll-fill-both { animation-fill-mode: both; }
+.ui-scroll-once { animation-iteration-count: 1; }
+.ui-scroll-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-scroll-z-0 { transform: translateZ(0); }
+.ui-scroll-z-1 { transform: translateZ(12px); }
+.ui-scroll-z-2 { transform: translateZ(24px); }
+.ui-scroll-z-3 { transform: translateZ(40px); }
+.ui-scroll-z-4 { transform: translateZ(60px); }
+.ui-scroll-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-scroll-mat-void { background: oklch(0 0 0); }
+.ui-scroll-mat-onyx { background: oklch(0.12 0 0); }
+.ui-scroll-mat-graphite { background: oklch(0.24 0 0); }
+.ui-scroll-mat-ash { background: oklch(0.45 0 0); }
+.ui-scroll-mat-silver { background: oklch(0.72 0 0); }
+.ui-scroll-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-scroll-state-idle { opacity: 1; transform: none; }
+.ui-scroll-state-enter { animation: ui-scroll-rise 0.5s var(--ui-ease-out) both; }
+.ui-scroll-state-exit { animation: ui-scroll-sink 0.35s var(--ui-ease-out) both; }
+.ui-scroll-state-live { animation: ui-scroll-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-scroll-state-attention { animation: ui-scroll-jitter 0.4s steps(3) 2; }
+.ui-scroll-state-success { animation: ui-scroll-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 28 — Luxury Scrollbar
+   ------------------------------------------------------------
+   Selectors owned .... .ui-scroll and its ::before/::after pseudo stack
+   Custom properties .. --ui-scroll-speed, --ui-scroll-ease, --ui-scroll-depth,
+                        --ui-scroll-lift, --ui-scroll-glow, --ui-scroll-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-scroll * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-scroll { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

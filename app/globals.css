@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+
+/* PikStore UI Foundry: 40 dedicated interaction layers (3D tilt, magnetic
+   buttons, scroll stage, cursor spotlight, download physics, island toasts…) */
+@import '../styles/ui-foundry.css';
 @import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));

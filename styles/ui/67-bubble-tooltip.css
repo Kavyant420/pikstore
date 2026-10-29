@@ -1,0 +1,210 @@
+/* ============================================================
+   PikStore UI Foundry · 67 — Bubble Trail Tooltips
+   Springy tooltip bubbles trailing the cursor on icon hovers.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-bubbletip { --bubbletip: bubbletip; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-bubbletip {
+  --bubbletip-speed: var(--ui-dur-base);
+  --bubbletip-ease: var(--ui-ease-out);
+  --bubbletip-spring: var(--ui-ease-spring);
+  --bubbletip-depth: calc(18px * var(--ui-depth-scale));
+  --bubbletip-lift: calc(-6px * var(--ui-depth-scale));
+  --bubbletip-glow: oklch(1 0 0 / 0.14);
+  --bubbletip-hairline: oklch(1 0 0 / 0.12);
+  --bubbletip-ink: oklch(0.96 0.005 265);
+  --bubbletip-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-bubbletip {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--bubbletip-speed) var(--bubbletip-ease),
+    box-shadow var(--bubbletip-speed) var(--bubbletip-ease),
+    border-color var(--bubbletip-speed) var(--bubbletip-ease),
+    background-color var(--bubbletip-speed) var(--bubbletip-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-bubbletip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--bubbletip-speed) var(--bubbletip-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-bubbletip::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--bubbletip-speed) var(--bubbletip-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-bubbletip:hover {
+    transform: translate3d(0, var(--bubbletip-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--bubbletip-hairline),
+      0 0 42px -12px var(--bubbletip-glow);
+  }
+  .ui-bubbletip:hover::before { opacity: 1; }
+  .ui-bubbletip:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-bubbletip:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-bubbletip:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes bubbletip-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes bubbletip-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes bubbletip-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes bubbletip-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-bubbletip[data-bubbletip-size="sm"] {
+  --bubbletip-depth: calc(10px * var(--ui-depth-scale));
+  --bubbletip-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-bubbletip[data-bubbletip-size="lg"] {
+  --bubbletip-depth: calc(30px * var(--ui-depth-scale));
+  --bubbletip-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-bubbletip[data-bubbletip-flat="true"] {
+  --bubbletip-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Spring bubble ------------------------------------------------------------------------------------------------------------------------------------------------- */
+.ui-bubbletip .tip { transform-origin: bottom center; animation: bubbletip-pop 0.32s var(--bubbletip-spring) both; }
+@keyframes bubbletip-pop { from { transform: scale(0.6) translateY(8px); opacity: 0; } }
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-bubbletip {
+    --bubbletip-depth: calc(var(--bubbletip-depth) * 0.7);
+    --bubbletip-lift: calc(var(--bubbletip-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-bubbletip {
+    --bubbletip-depth: calc(var(--bubbletip-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-bubbletip::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-bubbletip,
+  .ui-bubbletip::before,
+  .ui-bubbletip::after,
+  .ui-bubbletip * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-bubbletip:hover { box-shadow: 0 0 0 1px var(--bubbletip-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-bubbletip {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-bubbletip::before,
+  .ui-bubbletip::after { display: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Layer contract · 67 — Bubble Trail Tooltips
+   ------------------------------------------------------------
+   Selectors owned .... .ui-bubbletip and its ::before/::after pseudo stack
+   Custom properties .. --bubbletip-speed, --bubbletip-ease, --bubbletip-depth,
+                        --bubbletip-lift, --bubbletip-glow, --bubbletip-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Owner note ......... generated by scripts/gen-ui-layers.py — edit
+                        the generator, not the artifact, to keep the
+                        80-layer foundry reproducible.
+   ------------------------------------------------------------ */

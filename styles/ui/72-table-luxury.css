@@ -1,0 +1,210 @@
+/* ============================================================
+   PikStore UI Foundry · 72 — Luxury Data Table
+   Rows lifting on hover with sticky glass header.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-tablelux { --tablelux: tablelux; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-tablelux {
+  --tablelux-speed: var(--ui-dur-base);
+  --tablelux-ease: var(--ui-ease-out);
+  --tablelux-spring: var(--ui-ease-spring);
+  --tablelux-depth: calc(18px * var(--ui-depth-scale));
+  --tablelux-lift: calc(-6px * var(--ui-depth-scale));
+  --tablelux-glow: oklch(1 0 0 / 0.14);
+  --tablelux-hairline: oklch(1 0 0 / 0.12);
+  --tablelux-ink: oklch(0.96 0.005 265);
+  --tablelux-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-tablelux {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--tablelux-speed) var(--tablelux-ease),
+    box-shadow var(--tablelux-speed) var(--tablelux-ease),
+    border-color var(--tablelux-speed) var(--tablelux-ease),
+    background-color var(--tablelux-speed) var(--tablelux-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-tablelux::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--tablelux-speed) var(--tablelux-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-tablelux::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--tablelux-speed) var(--tablelux-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-tablelux:hover {
+    transform: translate3d(0, var(--tablelux-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--tablelux-hairline),
+      0 0 42px -12px var(--tablelux-glow);
+  }
+  .ui-tablelux:hover::before { opacity: 1; }
+  .ui-tablelux:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-tablelux:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-tablelux:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes tablelux-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes tablelux-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes tablelux-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes tablelux-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-tablelux[data-tablelux-size="sm"] {
+  --tablelux-depth: calc(10px * var(--ui-depth-scale));
+  --tablelux-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-tablelux[data-tablelux-size="lg"] {
+  --tablelux-depth: calc(30px * var(--ui-depth-scale));
+  --tablelux-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-tablelux[data-tablelux-flat="true"] {
+  --tablelux-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Row lift --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+.ui-tablelux tbody tr:hover { transform: translateZ(24px) scale(1.004); background: oklch(1 0 0 / 0.05); box-shadow: 0 12px 30px -18px oklch(0 0 0 / 0.9); }
+.ui-tablelux thead th { backdrop-filter: blur(14px); background: oklch(0.1 0 0 / 0.7); }
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-tablelux {
+    --tablelux-depth: calc(var(--tablelux-depth) * 0.7);
+    --tablelux-lift: calc(var(--tablelux-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-tablelux {
+    --tablelux-depth: calc(var(--tablelux-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-tablelux::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-tablelux,
+  .ui-tablelux::before,
+  .ui-tablelux::after,
+  .ui-tablelux * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-tablelux:hover { box-shadow: 0 0 0 1px var(--tablelux-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-tablelux {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-tablelux::before,
+  .ui-tablelux::after { display: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Layer contract · 72 — Luxury Data Table
+   ------------------------------------------------------------
+   Selectors owned .... .ui-tablelux and its ::before/::after pseudo stack
+   Custom properties .. --tablelux-speed, --tablelux-ease, --tablelux-depth,
+                        --tablelux-lift, --tablelux-glow, --tablelux-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Owner note ......... generated by scripts/gen-ui-layers.py — edit
+                        the generator, not the artifact, to keep the
+                        80-layer foundry reproducible.
+   ------------------------------------------------------------ */

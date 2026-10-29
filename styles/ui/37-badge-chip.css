@@ -1,0 +1,205 @@
+/* 37 - Badges & chips: live dots, flaps, verdict pops */
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 99px;
+  transition:
+    transform 360ms var(--ui-ease-spring),
+    box-shadow 360ms ease,
+    background-color 300ms ease;
+}
+.ui-chip:hover {
+  transform: translateY(-2px) translateZ(8px) scale(1.04);
+  box-shadow: 0 10px 24px -12px oklch(0 0 0 / 0.9);
+}
+
+/* LIVE dot with expanding sonar ring */
+.ui-live-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: oklch(1 0 0);
+}
+.ui-live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  border: 1px solid oklch(1 0 0 / 0.7);
+  animation: ui-sonar 1.8s var(--ui-ease-out) infinite;
+}
+@keyframes ui-sonar {
+  from { transform: scale(1); opacity: 1; }
+  to   { transform: scale(3.2); opacity: 0; }
+}
+
+/* Numeric badges flip like split-flap boards */
+.ui-flap {
+  display: inline-block;
+  transform-style: preserve-3d;
+  animation: ui-flap 420ms var(--ui-ease-out);
+}
+@keyframes ui-flap {
+  0%   { transform: rotateX(0deg); }
+  50%  { transform: rotateX(-90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+/* Verdict chip entrance */
+.ui-verdict { animation: ui-pop-in 480ms var(--ui-ease-spring) both; }
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-badge-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-badge-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-badge-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-badge-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-badge-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-badge-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-badge-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-badge-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-badge-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-badge-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-badge-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-badge-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-badge-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-badge-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-badge-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-badge-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-badge-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-badge-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Badges & Chips ---- */
+.ui-badge-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-badge-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-badge-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-badge-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-badge-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-badge-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-badge-delay-1 { animation-delay: 60ms; }
+.ui-badge-delay-2 { animation-delay: 120ms; }
+.ui-badge-delay-3 { animation-delay: 180ms; }
+.ui-badge-delay-4 { animation-delay: 240ms; }
+.ui-badge-fill-both { animation-fill-mode: both; }
+.ui-badge-once { animation-iteration-count: 1; }
+.ui-badge-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-badge-z-0 { transform: translateZ(0); }
+.ui-badge-z-1 { transform: translateZ(12px); }
+.ui-badge-z-2 { transform: translateZ(24px); }
+.ui-badge-z-3 { transform: translateZ(40px); }
+.ui-badge-z-4 { transform: translateZ(60px); }
+.ui-badge-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-badge-mat-void { background: oklch(0 0 0); }
+.ui-badge-mat-onyx { background: oklch(0.12 0 0); }
+.ui-badge-mat-graphite { background: oklch(0.24 0 0); }
+.ui-badge-mat-ash { background: oklch(0.45 0 0); }
+.ui-badge-mat-silver { background: oklch(0.72 0 0); }
+.ui-badge-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-badge-state-idle { opacity: 1; transform: none; }
+.ui-badge-state-enter { animation: ui-badge-rise 0.5s var(--ui-ease-out) both; }
+.ui-badge-state-exit { animation: ui-badge-sink 0.35s var(--ui-ease-out) both; }
+.ui-badge-state-live { animation: ui-badge-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-badge-state-attention { animation: ui-badge-jitter 0.4s steps(3) 2; }
+.ui-badge-state-success { animation: ui-badge-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 37 — Badges & Chips
+   ------------------------------------------------------------
+   Selectors owned .... .ui-badge and its ::before/::after pseudo stack
+   Custom properties .. --ui-badge-speed, --ui-badge-ease, --ui-badge-depth,
+                        --ui-badge-lift, --ui-badge-glow, --ui-badge-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-badge * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-badge { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

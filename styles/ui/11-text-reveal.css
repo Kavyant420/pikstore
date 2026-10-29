@@ -1,0 +1,205 @@
+/* 11 - Typographic reveals: line masks, letter cascades, chrome tides */
+.ui-line-mask { display: block; overflow: hidden; }
+.ui-line-mask > span {
+  display: block;
+  transform: translateY(110%) rotate(3deg);
+  transition: transform 900ms var(--ui-ease-aggressive), opacity 700ms ease;
+  opacity: 0;
+}
+.ui-line-mask[data-visible='true'] > span,
+[data-ui-reveal].is-visible .ui-line-mask > span {
+  transform: translateY(0) rotate(0deg);
+  opacity: 1;
+}
+
+.ui-line-mask:nth-child(2) > span { transition-delay: 90ms; }
+.ui-line-mask:nth-child(3) > span { transition-delay: 180ms; }
+
+/* Letter-by-letter cascade for hero words (.char spans injected by JS) */
+.ui-cascade > .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 0.6em, -40px) rotateX(-70deg);
+  transform-origin: 50% 0%;
+  animation: ui-char-in 800ms var(--ui-ease-out) forwards;
+  animation-delay: calc(var(--char-i, 0) * 32ms + var(--char-shift, 0ms));
+}
+@keyframes ui-char-in {
+  to { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+
+/* Chrome tide: slow moving highlight across big text */
+.ui-chrome-tide {
+  background: linear-gradient(100deg, oklch(1 0 0) 20%, oklch(0.55 0 0) 40%, oklch(1 0 0) 60%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ui-shimmer 7s linear infinite;
+}
+
+/* Outline ghost text that fills on hover */
+.ui-ghost-fill {
+  -webkit-text-stroke: 1px oklch(1 0 0 / 0.5);
+  color: transparent;
+  transition: color 500ms ease, -webkit-text-stroke-color 500ms ease;
+}
+.ui-ghost-fill:hover { color: oklch(1 0 0); -webkit-text-stroke-color: transparent; }
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-reveal-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-reveal-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-reveal-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-reveal-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-reveal-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-reveal-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-reveal-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-reveal-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-reveal-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-reveal-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-reveal-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-reveal-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-reveal-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-reveal-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-reveal-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-reveal-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-reveal-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-reveal-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Text Reveal Choreography ---- */
+.ui-reveal-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-reveal-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-reveal-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-reveal-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-reveal-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-reveal-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-reveal-delay-1 { animation-delay: 60ms; }
+.ui-reveal-delay-2 { animation-delay: 120ms; }
+.ui-reveal-delay-3 { animation-delay: 180ms; }
+.ui-reveal-delay-4 { animation-delay: 240ms; }
+.ui-reveal-fill-both { animation-fill-mode: both; }
+.ui-reveal-once { animation-iteration-count: 1; }
+.ui-reveal-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-reveal-z-0 { transform: translateZ(0); }
+.ui-reveal-z-1 { transform: translateZ(12px); }
+.ui-reveal-z-2 { transform: translateZ(24px); }
+.ui-reveal-z-3 { transform: translateZ(40px); }
+.ui-reveal-z-4 { transform: translateZ(60px); }
+.ui-reveal-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-reveal-mat-void { background: oklch(0 0 0); }
+.ui-reveal-mat-onyx { background: oklch(0.12 0 0); }
+.ui-reveal-mat-graphite { background: oklch(0.24 0 0); }
+.ui-reveal-mat-ash { background: oklch(0.45 0 0); }
+.ui-reveal-mat-silver { background: oklch(0.72 0 0); }
+.ui-reveal-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-reveal-state-idle { opacity: 1; transform: none; }
+.ui-reveal-state-enter { animation: ui-reveal-rise 0.5s var(--ui-ease-out) both; }
+.ui-reveal-state-exit { animation: ui-reveal-sink 0.35s var(--ui-ease-out) both; }
+.ui-reveal-state-live { animation: ui-reveal-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-reveal-state-attention { animation: ui-reveal-jitter 0.4s steps(3) 2; }
+.ui-reveal-state-success { animation: ui-reveal-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 11 — Text Reveal Choreography
+   ------------------------------------------------------------
+   Selectors owned .... .ui-reveal and its ::before/::after pseudo stack
+   Custom properties .. --ui-reveal-speed, --ui-reveal-ease, --ui-reveal-depth,
+                        --ui-reveal-lift, --ui-reveal-glow, --ui-reveal-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-reveal * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-reveal { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

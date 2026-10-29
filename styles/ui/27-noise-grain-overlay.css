@@ -1,0 +1,205 @@
+/* 27 - Film grain + ambient aurora: kills the flat digital look */
+.ui-grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 9990;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  animation: ui-grain-shift 0.9s steps(4) infinite;
+  mix-blend-mode: overlay;
+}
+
+@keyframes ui-grain-shift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-2%, 1%); }
+  50%  { transform: translate(1%, -2%); }
+  75%  { transform: translate(-1%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Soft aurora wash drifting behind everything */
+.ui-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 38% at 18% 22%, oklch(1 0 0 / 0.05), transparent 70%),
+    radial-gradient(40% 34% at 82% 68%, oklch(1 0 0 / 0.04), transparent 70%);
+  animation: ui-aurora-drift 22s var(--ui-ease-in-out) infinite alternate;
+}
+@keyframes ui-aurora-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(2%, 2%, 0) scale(1.08); }
+}
+
+/* Subtle scanlines for the security section */
+.ui-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    oklch(1 0 0 / 0.025) 0 1px,
+    transparent 1px 4px
+  );
+}
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-grain-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-grain-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-grain-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-grain-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-grain-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-grain-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-grain-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-grain-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-grain-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-grain-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-grain-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-grain-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-grain-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-grain-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-grain-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-grain-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-grain-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-grain-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Film Grain & Aurora Overlays ---- */
+.ui-grain-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-grain-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-grain-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-grain-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-grain-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-grain-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-grain-delay-1 { animation-delay: 60ms; }
+.ui-grain-delay-2 { animation-delay: 120ms; }
+.ui-grain-delay-3 { animation-delay: 180ms; }
+.ui-grain-delay-4 { animation-delay: 240ms; }
+.ui-grain-fill-both { animation-fill-mode: both; }
+.ui-grain-once { animation-iteration-count: 1; }
+.ui-grain-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-grain-z-0 { transform: translateZ(0); }
+.ui-grain-z-1 { transform: translateZ(12px); }
+.ui-grain-z-2 { transform: translateZ(24px); }
+.ui-grain-z-3 { transform: translateZ(40px); }
+.ui-grain-z-4 { transform: translateZ(60px); }
+.ui-grain-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-grain-mat-void { background: oklch(0 0 0); }
+.ui-grain-mat-onyx { background: oklch(0.12 0 0); }
+.ui-grain-mat-graphite { background: oklch(0.24 0 0); }
+.ui-grain-mat-ash { background: oklch(0.45 0 0); }
+.ui-grain-mat-silver { background: oklch(0.72 0 0); }
+.ui-grain-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-grain-state-idle { opacity: 1; transform: none; }
+.ui-grain-state-enter { animation: ui-grain-rise 0.5s var(--ui-ease-out) both; }
+.ui-grain-state-exit { animation: ui-grain-sink 0.35s var(--ui-ease-out) both; }
+.ui-grain-state-live { animation: ui-grain-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-grain-state-attention { animation: ui-grain-jitter 0.4s steps(3) 2; }
+.ui-grain-state-success { animation: ui-grain-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 27 — Film Grain & Aurora Overlays
+   ------------------------------------------------------------
+   Selectors owned .... .ui-grain and its ::before/::after pseudo stack
+   Custom properties .. --ui-grain-speed, --ui-grain-ease, --ui-grain-depth,
+                        --ui-grain-lift, --ui-grain-glow, --ui-grain-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-grain * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-grain { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

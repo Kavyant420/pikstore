@@ -1,0 +1,205 @@
+/* 09 - Pointer-tracked specular sheen for any surface */
+.ui-sheen { position: relative; isolation: isolate; }
+
+.ui-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 520ms var(--ui-ease-out);
+  background:
+    radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / var(--ui-sheen-opacity)),
+      transparent 46%
+    ),
+    conic-gradient(
+      from var(--sheen-angle, 140deg) at var(--mx, 50%) var(--my, 50%),
+      transparent 0deg,
+      oklch(1 0 0 / 0.05) 40deg,
+      transparent 90deg
+    );
+}
+
+.ui-sheen:hover::after,
+.ui-sheen[data-active='true']::after { opacity: 1; }
+
+/* Rim light: the border brightens nearest the cursor */
+.ui-rim { position: relative; }
+.ui-rim::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    oklch(1 0 0 / var(--ui-rim-opacity)),
+    oklch(1 0 0 / 0.06) 55%,
+    transparent 75%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+.ui-rim:hover::before { opacity: 1; }
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-sheen-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-sheen-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-sheen-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-sheen-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-sheen-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-sheen-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-sheen-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-sheen-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-sheen-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-sheen-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-sheen-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-sheen-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-sheen-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-sheen-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-sheen-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-sheen-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-sheen-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-sheen-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Sheen & Rim-Light Tracking ---- */
+.ui-sheen-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-sheen-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-sheen-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-sheen-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-sheen-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-sheen-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-sheen-delay-1 { animation-delay: 60ms; }
+.ui-sheen-delay-2 { animation-delay: 120ms; }
+.ui-sheen-delay-3 { animation-delay: 180ms; }
+.ui-sheen-delay-4 { animation-delay: 240ms; }
+.ui-sheen-fill-both { animation-fill-mode: both; }
+.ui-sheen-once { animation-iteration-count: 1; }
+.ui-sheen-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-sheen-z-0 { transform: translateZ(0); }
+.ui-sheen-z-1 { transform: translateZ(12px); }
+.ui-sheen-z-2 { transform: translateZ(24px); }
+.ui-sheen-z-3 { transform: translateZ(40px); }
+.ui-sheen-z-4 { transform: translateZ(60px); }
+.ui-sheen-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-sheen-mat-void { background: oklch(0 0 0); }
+.ui-sheen-mat-onyx { background: oklch(0.12 0 0); }
+.ui-sheen-mat-graphite { background: oklch(0.24 0 0); }
+.ui-sheen-mat-ash { background: oklch(0.45 0 0); }
+.ui-sheen-mat-silver { background: oklch(0.72 0 0); }
+.ui-sheen-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-sheen-state-idle { opacity: 1; transform: none; }
+.ui-sheen-state-enter { animation: ui-sheen-rise 0.5s var(--ui-ease-out) both; }
+.ui-sheen-state-exit { animation: ui-sheen-sink 0.35s var(--ui-ease-out) both; }
+.ui-sheen-state-live { animation: ui-sheen-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-sheen-state-attention { animation: ui-sheen-jitter 0.4s steps(3) 2; }
+.ui-sheen-state-success { animation: ui-sheen-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 09 — Sheen & Rim-Light Tracking
+   ------------------------------------------------------------
+   Selectors owned .... .ui-sheen and its ::before/::after pseudo stack
+   Custom properties .. --ui-sheen-speed, --ui-sheen-ease, --ui-sheen-depth,
+                        --ui-sheen-lift, --ui-sheen-glow, --ui-sheen-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-sheen * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-sheen { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

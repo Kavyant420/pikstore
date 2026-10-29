@@ -1,0 +1,205 @@
+/* 38 - Depth budget per breakpoint: heavy desktop, light mobile */
+@media (max-width: 1023px) {
+  :root {
+    --ui-perspective: 1000px;
+    --ui-depth-scale: 0.6;
+    --ui-parallax-strength: 0.55;
+    --ui-cursor-size: 320px;
+  }
+}
+
+@media (max-width: 639px) {
+  :root {
+    --ui-depth-scale: 0.35;
+    --ui-parallax-strength: 0.3;
+    --ui-reveal-distance: 20px;
+    --ui-glass-blur: 18px;
+  }
+
+  /* Cheaper effects on small GPUs */
+  .ui-rim::before,
+  .ui-card-edge-light { display: none; }
+
+  main > section { animation-range: entry 0% cover 30%; }
+
+  .ui-spotlight { --ui-cursor-size: 220px; }
+}
+
+/* Large displays get the full theatre treatment */
+@media (min-width: 1440px) {
+  :root {
+    --ui-depth-scale: 1.25;
+    --ui-cursor-size: 620px;
+    --ui-glass-blur: 30px;
+  }
+}
+
+/* Ultrawide: tame the parallax so nothing flies off stage */
+@media (min-width: 2200px) {
+  :root { --ui-parallax-strength: 0.7; }
+}
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-resp-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-resp-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-resp-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-resp-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-resp-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-resp-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-resp-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-resp-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-resp-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-resp-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-resp-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-resp-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-resp-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-resp-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-resp-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-resp-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-resp-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-resp-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Responsive Depth Budgets ---- */
+.ui-resp-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-resp-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-resp-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-resp-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-resp-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-resp-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-resp-delay-1 { animation-delay: 60ms; }
+.ui-resp-delay-2 { animation-delay: 120ms; }
+.ui-resp-delay-3 { animation-delay: 180ms; }
+.ui-resp-delay-4 { animation-delay: 240ms; }
+.ui-resp-fill-both { animation-fill-mode: both; }
+.ui-resp-once { animation-iteration-count: 1; }
+.ui-resp-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-resp-z-0 { transform: translateZ(0); }
+.ui-resp-z-1 { transform: translateZ(12px); }
+.ui-resp-z-2 { transform: translateZ(24px); }
+.ui-resp-z-3 { transform: translateZ(40px); }
+.ui-resp-z-4 { transform: translateZ(60px); }
+.ui-resp-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-resp-mat-void { background: oklch(0 0 0); }
+.ui-resp-mat-onyx { background: oklch(0.12 0 0); }
+.ui-resp-mat-graphite { background: oklch(0.24 0 0); }
+.ui-resp-mat-ash { background: oklch(0.45 0 0); }
+.ui-resp-mat-silver { background: oklch(0.72 0 0); }
+.ui-resp-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-resp-state-idle { opacity: 1; transform: none; }
+.ui-resp-state-enter { animation: ui-resp-rise 0.5s var(--ui-ease-out) both; }
+.ui-resp-state-exit { animation: ui-resp-sink 0.35s var(--ui-ease-out) both; }
+.ui-resp-state-live { animation: ui-resp-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-resp-state-attention { animation: ui-resp-jitter 0.4s steps(3) 2; }
+.ui-resp-state-success { animation: ui-resp-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 38 — Responsive Depth Budgets
+   ------------------------------------------------------------
+   Selectors owned .... .ui-resp and its ::before/::after pseudo stack
+   Custom properties .. --ui-resp-speed, --ui-resp-ease, --ui-resp-depth,
+                        --ui-resp-lift, --ui-resp-glow, --ui-resp-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-resp * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-resp { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

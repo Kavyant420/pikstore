@@ -1,0 +1,208 @@
+/* ============================================================
+   PikStore UI Foundry · 54 — Staggered Grid Entrance
+   Grid children rise through Z in diagonal wave order.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-staggergrid { --staggergrid: staggergrid; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-staggergrid {
+  --staggergrid-speed: var(--ui-dur-base);
+  --staggergrid-ease: var(--ui-ease-out);
+  --staggergrid-spring: var(--ui-ease-spring);
+  --staggergrid-depth: calc(18px * var(--ui-depth-scale));
+  --staggergrid-lift: calc(-6px * var(--ui-depth-scale));
+  --staggergrid-glow: oklch(1 0 0 / 0.14);
+  --staggergrid-hairline: oklch(1 0 0 / 0.12);
+  --staggergrid-ink: oklch(0.96 0.005 265);
+  --staggergrid-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-staggergrid {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--staggergrid-speed) var(--staggergrid-ease),
+    box-shadow var(--staggergrid-speed) var(--staggergrid-ease),
+    border-color var(--staggergrid-speed) var(--staggergrid-ease),
+    background-color var(--staggergrid-speed) var(--staggergrid-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-staggergrid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--staggergrid-speed) var(--staggergrid-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-staggergrid::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--staggergrid-speed) var(--staggergrid-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-staggergrid:hover {
+    transform: translate3d(0, var(--staggergrid-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--staggergrid-hairline),
+      0 0 42px -12px var(--staggergrid-glow);
+  }
+  .ui-staggergrid:hover::before { opacity: 1; }
+  .ui-staggergrid:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-staggergrid:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-staggergrid:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Depth children --------------------------------------------------- */
+.ui-staggergrid > .ui-staggergrid-core {
+  position: relative;
+  z-index: 1;
+  transform: translateZ(calc(var(--staggergrid-depth) * 0.5));
+  transform-style: preserve-3d;
+}
+.ui-staggergrid > .ui-staggergrid-ghost {
+  position: absolute;
+  inset: 8%;
+  border-radius: inherit;
+  background: oklch(0 0 0 / 0.55);
+  filter: blur(26px);
+  transform: translateZ(calc(var(--staggergrid-depth) * -1)) scale(0.92);
+  opacity: 0;
+  transition: opacity var(--staggergrid-speed) var(--staggergrid-ease);
+  pointer-events: none;
+}
+.ui-staggergrid:hover > .ui-staggergrid-ghost { opacity: 1; }
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes staggergrid-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes staggergrid-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes staggergrid-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes staggergrid-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-staggergrid[data-staggergrid-size="sm"] {
+  --staggergrid-depth: calc(10px * var(--ui-depth-scale));
+  --staggergrid-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-staggergrid[data-staggergrid-size="lg"] {
+  --staggergrid-depth: calc(30px * var(--ui-depth-scale));
+  --staggergrid-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-staggergrid[data-staggergrid-flat="true"] {
+  --staggergrid-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Wave order ------------------------------------------------------------------------------- */
+.ui-staggergrid > * { opacity: 0; transform: translate3d(0, 26px, -50px) rotateX(12deg); }
+.ui-staggergrid[data-entered="true"] > * {
+  opacity: 1; transform: none;
+  transition: opacity 0.65s var(--staggergrid-ease), transform 0.65s var(--staggergrid-ease);
+  transition-delay: calc((var(--col, 0) + var(--row, 0)) * 70ms);
+}
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-staggergrid {
+    --staggergrid-depth: calc(var(--staggergrid-depth) * 0.7);
+    --staggergrid-lift: calc(var(--staggergrid-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-staggergrid {
+    --staggergrid-depth: calc(var(--staggergrid-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-staggergrid::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-staggergrid,
+  .ui-staggergrid::before,
+  .ui-staggergrid::after,
+  .ui-staggergrid * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-staggergrid:hover { box-shadow: 0 0 0 1px var(--staggergrid-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-staggergrid {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-staggergrid::before,
+  .ui-staggergrid::after { display: none !important; }
+}

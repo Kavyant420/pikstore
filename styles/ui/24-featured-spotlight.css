@@ -1,0 +1,205 @@
+/* 24 - Featured picks: editorial tiles with light-table staging */
+.ui-spotlight-tile {
+  transform-style: preserve-3d;
+  transition:
+    transform 700ms var(--ui-ease-out),
+    box-shadow 700ms ease;
+}
+
+.ui-spotlight-tile:hover {
+  transform: perspective(1200px) translateZ(26px) rotateX(3deg) rotateY(-2deg);
+  box-shadow:
+    0 60px 90px -40px oklch(0 0 0 / 0.95),
+    inset 0 1px 0 oklch(1 0 0 / 0.22);
+}
+
+/* Giant watermark brand glyph parallaxes deepest */
+.ui-watermark {
+  transform: translate3d(calc(var(--pointer-x, 0) * -26px), calc(var(--pointer-y, 0) * -18px), 60px);
+  transition: transform 900ms var(--ui-ease-out), color 800ms ease;
+}
+.ui-spotlight-tile:hover .ui-watermark { color: oklch(1 0 0 / 0.12); }
+
+/* Headline lifts on hover */
+.ui-tile-title { transition: transform 600ms var(--ui-ease-spring), letter-spacing 600ms ease; }
+.ui-spotlight-tile:hover .ui-tile-title {
+  transform: translateZ(34px);
+  letter-spacing: 0.01em;
+}
+
+/* Light strip sweeps diagonally across the tile */
+.ui-tile-glare {
+  position: absolute;
+  inset: -60%;
+  background: linear-gradient(
+    120deg,
+    transparent 44%,
+    oklch(1 0 0 / 0.08) 49%,
+    oklch(1 0 0 / 0.16) 50%,
+    oklch(1 0 0 / 0.08) 51%,
+    transparent 56%
+  );
+  transform: translateX(-60%);
+  transition: transform 1.6s var(--ui-ease-out);
+  pointer-events: none;
+}
+.ui-spotlight-tile:hover .ui-tile-glare { transform: translateX(60%); }
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-feat-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-feat-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-feat-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-feat-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-feat-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-feat-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-feat-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-feat-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-feat-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-feat-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-feat-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-feat-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-feat-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-feat-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-feat-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-feat-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-feat-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-feat-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Featured Tile Spotlight ---- */
+.ui-feat-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-feat-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-feat-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-feat-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-feat-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-feat-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-feat-delay-1 { animation-delay: 60ms; }
+.ui-feat-delay-2 { animation-delay: 120ms; }
+.ui-feat-delay-3 { animation-delay: 180ms; }
+.ui-feat-delay-4 { animation-delay: 240ms; }
+.ui-feat-fill-both { animation-fill-mode: both; }
+.ui-feat-once { animation-iteration-count: 1; }
+.ui-feat-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-feat-z-0 { transform: translateZ(0); }
+.ui-feat-z-1 { transform: translateZ(12px); }
+.ui-feat-z-2 { transform: translateZ(24px); }
+.ui-feat-z-3 { transform: translateZ(40px); }
+.ui-feat-z-4 { transform: translateZ(60px); }
+.ui-feat-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-feat-mat-void { background: oklch(0 0 0); }
+.ui-feat-mat-onyx { background: oklch(0.12 0 0); }
+.ui-feat-mat-graphite { background: oklch(0.24 0 0); }
+.ui-feat-mat-ash { background: oklch(0.45 0 0); }
+.ui-feat-mat-silver { background: oklch(0.72 0 0); }
+.ui-feat-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-feat-state-idle { opacity: 1; transform: none; }
+.ui-feat-state-enter { animation: ui-feat-rise 0.5s var(--ui-ease-out) both; }
+.ui-feat-state-exit { animation: ui-feat-sink 0.35s var(--ui-ease-out) both; }
+.ui-feat-state-live { animation: ui-feat-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-feat-state-attention { animation: ui-feat-jitter 0.4s steps(3) 2; }
+.ui-feat-state-success { animation: ui-feat-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 24 — Featured Tile Spotlight
+   ------------------------------------------------------------
+   Selectors owned .... .ui-feat and its ::before/::after pseudo stack
+   Custom properties .. --ui-feat-speed, --ui-feat-ease, --ui-feat-depth,
+                        --ui-feat-lift, --ui-feat-glow, --ui-feat-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-feat * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-feat { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

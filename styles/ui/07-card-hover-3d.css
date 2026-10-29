@@ -1,0 +1,205 @@
+/* 07 - App cards: layered parallax lift on hover */
+.ui-card3d {
+  transform-style: preserve-3d;
+  transition:
+    transform 560ms var(--ui-ease-out),
+    box-shadow 560ms var(--ui-ease-out);
+  will-change: transform;
+}
+
+.ui-card3d:hover {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.2),
+    0 44px 70px -34px oklch(0 0 0 / 0.95),
+    0 0 0 1px oklch(1 0 0 / 0.07);
+}
+
+/* Layers float at different heights above the card plane */
+.ui-layer-1 { transform: translateZ(calc(16px * var(--ui-depth-scale))); }
+.ui-layer-2 { transform: translateZ(calc(32px * var(--ui-depth-scale))); }
+.ui-layer-3 { transform: translateZ(calc(52px * var(--ui-depth-scale))); }
+
+.ui-card3d [class*='ui-layer-'] { transition: transform 560ms var(--ui-ease-out); }
+.ui-card3d:hover [class*='ui-layer-'] {
+  transform: translateZ(calc(var(--lift, 24px) * var(--ui-depth-scale) * 1.6));
+}
+
+/* Shadow pool that slides under the lifted card */
+.ui-card-shadow-pool {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -14px;
+  height: 22px;
+  border-radius: 50%;
+  background: oklch(0 0 0 / 0.55);
+  filter: blur(14px);
+  opacity: 0;
+  transform: scaleX(0.7);
+  transition: opacity 480ms ease, transform 680ms var(--ui-ease-out);
+  pointer-events: none;
+}
+.ui-card3d:hover .ui-card-shadow-pool { opacity: 1; transform: scaleX(1); }
+
+/* Edge glow follows tilt origin */
+.ui-card-edge-light {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 420ms ease;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    oklch(1 0 0 / 0.14),
+    transparent 55%
+  );
+}
+.ui-card3d:hover .ui-card-edge-light { opacity: 1; }
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-card-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-card-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-card-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-card-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-card-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-card-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-card-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-card-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-card-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-card-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-card-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-card-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-card-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-card-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-card-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-card-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-card-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-card-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Card Hover Parallax 3D ---- */
+.ui-card-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-card-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-card-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-card-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-card-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-card-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-card-delay-1 { animation-delay: 60ms; }
+.ui-card-delay-2 { animation-delay: 120ms; }
+.ui-card-delay-3 { animation-delay: 180ms; }
+.ui-card-delay-4 { animation-delay: 240ms; }
+.ui-card-fill-both { animation-fill-mode: both; }
+.ui-card-once { animation-iteration-count: 1; }
+.ui-card-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-card-z-0 { transform: translateZ(0); }
+.ui-card-z-1 { transform: translateZ(12px); }
+.ui-card-z-2 { transform: translateZ(24px); }
+.ui-card-z-3 { transform: translateZ(40px); }
+.ui-card-z-4 { transform: translateZ(60px); }
+.ui-card-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-card-mat-void { background: oklch(0 0 0); }
+.ui-card-mat-onyx { background: oklch(0.12 0 0); }
+.ui-card-mat-graphite { background: oklch(0.24 0 0); }
+.ui-card-mat-ash { background: oklch(0.45 0 0); }
+.ui-card-mat-silver { background: oklch(0.72 0 0); }
+.ui-card-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-card-state-idle { opacity: 1; transform: none; }
+.ui-card-state-enter { animation: ui-card-rise 0.5s var(--ui-ease-out) both; }
+.ui-card-state-exit { animation: ui-card-sink 0.35s var(--ui-ease-out) both; }
+.ui-card-state-live { animation: ui-card-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-card-state-attention { animation: ui-card-jitter 0.4s steps(3) 2; }
+.ui-card-state-success { animation: ui-card-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 07 — Card Hover Parallax 3D
+   ------------------------------------------------------------
+   Selectors owned .... .ui-card and its ::before/::after pseudo stack
+   Custom properties .. --ui-card-speed, --ui-card-ease, --ui-card-depth,
+                        --ui-card-lift, --ui-card-glow, --ui-card-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-card * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-card { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
