@@ -1,0 +1,47 @@
+/* 35 - Tooltips & popovers that arrive with attitude */
+.ui-tip {
+  position: absolute;
+  z-index: 80;
+  padding: 0.4rem 0.7rem;
+  border-radius: 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  background: oklch(0.16 0 0 / 0.92);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.18), 0 18px 40px -16px oklch(0 0 0 / 0.9);
+  opacity: 0;
+  transform: translate(-50%, 8px) scale(0.85) rotateX(-24deg);
+  transform-origin: 50% 100%;
+  transition: opacity 220ms ease, transform 380ms cubic-bezier(0.2, 1.5, 0.4, 1);
+  pointer-events: none;
+}
+
+[data-tip-open='true'] .ui-tip {
+  opacity: 1;
+  transform: translate(-50%, -4px) scale(1) rotateX(0deg);
+}
+
+/* Tiny pointer tooth */
+.ui-tip::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 8px;
+  height: 8px;
+  translate: -50% 0;
+  rotate: 45deg;
+  background: inherit;
+  box-shadow: inset -1px -1px 0 oklch(1 0 0 / 0.12);
+}
+
+/* Popover panels unfurl from their trigger */
+.ui-popover {
+  transform-origin: var(--pop-origin, 50% 0%);
+  animation: ui-unfurl 420ms var(--ui-ease-spring) both;
+}
+@keyframes ui-unfurl {
+  from { opacity: 0; transform: scale(0.86) rotateX(-18deg); filter: blur(6px); }
+  to   { opacity: 1; transform: scale(1) rotateX(0deg); filter: blur(0); }
+}

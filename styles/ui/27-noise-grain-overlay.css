@@ -1,0 +1,44 @@
+/* 27 - Film grain + ambient aurora: kills the flat digital look */
+.ui-grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 9990;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  animation: ui-grain-shift 0.9s steps(4) infinite;
+  mix-blend-mode: overlay;
+}
+
+@keyframes ui-grain-shift {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(-2%, 1%); }
+  50%  { transform: translate(1%, -2%); }
+  75%  { transform: translate(-1%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Soft aurora wash drifting behind everything */
+.ui-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(46% 38% at 18% 22%, oklch(1 0 0 / 0.05), transparent 70%),
+    radial-gradient(40% 34% at 82% 68%, oklch(1 0 0 / 0.04), transparent 70%);
+  animation: ui-aurora-drift 22s var(--ui-ease-in-out) infinite alternate;
+}
+@keyframes ui-aurora-drift {
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(2%, 2%, 0) scale(1.08); }
+}
+
+/* Subtle scanlines for the security section */
+.ui-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    oklch(1 0 0 / 0.025) 0 1px,
+    transparent 1px 4px
+  );
+}

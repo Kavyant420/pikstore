@@ -1,0 +1,45 @@
+/* 25 - Security pipeline rows: numbers flip, rows levitate */
+.ui-pipeline-row {
+  position: relative;
+  transform-style: preserve-3d;
+  transition:
+    transform 520ms var(--ui-ease-out),
+    background-color 420ms ease,
+    box-shadow 520ms ease;
+}
+
+.ui-pipeline-row:hover {
+  transform: translateX(10px) translateZ(18px);
+  background: linear-gradient(90deg, oklch(1 0 0 / 0.06), transparent 70%);
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.08);
+}
+
+/* Step number rotates in as a coin flip */
+.ui-pipeline-num {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  transition: transform 640ms var(--ui-ease-spring), color 300ms ease;
+}
+.ui-pipeline-row:hover .ui-pipeline-num {
+  transform: rotateX(360deg) scale(1.3);
+  color: oklch(1 0 0);
+}
+
+/* Connector beam flows downward */
+.ui-pipeline-beam {
+  position: absolute;
+  left: 1.4rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, oklch(1 0 0 / 0.5), transparent);
+  background-size: 100% 220%;
+  animation: ui-beam-flow 3s linear infinite;
+}
+@keyframes ui-beam-flow { to { background-position: 0 -220%; } }
+
+/* Shield scene container breathes on hover */
+.ui-shield-stage { transition: transform 900ms var(--ui-ease-out); }
+.ui-shield-stage:hover {
+  transform: perspective(900px) rotateY(-8deg) rotateX(4deg) scale(1.02);
+}

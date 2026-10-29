@@ -1,0 +1,45 @@
+/* 26 - Footer wordmark marquee + lifting links */
+.ui-footer-word {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.16), oklch(1 0 0 / 0.03));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: filter 700ms ease, transform 700ms var(--ui-ease-out);
+}
+.ui-footer-word:hover {
+  filter: drop-shadow(0 12px 30px oklch(1 0 0 / 0.25));
+  transform: translateY(-4px) skewX(-2deg);
+}
+
+/* Infinite ticker strip */
+.ui-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.ui-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 3rem;
+  animation: ui-marquee-run 26s linear infinite;
+}
+.ui-marquee:hover .ui-marquee-track { animation-play-state: paused; }
+@keyframes ui-marquee-run { to { transform: translateX(-50%); } }
+
+/* Links grow a floor that lifts them */
+.ui-footer-link {
+  position: relative;
+  transition: transform 380ms var(--ui-ease-spring), color 260ms ease;
+}
+.ui-footer-link::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -3px;
+  height: 1px;
+  background: oklch(1 0 0 / 0.6);
+  transform: scaleX(0);
+  transition: transform 380ms var(--ui-ease-out);
+}
+.ui-footer-link:hover { transform: translateY(-3px) translateZ(10px); }
+.ui-footer-link:hover::before { transform: scaleX(1); }

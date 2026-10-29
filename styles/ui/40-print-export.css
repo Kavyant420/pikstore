@@ -1,0 +1,52 @@
+/* 40 - Print & export polish */
+@media print {
+  :root { color-scheme: light; }
+
+  body {
+    background: white !important;
+    color: black !important;
+    perspective: none;
+  }
+
+  .ui-grain,
+  .ui-aurora,
+  .ui-spotlight,
+  .ui-cursor-dot,
+  .ui-cursor-halo,
+  .ui-progress-rail,
+  .ui-progress-topline,
+  .ui-island,
+  header,
+  nav,
+  [role='dialog'] { display: none !important; }
+
+  main > section {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    break-inside: avoid;
+  }
+
+  .glass, .ui-glass, .ui-glass-thick {
+    background: white !important;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: 1px solid #ccc;
+  }
+
+  .text-chrome, .ui-chrome-tide {
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    color: black !important;
+    text-shadow: none !important;
+  }
+
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 10px;
+    color: #555;
+  }
+}

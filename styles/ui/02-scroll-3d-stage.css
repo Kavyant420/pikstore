@@ -1,0 +1,43 @@
+/* 02 - Scroll-driven 3D stage for the page shell */
+html { scroll-behavior: smooth; }
+
+body {
+  perspective: var(--ui-perspective);
+  perspective-origin: 50% 30%;
+  overflow-x: hidden;
+}
+
+main { transform-style: preserve-3d; }
+
+/* Every top-level section lives on its own depth plane and eases
+   forward as it enters the viewport (native scroll timeline). */
+main > section {
+  transform-style: preserve-3d;
+  animation: ui-section-advance linear both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 42%;
+}
+
+@keyframes ui-section-advance {
+  from {
+    opacity: 0.15;
+    transform: translate3d(0, 9vh, -160px) rotateX(7deg) scale(0.94);
+    filter: blur(6px) saturate(70%);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
+    filter: blur(0) saturate(100%);
+  }
+}
+
+#library, #security { animation-range: entry 0% cover 46%; }
+
+/* Depth fog helper toggled by JS for distant planes */
+.ui-depth-fog { transition: filter var(--ui-dur-slow) var(--ui-ease-out); }
+.ui-depth-fog[data-far='true'] { filter: blur(2px) brightness(0.75); }
+
+/* Fallback when scroll timelines are unsupported: JS adds .is-visible */
+@supports not (animation-timeline: view()) {
+  main > section { animation: none; opacity: 1; transform: none; filter: none; }
+}

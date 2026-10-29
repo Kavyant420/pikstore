@@ -1,0 +1,58 @@
+/* 39 - Accessibility: honor prefers-reduced-motion completely */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html { scroll-behavior: auto; }
+
+  body { perspective: none; }
+  main > section {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .ui-card3d,
+  .ui-spotlight-tile,
+  .tilt { transform: none !important; }
+
+  [data-ui-stagger] > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .ui-parallax,
+  .ui-parallax-slow,
+  .ui-parallax-fast,
+  .ui-parallax-field > * { transform: none !important; }
+
+  .ui-cursor-dot,
+  .ui-cursor-halo,
+  .ui-spotlight,
+  .ui-grain { display: none !important; }
+
+  .ui-magnet { transform: none !important; }
+
+  .ui-focusable:focus-visible::after { animation: none; }
+}
+
+/* Class-based opt-out (calm mode toggled by JS) */
+html[data-calm='true'] .ui-grain,
+html[data-calm='true'] .ui-cursor-dot,
+html[data-calm='true'] .ui-cursor-halo,
+html[data-calm='true'] .ui-spotlight { display: none; }
+
+html[data-calm='true'] main > section {
+  animation: none !important;
+  opacity: 1;
+  transform: none;
+  filter: none;
+}

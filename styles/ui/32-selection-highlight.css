@@ -1,0 +1,32 @@
+/* 32 - Selection & clipboard feedback */
+::selection {
+  background: oklch(1 0 0);
+  color: oklch(0.1 0 0);
+  text-shadow: none;
+}
+
+/* Copied flash: element briefly turns into light */
+.ui-copied-flash { animation: ui-copied 640ms var(--ui-ease-out); }
+@keyframes ui-copied {
+  0%   { box-shadow: 0 0 0 0 oklch(1 0 0 / 0.7); }
+  40%  { box-shadow: 0 0 0 8px oklch(1 0 0 / 0); background: oklch(1 0 0 / 0.18); }
+  100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); }
+}
+
+/* Hash text gets a decode flicker when revealed */
+.ui-decode {
+  font-variant-ligatures: none;
+  animation: ui-decode 900ms steps(14) 1;
+}
+@keyframes ui-decode {
+  from { opacity: 0.2; filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+
+/* Selectable wells */
+.ui-selectable-well { caret-shape: bar; user-select: text; }
+.ui-selectable-well::selection { background: oklch(1 0 0 / 0.9); }
+
+/* Long-press feedback for touch copy */
+.ui-pressable { -webkit-touch-callout: default; transition: transform 160ms ease; }
+.ui-pressable:active { transform: scale(0.985); }

@@ -1,0 +1,47 @@
+/* 15 - Category pills: springy selection with an orbiting halo */
+.ui-pill {
+  position: relative;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--ui-dur-base) var(--ui-ease-spring),
+    color var(--ui-dur-base) ease,
+    background-color var(--ui-dur-base) ease,
+    box-shadow var(--ui-dur-base) ease;
+}
+
+.ui-pill:hover {
+  transform: translateY(-3px) translateZ(10px) scale(1.04);
+  box-shadow: 0 16px 30px -16px oklch(0 0 0 / 0.9);
+}
+
+.ui-pill:active { transform: translateY(1px) scale(0.96); transition-duration: 70ms; }
+
+/* Selected pill breathes with an orbit dot */
+.ui-pill[aria-selected='true'] { animation: ui-glow-pulse 3.2s var(--ui-ease-in-out) infinite; }
+.ui-pill[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: calc(50% - 2.5px);
+  width: 5px;
+  height: 5px;
+  border-radius: 99px;
+  background: oklch(1 0 0);
+  box-shadow: 0 0 10px oklch(1 0 0 / 0.9);
+  transform-origin: 2.5px 22px;
+  animation: ui-spin-slow 5s linear infinite;
+}
+
+/* Horizontal drag inertia feel */
+.ui-pill-rail { scroll-snap-type: x proximity; overscroll-behavior-x: contain; }
+.ui-pill-rail .ui-pill { scroll-snap-align: center; }
+
+/* Reveal cascade when the rail enters view */
+.ui-pill-rail .ui-pill {
+  opacity: 0;
+  transform: translateY(14px) scale(0.92);
+  transition:
+    opacity 480ms var(--ui-ease-out) calc(var(--i, 0) * 45ms),
+    transform 620ms var(--ui-ease-spring) calc(var(--i, 0) * 45ms);
+}
+.ui-pill-rail.is-visible .ui-pill { opacity: 1; transform: none; }

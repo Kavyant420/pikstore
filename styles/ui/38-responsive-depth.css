@@ -1,0 +1,40 @@
+/* 38 - Depth budget per breakpoint: heavy desktop, light mobile */
+@media (max-width: 1023px) {
+  :root {
+    --ui-perspective: 1000px;
+    --ui-depth-scale: 0.6;
+    --ui-parallax-strength: 0.55;
+    --ui-cursor-size: 320px;
+  }
+}
+
+@media (max-width: 639px) {
+  :root {
+    --ui-depth-scale: 0.35;
+    --ui-parallax-strength: 0.3;
+    --ui-reveal-distance: 20px;
+    --ui-glass-blur: 18px;
+  }
+
+  /* Cheaper effects on small GPUs */
+  .ui-rim::before,
+  .ui-card-edge-light { display: none; }
+
+  main > section { animation-range: entry 0% cover 30%; }
+
+  .ui-spotlight { --ui-cursor-size: 220px; }
+}
+
+/* Large displays get the full theatre treatment */
+@media (min-width: 1440px) {
+  :root {
+    --ui-depth-scale: 1.25;
+    --ui-cursor-size: 620px;
+    --ui-glass-blur: 30px;
+  }
+}
+
+/* Ultrawide: tame the parallax so nothing flies off stage */
+@media (min-width: 2200px) {
+  :root { --ui-parallax-strength: 0.7; }
+}

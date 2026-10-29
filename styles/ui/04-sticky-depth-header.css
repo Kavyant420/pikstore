@@ -1,0 +1,62 @@
+/* 04 - Header that compresses into a floating glass puck on scroll */
+.ui-header-shell {
+  transition:
+    transform var(--ui-dur-base) var(--ui-ease-out),
+    opacity var(--ui-dur-base) var(--ui-ease-out);
+  transform-style: preserve-3d;
+}
+
+.ui-header-bar {
+  transition:
+    height var(--ui-dur-base) var(--ui-ease-spring),
+    max-width var(--ui-dur-base) var(--ui-ease-out),
+    box-shadow var(--ui-dur-base) var(--ui-ease-out),
+    transform var(--ui-dur-base) var(--ui-ease-out);
+  transform-style: preserve-3d;
+}
+
+.ui-header-shell[data-scrolled='true'] .ui-header-bar {
+  --glass-blur: 34px;
+  height: 3.25rem;
+  max-width: 56rem;
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.22),
+    0 18px 44px -18px oklch(0 0 0 / 0.9),
+    0 0 0 1px oklch(1 0 0 / 0.06);
+  transform: rotateX(4deg) translateZ(12px);
+}
+
+/* Hide on fast scroll-down, spring back on scroll-up */
+.ui-header-shell[data-hidden='true'] {
+  transform: translateY(-140%) rotateX(22deg);
+  opacity: 0;
+}
+
+.ui-header-shell .brand-mark {
+  transition: transform var(--ui-dur-base) var(--ui-ease-spring);
+}
+.ui-header-shell:hover .brand-mark {
+  transform: rotateY(180deg) translateZ(20px);
+}
+
+/* Nav links get a rising 3D underline slab */
+.ui-nav-link {
+  position: relative;
+  transform-style: preserve-3d;
+}
+.ui-nav-link::after {
+  content: '';
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: oklch(1 0 0 / 0.9);
+  transform: scaleX(0) translateZ(6px);
+  transform-origin: center;
+  transition: transform var(--ui-dur-base) var(--ui-ease-spring);
+  box-shadow: 0 4px 10px oklch(0 0 0 / 0.5);
+}
+.ui-nav-link:hover::after,
+.ui-nav-link[aria-current='true']::after { transform: scaleX(1) translateZ(6px); }

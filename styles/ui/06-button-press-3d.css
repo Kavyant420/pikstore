@@ -1,0 +1,61 @@
+/* 06 - Physical button press: extruded edge that depresses in Z */
+.ui-btn3d {
+  position: relative;
+  transform-style: preserve-3d;
+  transition:
+    transform 160ms var(--ui-ease-out),
+    box-shadow 220ms var(--ui-ease-out),
+    filter 220ms ease;
+}
+
+.ui-btn3d::after {
+  /* the side wall of the key */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  translate: 0 4px -6px;
+  background: oklch(0 0 0 / 0.55);
+  transition: translate 160ms var(--ui-ease-out);
+  z-index: -1;
+}
+
+.ui-btn3d:hover {
+  transform: translateY(-2px) rotateX(7deg);
+  filter: brightness(1.06);
+}
+.ui-btn3d:hover::after { translate: 0 7px -8px; }
+
+.ui-btn3d:active {
+  transform: translateY(3px) rotateX(0deg) scale(0.98);
+  transition-duration: 60ms;
+}
+.ui-btn3d:active::after { translate: 0 1px -2px; }
+
+/* Glossy sweep across the cap on hover */
+.ui-btn3d-cap { position: relative; overflow: hidden; }
+.ui-btn3d-cap .gloss {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 38%;
+  background: linear-gradient(100deg, transparent, oklch(1 0 0 / 0.5), transparent);
+  transform: skewX(-18deg) translateX(-220%);
+  pointer-events: none;
+}
+.ui-btn3d:hover .gloss { animation: ui-slide-track 900ms var(--ui-ease-out); }
+
+/* Ripple host */
+.ui-ripple-host { position: relative; overflow: hidden; }
+.ui-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, oklch(1 0 0 / 0.5), oklch(1 0 0 / 0.1) 60%, transparent 70%);
+  transform: scale(0);
+  opacity: 0.85;
+  pointer-events: none;
+  animation: ui-ripple-grow 620ms var(--ui-ease-out) forwards;
+}
+@keyframes ui-ripple-grow {
+  to { transform: scale(2.6); opacity: 0; }
+}

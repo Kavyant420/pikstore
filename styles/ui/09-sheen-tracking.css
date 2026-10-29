@@ -1,0 +1,51 @@
+/* 09 - Pointer-tracked specular sheen for any surface */
+.ui-sheen { position: relative; isolation: isolate; }
+
+.ui-sheen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 520ms var(--ui-ease-out);
+  background:
+    radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / var(--ui-sheen-opacity)),
+      transparent 46%
+    ),
+    conic-gradient(
+      from var(--sheen-angle, 140deg) at var(--mx, 50%) var(--my, 50%),
+      transparent 0deg,
+      oklch(1 0 0 / 0.05) 40deg,
+      transparent 90deg
+    );
+}
+
+.ui-sheen:hover::after,
+.ui-sheen[data-active='true']::after { opacity: 1; }
+
+/* Rim light: the border brightens nearest the cursor */
+.ui-rim { position: relative; }
+.ui-rim::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: radial-gradient(
+    260px circle at var(--mx, 50%) var(--my, 50%),
+    oklch(1 0 0 / var(--ui-rim-opacity)),
+    oklch(1 0 0 / 0.06) 55%,
+    transparent 75%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+.ui-rim:hover::before { opacity: 1; }
