@@ -4,12 +4,13 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import type { StoreApp } from '@/lib/catalog'
 import { detectArch, detectPlatform, type Platform } from '@/lib/platform'
 import type { ScanReport } from '@/lib/scan-types'
+import { buildTrustProfile, shouldAutoDownload, type TrustProfile } from '@/lib/ai-security'
 
 export type Notice = { id: number; app: StoreApp; title: string; detail: string }
 
 export type InstallState =
   | { id: number; app: StoreApp; platform: Platform; phase: 'scanning' }
-  | { id: number; app: StoreApp; platform: Platform; phase: 'result'; report: ScanReport; downloaded: boolean }
+  | { id: number; app: StoreApp; platform: Platform; phase: 'result'; report: ScanReport; downloaded: boolean; trust: TrustProfile }
   | { id: number; app: StoreApp; platform: Platform; phase: 'unavailable' }
   | { id: number; app: StoreApp; platform: Platform; phase: 'error'; message: string }
 
@@ -73,6 +74,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     activeScan.current = id
     setInstallState({ id, app, platform: target, phase: 'scanning' })
     setInstallOpen(true)
+    // Premium FX: kick off the liquid progress choreography on the card/button
+    window.dispatchEvent(new CustomEvent('ui:download-start', { detail: { appId: app.id, durationMs: MIN_SCAN_MS + 400 } }))
 
     const started = performance.now()
     const params = new URLSearchParams({ owner: app.owner, repo: app.repo, platform: target, arch: detectArch(target) })
@@ -85,7 +88,10 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       } else if (!res.ok) {
         next = { id, app, platform: target, phase: 'error', message: body.error ?? 'The scan could not be completed.' }
       } else {
-        next = { id, app, platform: target, phase: 'result', report: body as ScanReport, downloaded: false }
+        const report = body as ScanReport
+        // AI security layer: explainable ensemble trust profile
+        const trust = buildTrustProfile(app.id, `${app.owner}/${app.repo}`, app.stars ?? 0, report)
+        next = { id, app, platform: target, phase: 'result', report, downloaded: false, trust }
       }
     } catch {
       next = { id, app, platform: target, phase: 'error', message: 'Network error. Check your connection.' }
@@ -95,11 +101,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     if (elapsed < MIN_SCAN_MS) await new Promise((r) => setTimeout(r, MIN_SCAN_MS - elapsed))
     if (activeScan.current !== id) return
 
-    if (next.phase === 'result' && next.report.verdict === 'clean') {
-      const ok = startDownload(next.report.file.url)
-      next = { ...next, downloaded: ok }
-      if (ok) {
-        setNotice({ id, app, title: `Downloading ${app.name}`, detail: `Verified · ${next.report.file.name}` })
+    if (next.phase === 'result') {
+      // Double gate: static scan verdict AND AI trust band must agree
+      // before we silently start the download. Otherwise the dialog
+      // shows the reasoning and lets the user decide.
+      if (shouldAutoDownload(next.report, next.trust)) {
+        const ok = startDownload(next.report.file.url)
+        next = { ...next, downloaded: ok }
+        if (ok) {
+          setNotice({ id, app, title: `Downloading ${app.name}`, detail: `PikShield ${next.trust.score}/100 · ${next.report.file.name}` })
+        }
+      } else if (next.report.verdict === 'clean') {
+        window.dispatchEvent(new CustomEvent('ui:shield-hold', { detail: { appId: app.id, band: next.trust.band } }))
       }
     }
     setInstallState(next)

@@ -1,10 +1,11 @@
 'use client'
 
 import { Dialog } from '@base-ui/react/dialog'
-import { AlertTriangle, ArrowDown, Check, Minus, RotateCw, ShieldAlert, ShieldCheck, ShieldQuestion, X } from 'lucide-react'
+import { AlertTriangle, ArrowDown, Check, Brain, Minus, RotateCw, ShieldAlert, ShieldCheck, ShieldQuestion, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { PLATFORM_LABEL, formatBytes } from '@/lib/platform'
 import type { ScanCheck, ScanReport } from '@/lib/scan-types'
+import type { TrustProfile } from '@/lib/ai-security'
 import { cn } from '@/lib/utils'
 import { AppIcon } from './app-icon'
 import { useStore } from './store-provider'
@@ -13,8 +14,79 @@ const STEPS = [
   'Resolving the official release',
   'Verifying SHA-256 fingerprint',
   'Querying antivirus engines',
+  'Running PikShield AI ensemble',
   'Analyzing file and publisher',
 ]
+
+/** Animated radial trust gauge — pure black & white premium. */
+function TrustGauge({ profile }: { profile: TrustProfile }) {
+  const [shown, setShown] = useState(0)
+  useEffect(() => {
+    let raf = 0
+    const start = performance.now()
+    const dur = 1100
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / dur)
+      setShown(Math.round(profile.score * (1 - Math.pow(1 - t, 3))))
+      if (t < 1) raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [profile.score])
+
+  const ring =
+    profile.band === 'risk'
+      ? 'bg-foreground text-background'
+      : profile.band === 'premium'
+        ? 'bg-foreground text-background shadow-[0_0_28px_4px_oklch(1_0_0/0.25)]'
+        : 'border border-foreground text-foreground'
+
+  return (
+    <div className="flex items-center gap-4 rounded-3xl border border-border p-4">
+      <div
+        className={cn('flex size-16 shrink-0 items-center justify-center rounded-full font-mono text-lg font-bold tabular-nums transition-shadow duration-700', ring)}
+        role="img"
+        aria-label={`AI trust score ${profile.score} out of 100`}
+      >
+        {shown}
+      </div>
+      <div className="flex min-w-0 flex-col gap-1">
+        <span className="flex items-center gap-2 text-sm font-semibold">
+          <Brain className="size-4" strokeWidth={1.75} aria-hidden="true" />
+          PikShield AI · {profile.band.toUpperCase()}
+        </span>
+        <p className="text-pretty text-[13px] leading-relaxed text-muted-foreground">{profile.headline}</p>
+      </div>
+    </div>
+  )
+}
+
+/** Explainable per-signal bars from the AI ensemble. */
+function SignalBars({ profile }: { profile: TrustProfile }) {
+  return (
+    <ul className="flex flex-col gap-2.5" aria-label="AI security signals">
+      {profile.signals.map((s, i) => (
+        <li key={s.id} className="flex flex-col gap-1">
+          <div className="flex items-center justify-between gap-2 text-xs">
+            <span className="font-semibold">{s.label}</span>
+            <span className="font-mono text-muted-foreground tabular-nums">{Math.round(s.score * 100)}</span>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-muted" style={{ perspective: '240px' }}>
+            <div
+              className="h-full origin-left rounded-full bg-foreground transition-transform duration-700 ease-out"
+              style={{
+                transform: `scaleX(${s.score}) rotateX(${(i % 2 === 0 ? 1 : -1) * 4}deg)`,
+                boxShadow: '0 0 10px oklch(1 0 0 / 0.35)',
+                transitionDelay: `${i * 90}ms`,
+              }}
+            />
+          </div>
+          <span className="text-pretty text-[12px] leading-relaxed text-muted-foreground">{s.detail}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 function ScanningView() {
   const [step, setStep] = useState(0)
@@ -133,7 +205,7 @@ function FileCard({ report }: { report: ScanReport }) {
   )
 }
 
-function ResultView({ report, downloaded }: { report: ScanReport; downloaded: boolean }) {
+function ResultView({ report, downloaded, trust }: { report: ScanReport; downloaded: boolean; trust: TrustProfile }) {
   const { confirmDownload, closeInstall } = useStore()
   const [acknowledged, setAcknowledged] = useState(false)
   const { verdict } = report
@@ -144,7 +216,9 @@ function ResultView({ report, downloaded }: { report: ScanReport; downloaded: bo
   const summary =
     verdict === 'clean'
       ? downloaded
-        ? 'Every check passed. Your download has started.'
+        ? trust.band === 'watch' || trust.band === 'risk'
+          ? 'Engine checks passed, but the AI ensemble flagged advisory signals — review them below.'
+          : 'Every check and the AI ensemble agree. Your download has started.'
         : 'Every check passed. Your browser blocked the automatic download.'
       : verdict === 'caution'
         ? 'Some checks need your attention before you install this file.'
@@ -179,6 +253,9 @@ function ResultView({ report, downloaded }: { report: ScanReport; downloaded: bo
           <CheckRow key={check.id} check={check} />
         ))}
       </ul>
+
+      <TrustGauge profile={trust} />
+      <SignalBars profile={trust} />
 
       <FileCard report={report} />
 
@@ -267,7 +344,7 @@ export function ScanDialog() {
                 </Dialog.Close>
 
                 {state.phase === 'scanning' && <ScanningView key={state.id} />}
-                {state.phase === 'result' && <ResultView key={state.id} report={state.report} downloaded={state.downloaded} />}
+                {state.phase === 'result' && <ResultView key={state.id} report={state.report} downloaded={state.downloaded} trust={state.trust} />}
                 {state.phase === 'unavailable' && (
                   <div className="flex flex-col gap-5">
                     <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
