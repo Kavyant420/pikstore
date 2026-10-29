@@ -15,6 +15,7 @@ import { SecuritySection } from './security-section'
 import { SiteFooter } from './site-footer'
 import { SiteHeader } from './site-header'
 import { StoreProvider, useStore } from './store-provider'
+import { UiFoundryProvider } from '@/components/ui/foundry-provider'
 import { UniverseResults } from './universe-results'
 
 function Library({ query, onQueryChange }: { query: string; onQueryChange: (v: string) => void }) {
@@ -88,6 +89,7 @@ export function Storefront() {
   }
 
   return (
+    <UiFoundryProvider>
     <StoreProvider>
       <SiteHeader query={query} onQueryChange={setQuery} onSearchSubmit={focusLibrary} />
       <main>
@@ -102,5 +104,6 @@ export function Storefront() {
       <DownloadIsland />
       <MobileTabBar />
     </StoreProvider>
+    </UiFoundryProvider>
   )
 }

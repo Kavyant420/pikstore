@@ -1,0 +1,217 @@
+/* =====================================================================
+   styles/ui/41-get-button-physics.css — Get button download choreography
+   Drives the liquid fill inside [data-ui-busy-scope] hosts while a scan
+   runs, plus success/fail micro-feedback. Pure black & white premium FX.
+   ===================================================================== */
+
+[data-ui-busy-scope] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Liquid fill layer — width driven by --progress written by JS */
+[data-ui-busy-scope]::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--progress, 0%);
+  z-index: -1;
+  background: linear-gradient(
+    100deg,
+    oklch(1 0 0 / 0.28) 0%,
+    oklch(1 0 0 / 0.16) 45%,
+    oklch(1 0 0 / 0.3) 100%
+  );
+  box-shadow:
+    inset 0 0 12px oklch(1 0 0 / 0.18),
+    0 0 18px oklch(1 0 0 / 0.12);
+  opacity: 0;
+  transition:
+    width 120ms linear,
+    opacity 240ms var(--ui-ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  will-change: width, opacity;
+  pointer-events: none;
+}
+
+[data-ui-busy-scope].ui-downloading::before {
+  opacity: 1;
+  animation: ui-busy-shimmer 1.15s linear infinite;
+  background-size: 220% 100%;
+}
+
+@keyframes ui-busy-shimmer {
+  from { background-position: -180% 0; }
+  to   { background-position: 180% 0; }
+}
+
+/* Sweeping sheen rail while busy */
+[data-ui-busy-scope]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 34%;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.22), transparent);
+  transform: skewX(-18deg) translate3d(0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-ui-busy-scope].ui-downloading::after {
+  opacity: 1;
+  animation: ui-busy-sweep 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes ui-busy-sweep {
+  from { left: -40%; }
+  to   { left: 130%; }
+}
+
+/* Busy state: subtle depth lift + breathing halo */
+[data-ui-busy-scope].ui-downloading {
+  transform: translateZ(0) scale(1.02);
+  box-shadow:
+    0 10px 28px -12px oklch(0 0 0 / 0.7),
+    0 0 0 1px oklch(1 0 0 / 0.14),
+    0 0 22px 2px oklch(1 0 0 / 0.08);
+  animation: ui-busy-breathe 1.6s ease-in-out infinite;
+}
+
+@keyframes ui-busy-breathe {
+  0%, 100% { box-shadow: 0 10px 28px -12px oklch(0 0 0 / 0.7), 0 0 0 1px oklch(1 0 0 / 0.14), 0 0 18px 1px oklch(1 0 0 / 0.06); }
+  50%      { box-shadow: 0 12px 32px -12px oklch(0 0 0 / 0.75), 0 0 0 1px oklch(1 0 0 / 0.22), 0 0 30px 4px oklch(1 0 0 / 0.12); }
+}
+
+/* Success flash — check pop */
+[data-ui-busy-scope].ui-download-done {
+  animation: ui-done-pop 480ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+[data-ui-busy-scope].ui-download-done::before {
+  opacity: 1;
+  width: 100%;
+  background: linear-gradient(120deg, oklch(1 0 0 / 0.34), oklch(1 0 0 / 0.18));
+  animation: ui-done-fade 900ms ease-out 300ms forwards;
+}
+
+@keyframes ui-done-pop {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.08); }
+  70%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ui-done-fade {
+  to { opacity: 0; }
+}
+
+/* Failure shake */
+[data-ui-busy-scope].ui-download-fail {
+  animation: ui-fail-shake 420ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+[data-ui-busy-scope].ui-download-fail::before {
+  opacity: 0;
+}
+
+@keyframes ui-fail-shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+/* Scanning label letters drift like a scanner readout */
+.ui-scanning-label {
+  display: inline-flex;
+  gap: 0.5px;
+}
+
+.ui-scanning-label > span {
+  display: inline-block;
+  animation: ui-scan-letter 1.2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 70ms);
+  opacity: 0.55;
+}
+
+@keyframes ui-scan-letter {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50%      { transform: translateY(-3px); opacity: 1; }
+}
+
+/* Orbiting shield dots around the busy button */
+.ui-orbit-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
+[data-ui-busy-scope].ui-downloading .ui-orbit-ring {
+  opacity: 1;
+  animation: ui-orbit-spin 2.4s linear infinite;
+}
+
+.ui-orbit-ring::before,
+.ui-orbit-ring::after {
+  content: '';
+  position: absolute;
+  size: 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 9999px;
+  background: oklch(1 0 0 / 0.85);
+  box-shadow: 0 0 8px 2px oklch(1 0 0 / 0.4);
+}
+
+.ui-orbit-ring::before { top: 0; left: 50%; }
+.ui-orbit-ring::after  { bottom: 0; left: 50%; }
+
+@keyframes ui-orbit-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Reduced motion: keep information, drop movement */
+@media (prefers-reduced-motion: reduce) {
+  [data-ui-busy-scope].ui-downloading {
+    animation: none;
+    transform: none;
+  }
+  [data-ui-busy-scope].ui-downloading::before {
+    animation: none;
+    background: oklch(1 0 0 / 0.2);
+  }
+  [data-ui-busy-scope].ui-downloading::after {
+    animation: none;
+    opacity: 0;
+  }
+  [data-ui-busy-scope].ui-download-done,
+  [data-ui-busy-scope].ui-download-fail {
+    animation: none;
+  }
+  .ui-scanning-label > span {
+    animation: none;
+    opacity: 1;
+  }
+  .ui-orbit-ring { display: none; }
+}
+
+/* High-contrast premium fallback */
+@media (forced-colors: active) {
+  [data-ui-busy-scope]::before { background: CanvasText; opacity: 0.3; }
+}
+
+/* Depth budget tiers (mobile flattens per file 38 contract) */
+@media (max-width: 640px) {
+  [data-ui-busy-scope].ui-downloading {
+    transform: none;
+    box-shadow: 0 0 0 1px oklch(1 0 0 / 0.18);
+    animation: none;
+  }
+  [data-ui-busy-scope]::after { display: none; }
+}

@@ -6,56 +6,112 @@
  */
 import { IS_BROWSER, emitUi, prefersReducedMotion, setVar, tween } from './dom'
 
-type Track = HTMLElement & { _uiCancel?: () => void }
-
-function trackFor(appId: string): Track | null {
-  return document.querySelector<Track>(`[data-ui-progress-for="${CSS.escape(appId)}"]`)
+type Session = {
+  timer: number
+  cancel: () => void
 }
 
-function runProgress(track: Track, durationMs = 2600): void {
+const sessions = new Map<string, Session>()
+
+function finish(appId: string, host: HTMLElement, ok: boolean): void {
+  const prev = sessions.get(appId)
+  if (prev) {
+    window.clearTimeout(prev.timer)
+    prev.cancel()
+    sessions.delete(appId)
+  }
+  delete host.dataset.uiBusy
+  host.classList.remove('ui-downloading')
+  host.classList.add(ok ? 'ui-download-done' : 'ui-download-fail')
+  window.setTimeout(() => host.classList.remove('ui-download-done', 'ui-download-fail'), 1500)
+  setVar(host, '--progress', ok ? '100%' : '0%')
+  emitUi(host, 'download-complete', { appId, ok })
+}
+
+/**
+ * Run the liquid progress choreography on the Get button host itself
+ * (the element carrying `data-ui-busy-scope`). Works even when no card
+ * track exists — the fill is driven by the --progress custom property.
+ */
+function runProgress(appId: string, durationMs = 2600): void {
+  if (!IS_BROWSER) return
+  const hosts = Array.from(
+    document.querySelectorAll<HTMLElement>(`[data-ui-progress-for="${CSS.escape(appId)}"], [data-ui-busy-scope="${CSS.escape(appId)}"]`),
+  )
+  if (hosts.length === 0) return
+  const primary = hosts[0]
+  for (const host of hosts) {
+    host.dataset.uiBusy = 'true'
+    host.classList.add('ui-downloading')
+    host.classList.remove('ui-download-done', 'ui-download-fail')
+    setVar(host, '--progress', '0%')
+  }
+
   if (prefersReducedMotion()) {
-    setVar(track, '--progress', '100%')
+    const timer = window.setTimeout(() => {
+      for (const host of hosts) finish(appId, host, true)
+    }, Math.min(durationMs, 600))
+    sessions.set(appId, { timer, cancel: () => {} })
     return
   }
-  track._uiCancel?.()
-  const liquid = track.querySelector<HTMLElement>('.ui-progress-liquid')
+
+  const liquid = primary.querySelector<HTMLElement>('.ui-progress-liquid')
   if (liquid) liquid.classList.add('ui-progress-stripes')
   let lastPct = -1
-  track._uiCancel = tween(0, 100, durationMs, (v) => {
-    const pct = Math.round(v)
-    if (pct === lastPct) return
-    lastPct = pct
-    setVar(track, '--progress', `${pct}%`)
-    if (track.dataset.uiBar) setVar(document.documentElement, track.dataset.uiBar, pct / 100)
-  }, (t) => 1 - Math.pow(1 - t, 2.4))
-  window.setTimeout(() => {
+  const cancel = tween(
+    0,
+    100,
+    durationMs,
+    (v) => {
+      const pct = Math.round(v)
+      if (pct === lastPct) return
+      lastPct = pct
+      for (const host of hosts) setVar(host, '--progress', `${pct}%`)
+      if (primary.dataset.uiBar) setVar(document.documentElement, primary.dataset.uiBar, pct / 100)
+    },
+    (t) => 1 - Math.pow(1 - t, 2.4),
+  )
+  const timer = window.setTimeout(() => {
     if (liquid) liquid.classList.remove('ui-progress-stripes')
-    const burst = document.createElement('span')
-    burst.className = 'ui-progress-burst'
-    track.appendChild(burst)
-    burst.addEventListener('animationend', () => burst.remove(), { once: true })
-    emitUi(track, 'download-complete', { appId: track.dataset.uiProgressFor })
+    for (const host of hosts) {
+      const burst = document.createElement('span')
+      burst.className = 'ui-progress-burst'
+      host.appendChild(burst)
+      burst.addEventListener('animationend', () => burst.remove(), { once: true })
+      finish(appId, host, true)
+    }
   }, durationMs + 80)
+  sessions.set(appId, { timer, cancel })
+}
+
+/** Abort a running simulation (used when the real flow errors out). */
+export function abortProgress(appId: string): void {
+  if (!IS_BROWSER) return
+  const hosts = Array.from(
+    document.querySelectorAll<HTMLElement>(`[data-ui-progress-for="${CSS.escape(appId)}"], [data-ui-busy-scope="${CSS.escape(appId)}"]`),
+  )
+  for (const host of hosts) finish(appId, host, false)
 }
 
 export function mountDownloadPhysics(): () => void {
   if (!IS_BROWSER) return () => {}
 
   const onStart = (e: Event) => {
-    const detail = (e as CustomEvent<{ appId?: string }>).detail
+    const detail = (e as CustomEvent<{ appId?: string; durationMs?: number }>).detail
     if (!detail?.appId) return
-    const track = trackFor(detail.appId)
-    if (track) runProgress(track)
+    runProgress(detail.appId, detail.durationMs ?? 2600)
   }
 
   window.addEventListener('ui:download-start', onStart)
-  return () => window.removeEventListener('ui:download-start', onStart)
+  return () => {
+    window.removeEventListener('ui:download-start', onStart)
+    for (const id of Array.from(sessions.keys())) abortProgress(id)
+  }
 }
 
 /** Helper other modules/buttons can call directly. */
 export function pulseProgress(appId: string, durationMs?: number): void {
-  const track = trackFor(appId)
-  if (track) runProgress(track, durationMs)
+  runProgress(appId, durationMs)
 }
 
 /* ------------------------------------------------------------------
@@ -94,8 +150,10 @@ const bound = new WeakMap<HTMLElement, () => void>()
 registerdownload_physics({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountDownloadPhysics(el)
-    if (typeof off === 'function') bound.set(el, off)
+    // Hosts are event-driven: the window listener registered by
+    // mountDownloadPhysics reacts to ui:download-start events carrying
+    // this host's appId. Binding simply marks the element as managed.
+    if (el instanceof HTMLElement) bound.set(el, () => {})
   },
   release(el) {
     const off = bound.get(el)

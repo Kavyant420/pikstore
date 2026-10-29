@@ -124,8 +124,8 @@ export function nextFrames(n: number): Promise<void> {
     let i = n
     const step = () => (--i > 0 ? requestAnimationFrame(step) : resolve())
     requestAnimationFrame(step)
-  }))
-
+  })
+}
 
 /** Element visibility heuristic that avoids getBoundingClientRect cost. */
 export function likelyVisible(el: HTMLElement): boolean {
