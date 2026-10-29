@@ -34,7 +34,9 @@ function SheetBody({ app }: { app: StoreApp }) {
 
   return (
     <div className="no-scrollbar max-h-[92dvh] overflow-y-auto">
-      <div className="flex flex-col gap-7 p-5 sm:p-7">
+      {/* `min-h-full` + centering keeps content vertically centered inside the card
+          when it's short, and falls back to normal top-aligned scrolling when it overflows. */}
+      <div className="flex min-h-full flex-col justify-center gap-7 p-5 sm:p-7">
         <div className="flex flex-col gap-5 pr-10 sm:flex-row sm:items-end sm:justify-between sm:pr-0">
           <div className="flex items-center gap-4">
             <AppIcon app={app} className="size-20 sm:size-24" />
