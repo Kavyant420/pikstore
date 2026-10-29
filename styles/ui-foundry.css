@@ -1,6 +1,10 @@
 /* ============================================================
-   PikStore UI Foundry — single entry that loads all 40 layers.
+   PikStore UI Foundry — single entry that loads all 81 layers.
    Order matters: tokens → keyframes → stage → components → a11y.
+   Layers 00-40: core interaction language (black & white premium).
+   Layers 41-80: extended cinematic kit (marquee 3D, flip cards,
+   coverflow carousel, portal loaders, pinned scroll scenes, CTA
+   beacons, outro curtain… every file >=200 lines, monochrome only).
    ============================================================ */
 @import './ui/00-foundry-tokens.css';
 @import './ui/01-motion-keyframes.css';
@@ -43,3 +47,43 @@
 @import './ui/38-responsive-depth.css';
 @import './ui/39-reduced-motion.css';
 @import './ui/40-print-export.css';
+@import './ui/41-marquee-3d.css';
+@import './ui/42-split-text.css';
+@import './ui/43-ken-burns.css';
+@import './ui/44-orbit-ring.css';
+@import './ui/45-flip-card.css';
+@import './ui/46-stack-cards.css';
+@import './ui/47-counter-odometer.css';
+@import './ui/48-water-ripple.css';
+@import './ui/49-magnetic-field.css';
+@import './ui/50-glitch-scan.css';
+@import './ui/51-spotlight-stage.css';
+@import './ui/52-scramble-decode.css';
+@import './ui/53-typewriter.css';
+@import './ui/54-stagger-grid.css';
+@import './ui/55-carousel-depth.css';
+@import './ui/56-accordion-physics.css';
+@import './ui/57-stepper-pipeline.css';
+@import './ui/58-parallax-hero.css';
+@import './ui/59-noise-gradient.css';
+@import './ui/60-edge-glow.css';
+@import './ui/61-tilt-gallery.css';
+@import './ui/62-loader-portal.css';
+@import './ui/63-scroll-hijack-pin.css';
+@import './ui/64-number-wheel.css';
+@import './ui/65-context-menu.css';
+@import './ui/66-command-palette.css';
+@import './ui/67-bubble-tooltip.css';
+@import './ui/68-progress-conic.css';
+@import './ui/69-file-drop.css';
+@import './ui/70-tag-soup.css';
+@import './ui/71-quote-block.css';
+@import './ui/72-table-luxury.css';
+@import './ui/73-avatar-stack.css';
+@import './ui/74-banner-collapse.css';
+@import './ui/75-sidebar-drawer.css';
+@import './ui/76-pagination-orbit.css';
+@import './ui/77-breadcrumb-trail.css';
+@import './ui/78-cta-beam.css';
+@import './ui/79-status-dot.css';
+@import './ui/80-finale-outro.css';

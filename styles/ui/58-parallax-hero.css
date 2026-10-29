@@ -1,0 +1,205 @@
+/* ============================================================
+   PikStore UI Foundry · 58 — Parallax Hero Stack
+   Layered hero planes translating at different rates with pointer.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-herostack { --herostack: herostack; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-herostack {
+  --herostack-speed: var(--ui-dur-base);
+  --herostack-ease: var(--ui-ease-out);
+  --herostack-spring: var(--ui-ease-spring);
+  --herostack-depth: calc(18px * var(--ui-depth-scale));
+  --herostack-lift: calc(-6px * var(--ui-depth-scale));
+  --herostack-glow: oklch(1 0 0 / 0.14);
+  --herostack-hairline: oklch(1 0 0 / 0.12);
+  --herostack-ink: oklch(0.96 0.005 265);
+  --herostack-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-herostack {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--herostack-speed) var(--herostack-ease),
+    box-shadow var(--herostack-speed) var(--herostack-ease),
+    border-color var(--herostack-speed) var(--herostack-ease),
+    background-color var(--herostack-speed) var(--herostack-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-herostack::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--herostack-speed) var(--herostack-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-herostack::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--herostack-speed) var(--herostack-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-herostack:hover {
+    transform: translate3d(0, var(--herostack-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--herostack-hairline),
+      0 0 42px -12px var(--herostack-glow);
+  }
+  .ui-herostack:hover::before { opacity: 1; }
+  .ui-herostack:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-herostack:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-herostack:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Depth children --------------------------------------------------- */
+.ui-herostack > .ui-herostack-core {
+  position: relative;
+  z-index: 1;
+  transform: translateZ(calc(var(--herostack-depth) * 0.5));
+  transform-style: preserve-3d;
+}
+.ui-herostack > .ui-herostack-ghost {
+  position: absolute;
+  inset: 8%;
+  border-radius: inherit;
+  background: oklch(0 0 0 / 0.55);
+  filter: blur(26px);
+  transform: translateZ(calc(var(--herostack-depth) * -1)) scale(0.92);
+  opacity: 0;
+  transition: opacity var(--herostack-speed) var(--herostack-ease);
+  pointer-events: none;
+}
+.ui-herostack:hover > .ui-herostack-ghost { opacity: 1; }
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes herostack-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes herostack-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes herostack-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes herostack-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-herostack[data-herostack-size="sm"] {
+  --herostack-depth: calc(10px * var(--ui-depth-scale));
+  --herostack-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-herostack[data-herostack-size="lg"] {
+  --herostack-depth: calc(30px * var(--ui-depth-scale));
+  --herostack-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-herostack[data-herostack-flat="true"] {
+  --herostack-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Plane rates ----------------------------------------------------------------------------------------------------- */
+.ui-herostack [data-plane="1"] { transform: translate3d(calc(var(--px, 0) * -8px), calc(var(--py, 0) * -6px), 60px); }
+.ui-herostack [data-plane="2"] { transform: translate3d(calc(var(--px, 0) * -16px), calc(var(--py, 0) * -12px), 20px); }
+.ui-herostack [data-plane="3"] { transform: translate3d(calc(var(--px, 0) * -28px), calc(var(--py, 0) * -20px), -30px); }
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-herostack {
+    --herostack-depth: calc(var(--herostack-depth) * 0.7);
+    --herostack-lift: calc(var(--herostack-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-herostack {
+    --herostack-depth: calc(var(--herostack-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-herostack::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-herostack,
+  .ui-herostack::before,
+  .ui-herostack::after,
+  .ui-herostack * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-herostack:hover { box-shadow: 0 0 0 1px var(--herostack-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-herostack {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-herostack::before,
+  .ui-herostack::after { display: none !important; }
+}

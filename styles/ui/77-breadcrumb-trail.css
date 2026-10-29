@@ -1,0 +1,211 @@
+/* ============================================================
+   PikStore UI Foundry · 77 — Breadcrumb Light Trail
+   Chevron breadcrumbs with traveling highlight.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-breadcrumb { --breadcrumb: breadcrumb; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-breadcrumb {
+  --breadcrumb-speed: var(--ui-dur-base);
+  --breadcrumb-ease: var(--ui-ease-out);
+  --breadcrumb-spring: var(--ui-ease-spring);
+  --breadcrumb-depth: calc(18px * var(--ui-depth-scale));
+  --breadcrumb-lift: calc(-6px * var(--ui-depth-scale));
+  --breadcrumb-glow: oklch(1 0 0 / 0.14);
+  --breadcrumb-hairline: oklch(1 0 0 / 0.12);
+  --breadcrumb-ink: oklch(0.96 0.005 265);
+  --breadcrumb-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-breadcrumb {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--breadcrumb-speed) var(--breadcrumb-ease),
+    box-shadow var(--breadcrumb-speed) var(--breadcrumb-ease),
+    border-color var(--breadcrumb-speed) var(--breadcrumb-ease),
+    background-color var(--breadcrumb-speed) var(--breadcrumb-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-breadcrumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--breadcrumb-speed) var(--breadcrumb-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-breadcrumb::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--breadcrumb-speed) var(--breadcrumb-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-breadcrumb:hover {
+    transform: translate3d(0, var(--breadcrumb-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--breadcrumb-hairline),
+      0 0 42px -12px var(--breadcrumb-glow);
+  }
+  .ui-breadcrumb:hover::before { opacity: 1; }
+  .ui-breadcrumb:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-breadcrumb:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-breadcrumb:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes breadcrumb-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes breadcrumb-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes breadcrumb-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes breadcrumb-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-breadcrumb[data-breadcrumb-size="sm"] {
+  --breadcrumb-depth: calc(10px * var(--ui-depth-scale));
+  --breadcrumb-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-breadcrumb[data-breadcrumb-size="lg"] {
+  --breadcrumb-depth: calc(30px * var(--ui-depth-scale));
+  --breadcrumb-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-breadcrumb[data-breadcrumb-flat="true"] {
+  --breadcrumb-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Traveling highlight --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+.ui-breadcrumb .crumb { position: relative; overflow: hidden; }
+.ui-breadcrumb .crumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.5), transparent); animation: breadcrumb-travel 2.4s linear infinite; }
+@keyframes breadcrumb-travel { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-breadcrumb {
+    --breadcrumb-depth: calc(var(--breadcrumb-depth) * 0.7);
+    --breadcrumb-lift: calc(var(--breadcrumb-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-breadcrumb {
+    --breadcrumb-depth: calc(var(--breadcrumb-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-breadcrumb::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-breadcrumb,
+  .ui-breadcrumb::before,
+  .ui-breadcrumb::after,
+  .ui-breadcrumb * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-breadcrumb:hover { box-shadow: 0 0 0 1px var(--breadcrumb-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-breadcrumb {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-breadcrumb::before,
+  .ui-breadcrumb::after { display: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Layer contract · 77 — Breadcrumb Light Trail
+   ------------------------------------------------------------
+   Selectors owned .... .ui-breadcrumb and its ::before/::after pseudo stack
+   Custom properties .. --breadcrumb-speed, --breadcrumb-ease, --breadcrumb-depth,
+                        --breadcrumb-lift, --breadcrumb-glow, --breadcrumb-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Owner note ......... generated by scripts/gen-ui-layers.py — edit
+                        the generator, not the artifact, to keep the
+                        80-layer foundry reproducible.
+   ------------------------------------------------------------ */

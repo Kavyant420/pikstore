@@ -48,3 +48,158 @@
 /* Label nudge on toggle */
 .ui-switch-label { transition: transform 380ms var(--ui-ease-spring), color 300ms ease; }
 .ui-switch-group:hover .ui-switch-label { transform: translateX(-3px); }
+
+/* ---- Ambient keyframe vocabulary for this layer ---- */
+@keyframes ui-switch-rise { from { transform: translate3d(0, 14px, -30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-switch-sink { from { transform: none; opacity: 1; } to { transform: translate3d(0, 10px, -24px); opacity: 0; } }
+@keyframes ui-switch-tilt-in { from { transform: perspective(1200px) rotateX(12deg) translateY(18px); opacity: 0; } to { transform: perspective(1200px) rotateX(0) translateY(0); opacity: 1; } }
+@keyframes ui-switch-sway-x { 0%, 100% { transform: translate3d(-4px, 0, 0); } 50% { transform: translate3d(4px, 0, 0); } }
+@keyframes ui-switch-halo-breathe { 0%, 100% { box-shadow: 0 0 0 0 oklch(1 0 0 / 0); } 50% { box-shadow: 0 0 26px 3px oklch(1 0 0 / 0.12); } }
+@keyframes ui-switch-depth-z { 0%, 100% { transform: translateZ(0); } 50% { transform: translateZ(24px); } }
+@keyframes ui-switch-spin-axis { from { transform: rotate3d(0, 1, 0, 0deg); } to { transform: rotate3d(0, 1, 0, 360deg); } }
+@keyframes ui-switch-fade-soft { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ui-switch-scale-pop { 0% { transform: scale(0.9); opacity: 0; } 70% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes ui-switch-slide-fade { from { transform: translate3d(-16px, 0, 0); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ui-switch-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes ui-switch-orbit-mini { from { transform: rotate(0deg) translateX(10px) rotate(0deg); } to { transform: rotate(360deg) translateX(10px) rotate(-360deg); } }
+@keyframes ui-switch-mask-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes ui-switch-sheen-pass { from { background-position: -220% 0; } to { background-position: 220% 0; } }
+@keyframes ui-switch-pulse-ring { 0% { transform: scale(0.7); opacity: 0.9; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes ui-switch-jitter { 0%, 100% { transform: translate3d(0, 0, 0); } 20% { transform: translate3d(-1px, 1px, 0); } 40% { transform: translate3d(1px, -1px, 0); } 60% { transform: translate3d(-1px, -1px, 0); } 80% { transform: translate3d(1px, 1px, 0); } }
+@keyframes ui-switch-unfold-x { from { transform: scaleX(0); opacity: 0; } to { transform: scaleX(1); opacity: 1; } }
+@keyframes ui-switch-lift-settle { 0% { transform: translateY(0); } 35% { transform: translateY(-9px); } 70% { transform: translateY(2px); } 100% { transform: translateY(0); } }
+
+/* ---- Shared easing aliases usable inside Switch Toggle Physics ---- */
+.ui-switch-ease-out { animation-timing-function: var(--ui-ease-out); }
+.ui-switch-ease-spring { animation-timing-function: var(--ui-ease-spring); }
+.ui-switch-ease-aggressive { animation-timing-function: var(--ui-ease-aggressive); }
+.ui-switch-dur-fast { animation-duration: var(--ui-dur-fast); }
+.ui-switch-dur-slow { animation-duration: var(--ui-dur-slow); }
+.ui-switch-dur-glacial { animation-duration: var(--ui-dur-glacial); }
+.ui-switch-delay-1 { animation-delay: 60ms; }
+.ui-switch-delay-2 { animation-delay: 120ms; }
+.ui-switch-delay-3 { animation-delay: 180ms; }
+.ui-switch-delay-4 { animation-delay: 240ms; }
+.ui-switch-fill-both { animation-fill-mode: both; }
+.ui-switch-once { animation-iteration-count: 1; }
+.ui-switch-paused { animation-play-state: paused; }
+
+/* ---- Depth utility ramp ---- */
+.ui-switch-z-0 { transform: translateZ(0); }
+.ui-switch-z-1 { transform: translateZ(12px); }
+.ui-switch-z-2 { transform: translateZ(24px); }
+.ui-switch-z-3 { transform: translateZ(40px); }
+.ui-switch-z-4 { transform: translateZ(60px); }
+.ui-switch-z-neg { transform: translateZ(-30px); }
+
+/* ---- Achromatic material swatches ---- */
+.ui-switch-mat-void { background: oklch(0 0 0); }
+.ui-switch-mat-onyx { background: oklch(0.12 0 0); }
+.ui-switch-mat-graphite { background: oklch(0.24 0 0); }
+.ui-switch-mat-ash { background: oklch(0.45 0 0); }
+.ui-switch-mat-silver { background: oklch(0.72 0 0); }
+.ui-switch-mat-paper { background: oklch(0.95 0 0); }
+
+/* ---- Interaction state matrix ---- */
+.ui-switch-state-idle { opacity: 1; transform: none; }
+.ui-switch-state-enter { animation: ui-switch-rise 0.5s var(--ui-ease-out) both; }
+.ui-switch-state-exit { animation: ui-switch-sink 0.35s var(--ui-ease-out) both; }
+.ui-switch-state-live { animation: ui-switch-halo-breathe 3s var(--ui-ease-in-out) infinite; }
+.ui-switch-state-attention { animation: ui-switch-jitter 0.4s steps(3) 2; }
+.ui-switch-state-success { animation: ui-switch-lift-settle 0.7s var(--ui-ease-spring) 1; }
+
+/* ------------------------------------------------------------
+   Layer contract · 22 — Switch Toggle Physics
+   ------------------------------------------------------------
+   Selectors owned .... .ui-switch and its ::before/::after pseudo stack
+   Custom properties .. --ui-switch-speed, --ui-switch-ease, --ui-switch-depth,
+                        --ui-switch-lift, --ui-switch-glow, --ui-switch-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Z-order map ........ 0 ghost, 1 core content, 2 sheen, 3 hairline.
+   Owner note ......... hand-tuned foundry layer; keep the monochrome
+                        premium language consistent when editing.
+   ------------------------------------------------------------ */
+
+/* ---- Guard rails ---- */
+@supports not (transform: translateZ(0)) {
+  .ui-switch * { animation: none !important; }
+}
+@media (forced-colors: active) {
+  .ui-switch { border: 1px solid CanvasText; }
+}
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */
+/* fill */

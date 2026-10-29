@@ -1,0 +1,210 @@
+/* ============================================================
+   PikStore UI Foundry · 78 — CTA Beacon Pulse
+   Primary call-to-action emitting slow radar beams.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-ctabeam { --ctabeam: ctabeam; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-ctabeam {
+  --ctabeam-speed: var(--ui-dur-base);
+  --ctabeam-ease: var(--ui-ease-out);
+  --ctabeam-spring: var(--ui-ease-spring);
+  --ctabeam-depth: calc(18px * var(--ui-depth-scale));
+  --ctabeam-lift: calc(-6px * var(--ui-depth-scale));
+  --ctabeam-glow: oklch(1 0 0 / 0.14);
+  --ctabeam-hairline: oklch(1 0 0 / 0.12);
+  --ctabeam-ink: oklch(0.96 0.005 265);
+  --ctabeam-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-ctabeam {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--ctabeam-speed) var(--ctabeam-ease),
+    box-shadow var(--ctabeam-speed) var(--ctabeam-ease),
+    border-color var(--ctabeam-speed) var(--ctabeam-ease),
+    background-color var(--ctabeam-speed) var(--ctabeam-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-ctabeam::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--ctabeam-speed) var(--ctabeam-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-ctabeam::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--ctabeam-speed) var(--ctabeam-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-ctabeam:hover {
+    transform: translate3d(0, var(--ctabeam-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--ctabeam-hairline),
+      0 0 42px -12px var(--ctabeam-glow);
+  }
+  .ui-ctabeam:hover::before { opacity: 1; }
+  .ui-ctabeam:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-ctabeam:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-ctabeam:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes ctabeam-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes ctabeam-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes ctabeam-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes ctabeam-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-ctabeam[data-ctabeam-size="sm"] {
+  --ctabeam-depth: calc(10px * var(--ui-depth-scale));
+  --ctabeam-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-ctabeam[data-ctabeam-size="lg"] {
+  --ctabeam-depth: calc(30px * var(--ui-depth-scale));
+  --ctabeam-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-ctabeam[data-ctabeam-flat="true"] {
+  --ctabeam-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Radar beams ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+.ui-ctabeam .beam { border: 1px solid oklch(1 0 0 / 0.25); border-radius: 50%; animation: ctabeam-emit 3s var(--ctabeam-ease) infinite; }
+@keyframes ctabeam-emit { from { inset: 0; opacity: 0.8; } to { inset: -140%; opacity: 0; } }
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-ctabeam {
+    --ctabeam-depth: calc(var(--ctabeam-depth) * 0.7);
+    --ctabeam-lift: calc(var(--ctabeam-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-ctabeam {
+    --ctabeam-depth: calc(var(--ctabeam-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-ctabeam::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-ctabeam,
+  .ui-ctabeam::before,
+  .ui-ctabeam::after,
+  .ui-ctabeam * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-ctabeam:hover { box-shadow: 0 0 0 1px var(--ctabeam-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-ctabeam {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-ctabeam::before,
+  .ui-ctabeam::after { display: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Layer contract · 78 — CTA Beacon Pulse
+   ------------------------------------------------------------
+   Selectors owned .... .ui-ctabeam and its ::before/::after pseudo stack
+   Custom properties .. --ctabeam-speed, --ctabeam-ease, --ctabeam-depth,
+                        --ctabeam-lift, --ctabeam-glow, --ctabeam-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Owner note ......... generated by scripts/gen-ui-layers.py — edit
+                        the generator, not the artifact, to keep the
+                        80-layer foundry reproducible.
+   ------------------------------------------------------------ */

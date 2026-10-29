@@ -1,0 +1,209 @@
+/* ============================================================
+   PikStore UI Foundry · 68 — Conic Progress Rings
+   Circular download rings with sweeping conic gradient.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-conicprog { --conicprog: conicprog; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-conicprog {
+  --conicprog-speed: var(--ui-dur-base);
+  --conicprog-ease: var(--ui-ease-out);
+  --conicprog-spring: var(--ui-ease-spring);
+  --conicprog-depth: calc(18px * var(--ui-depth-scale));
+  --conicprog-lift: calc(-6px * var(--ui-depth-scale));
+  --conicprog-glow: oklch(1 0 0 / 0.14);
+  --conicprog-hairline: oklch(1 0 0 / 0.12);
+  --conicprog-ink: oklch(0.96 0.005 265);
+  --conicprog-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-conicprog {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--conicprog-speed) var(--conicprog-ease),
+    box-shadow var(--conicprog-speed) var(--conicprog-ease),
+    border-color var(--conicprog-speed) var(--conicprog-ease),
+    background-color var(--conicprog-speed) var(--conicprog-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-conicprog::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--conicprog-speed) var(--conicprog-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-conicprog::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--conicprog-speed) var(--conicprog-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-conicprog:hover {
+    transform: translate3d(0, var(--conicprog-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--conicprog-hairline),
+      0 0 42px -12px var(--conicprog-glow);
+  }
+  .ui-conicprog:hover::before { opacity: 1; }
+  .ui-conicprog:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-conicprog:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-conicprog:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes conicprog-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes conicprog-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes conicprog-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes conicprog-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-conicprog[data-conicprog-size="sm"] {
+  --conicprog-depth: calc(10px * var(--ui-depth-scale));
+  --conicprog-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-conicprog[data-conicprog-size="lg"] {
+  --conicprog-depth: calc(30px * var(--ui-depth-scale));
+  --conicprog-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-conicprog[data-conicprog-flat="true"] {
+  --conicprog-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Conic sweep -------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
+.ui-conicprog .disc { background: conic-gradient(oklch(1 0 0 / 0.9) calc(var(--pct, 0) * 1%), oklch(1 0 0 / 0.1) 0); mask: radial-gradient(closest-side, transparent 72%, #000 73%); transition: background 0.3s linear; }
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-conicprog {
+    --conicprog-depth: calc(var(--conicprog-depth) * 0.7);
+    --conicprog-lift: calc(var(--conicprog-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-conicprog {
+    --conicprog-depth: calc(var(--conicprog-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-conicprog::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-conicprog,
+  .ui-conicprog::before,
+  .ui-conicprog::after,
+  .ui-conicprog * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-conicprog:hover { box-shadow: 0 0 0 1px var(--conicprog-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-conicprog {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-conicprog::before,
+  .ui-conicprog::after { display: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Layer contract · 68 — Conic Progress Rings
+   ------------------------------------------------------------
+   Selectors owned .... .ui-conicprog and its ::before/::after pseudo stack
+   Custom properties .. --conicprog-speed, --conicprog-ease, --conicprog-depth,
+                        --conicprog-lift, --conicprog-glow, --conicprog-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Owner note ......... generated by scripts/gen-ui-layers.py — edit
+                        the generator, not the artifact, to keep the
+                        80-layer foundry reproducible.
+   ------------------------------------------------------------ */

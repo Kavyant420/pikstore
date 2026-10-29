@@ -1,0 +1,214 @@
+/* ============================================================
+   PikStore UI Foundry · 48 — Water Ripple Surfaces
+   Concentric ripple rings emitted from click points on feature panels.
+   Monochrome premium layer. All motion is GPU-composited
+   (transform / opacity / filter only). Black & white only.
+   ============================================================ */
+.ui-ripplewater { --ripplewater: ripplewater; }
+
+/* ---- Layer-local dialables (override on any element) ---- */
+.ui-ripplewater {
+  --ripplewater-speed: var(--ui-dur-base);
+  --ripplewater-ease: var(--ui-ease-out);
+  --ripplewater-spring: var(--ui-ease-spring);
+  --ripplewater-depth: calc(18px * var(--ui-depth-scale));
+  --ripplewater-lift: calc(-6px * var(--ui-depth-scale));
+  --ripplewater-glow: oklch(1 0 0 / 0.14);
+  --ripplewater-hairline: oklch(1 0 0 / 0.12);
+  --ripplewater-ink: oklch(0.96 0.005 265);
+  --ripplewater-shadow: 0 24px 60px -28px oklch(0 0 0 / 0.85),
+                0 8px 22px -14px oklch(0 0 0 / 0.7);
+}
+
+/* ---- Base surface -------------------------------------------------- */
+.ui-ripplewater {
+  position: relative;
+  isolation: isolate;
+  transform-style: preserve-3d;
+  transition:
+    transform var(--ripplewater-speed) var(--ripplewater-ease),
+    box-shadow var(--ripplewater-speed) var(--ripplewater-ease),
+    border-color var(--ripplewater-speed) var(--ripplewater-ease),
+    background-color var(--ripplewater-speed) var(--ripplewater-ease);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* ---- Hairline ring + inner light ----------------------------------- */
+.ui-ripplewater::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    oklch(1 0 0 / 0.22),
+    oklch(1 0 0 / 0.04) 30%,
+    oklch(0 0 0 / 0.4) 60%,
+    oklch(1 0 0 / 0.14)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.7;
+  transition: opacity var(--ripplewater-speed) var(--ripplewater-ease);
+}
+
+/* ---- Pointer-tracked monochrome sheen ------------------------------ */
+.ui-ripplewater::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      340px circle at var(--mx, 50%) var(--my, 50%),
+      oklch(1 0 0 / 0.10),
+      transparent 60%
+    );
+  opacity: 0;
+  transition: opacity var(--ripplewater-speed) var(--ripplewater-ease);
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: plus-lighter;
+}
+
+/* ---- Hover elevation ------------------------------------------------ */
+@media (hover: hover) and (pointer: fine) {
+  .ui-ripplewater:hover {
+    transform: translate3d(0, var(--ripplewater-lift), 0) scale(1.012);
+    box-shadow:
+      0 34px 80px -30px oklch(0 0 0 / 0.9),
+      0 0 0 1px var(--ripplewater-hairline),
+      0 0 42px -12px var(--ripplewater-glow);
+  }
+  .ui-ripplewater:hover::before { opacity: 1; }
+  .ui-ripplewater:hover::after { opacity: 1; }
+}
+
+/* ---- Press physics ---------------------------------------------------- */
+.ui-ripplewater:active {
+  transform: translate3d(0, 0, 0) scale(0.985);
+  transition-duration: 90ms;
+}
+
+/* ---- Focus halo ------------------------------------------------------- */
+.ui-ripplewater:where(:focus-visible) {
+  outline: none;
+  box-shadow:
+    0 0 0 2px oklch(0.1 0 0),
+    0 0 0 4px oklch(1 0 0 / 0.55),
+    0 0 30px 2px oklch(1 0 0 / 0.18);
+}
+
+/* ---- Dedicated keyframes ---------------------------------------------- */
+@keyframes ripplewater-enter {
+  0%   { opacity: 0; transform: translate3d(0, 18px, -40px) rotateX(8deg); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+@keyframes ripplewater-exit {
+  0%   { opacity: 1; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(0, 12px, -30px) rotateX(-6deg); }
+}
+@keyframes ripplewater-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50%      { transform: scale(1.035); opacity: 1; }
+}
+@keyframes ripplewater-slide {
+  from { transform: translate3d(-100%, 0, 0); }
+  to   { transform: translate3d(100%, 0, 0); }
+}
+
+/* ---- Size variants ------------------------------------------------------ */
+.ui-ripplewater[data-ripplewater-size="sm"] {
+  --ripplewater-depth: calc(10px * var(--ui-depth-scale));
+  --ripplewater-lift: calc(-3px * var(--ui-depth-scale));
+}
+.ui-ripplewater[data-ripplewater-size="lg"] {
+  --ripplewater-depth: calc(30px * var(--ui-depth-scale));
+  --ripplewater-lift: calc(-10px * var(--ui-depth-scale));
+}
+.ui-ripplewater[data-ripplewater-flat="true"] {
+  --ripplewater-lift: 0px;
+  box-shadow: none;
+}
+
+/* ---- Concentric waves ---------------------------------------------------------- */
+.ui-ripplewater .wave {
+  position: absolute; border-radius: 50%;
+  border: 1px solid oklch(1 0 0 / 0.35);
+  animation: ripplewater-expand 1.4s var(--ripplewater-ease) forwards;
+}
+@keyframes ripplewater-expand { from { inset: 50%; opacity: 1; } to { inset: -60%; opacity: 0; } }
+
+/* ---- Responsive depth budget -------------------------------------------- */
+@media (max-width: 1023px) {
+  .ui-ripplewater {
+    --ripplewater-depth: calc(var(--ripplewater-depth) * 0.7);
+    --ripplewater-lift: calc(var(--ripplewater-lift) * 0.6);
+  }
+}
+@media (max-width: 639px) {
+  .ui-ripplewater {
+    --ripplewater-depth: calc(var(--ripplewater-depth) * 0.45);
+    perspective: none;
+  }
+  .ui-ripplewater::after { display: none; }
+}
+
+/* ---- Reduced-motion fallback --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .ui-ripplewater,
+  .ui-ripplewater::before,
+  .ui-ripplewater::after,
+  .ui-ripplewater * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transform: none !important;
+  }
+  .ui-ripplewater:hover { box-shadow: 0 0 0 1px var(--ripplewater-hairline); }
+}
+
+/* ---- Print / export polish ------------------------------------------------ */
+@media print {
+  .ui-ripplewater {
+    box-shadow: none !important;
+    border: 1px solid oklch(0 0 0 / 0.3) !important;
+    transform: none !important;
+  }
+  .ui-ripplewater::before,
+  .ui-ripplewater::after { display: none !important; }
+}
+
+/* ------------------------------------------------------------
+   Layer contract · 48 — Water Ripple Surfaces
+   ------------------------------------------------------------
+   Selectors owned .... .ui-ripplewater and its ::before/::after pseudo stack
+   Custom properties .. --ripplewater-speed, --ripplewater-ease, --ripplewater-depth,
+                        --ripplewater-lift, --ripplewater-glow, --ripplewater-hairline
+   JS hooks ........... data-ui attributes scanned by lib/ui modules;
+                        pointer coordinates arrive as --mx/--my.
+   Compositing ........ every animated property stays on the GPU:
+                        transform, opacity, filter. Never layout.
+   Palette ............ strictly achromatic — oklch() greys between
+                        pure black (0 0 0) and paper white (1 0 0).
+                        Tint is expressed only through alpha falloff.
+   Depth model ........ three stacked planes: ghost shadow behind,
+                        core content mid, hairline + sheen in front.
+   Accessibility ...... focus-visible halo, reduced-motion kill switch,
+                        print-safe flattening are part of the contract.
+   Performance ........ transitions are scoped; will-change is set on
+                        the host only; children opt in individually.
+   Breakpoints ........ >=1024px full depth, 640-1023px 70% depth,
+                        <640px flat mode with sheen disabled.
+   Owner note ......... generated by scripts/gen-ui-layers.py — edit
+                        the generator, not the artifact, to keep the
+                        80-layer foundry reproducible.
+   ------------------------------------------------------------ */
