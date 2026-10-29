@@ -1,0 +1,44 @@
+/* 12 - Parallax layers driven by JS custom properties */
+.ui-parallax {
+  --px: 0px;
+  --py: 0px;
+  transform: translate3d(calc(var(--px) * var(--ui-parallax-strength)), calc(var(--py) * var(--ui-parallax-strength)), 0);
+  will-change: transform;
+  transition: transform 60ms linear;
+}
+
+/* Scroll-linked drift bands (--scroll-delta set by JS) */
+.ui-parallax-slow {
+  transform: translate3d(0, calc(var(--scroll-delta, 0px) * 0.12 * var(--ui-parallax-strength)), 0);
+}
+.ui-parallax-fast {
+  transform: translate3d(0, calc(var(--scroll-delta, 0px) * -0.3 * var(--ui-parallax-strength)), 0);
+}
+
+/* Pointer parallax field: children move at their own depth factor */
+.ui-parallax-field {
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.ui-parallax-field > * {
+  transform: translate3d(
+    calc(var(--pointer-x, 0) * var(--factor, 1) * 18px),
+    calc(var(--pointer-y, 0) * var(--factor, 1) * 18px),
+    calc(var(--factor, 1) * 30px)
+  );
+  transition: transform 500ms var(--ui-ease-out);
+}
+
+/* Ken Burns breathing */
+.ui-kenburns { animation: ui-kenburns 18s var(--ui-ease-in-out) infinite alternate; }
+@keyframes ui-kenburns {
+  from { transform: scale(1) translate(0, 0); }
+  to   { transform: scale(1.08) translate(-1.5%, 1.5%); }
+}
+
+/* Icon micro-orbit on featured tiles */
+.ui-icon-orbit { transition: transform 700ms var(--ui-ease-spring); }
+.group:hover .ui-icon-orbit {
+  transform: translate3d(0, -6px, 30px) rotate(-6deg) scale(1.08);
+}

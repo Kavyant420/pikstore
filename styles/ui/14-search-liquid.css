@@ -1,0 +1,46 @@
+/* 14 - Search field: expands like poured glass, pulses while typing */
+.ui-search {
+  transition:
+    width var(--ui-dur-slow) var(--ui-ease-spring),
+    box-shadow var(--ui-dur-base) ease,
+    transform var(--ui-dur-base) var(--ui-ease-out);
+  transform-style: preserve-3d;
+}
+
+.ui-search:focus-within {
+  transform: translateZ(14px) perspective(700px) rotateX(3deg);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.25),
+    0 0 0 1px oklch(1 0 0 / 0.3),
+    0 22px 50px -20px oklch(0 0 0 / 0.9),
+    0 0 40px -6px oklch(1 0 0 / 0.18);
+}
+
+/* Magnifier does a backflip when focused */
+.ui-search .search-glyph { transition: transform 620ms var(--ui-ease-spring); }
+.ui-search:focus-within .search-glyph {
+  transform: rotate(-20deg) scale(1.15) translateZ(10px);
+}
+
+/* Typing pulse (data-typing toggled by JS) */
+.ui-search[data-typing='true'] { animation: ui-glow-pulse 900ms var(--ui-ease-out); }
+
+/* Clear button spins in */
+.ui-search-clear {
+  animation: ui-pop-in 320ms var(--ui-ease-spring) both;
+  transition: transform 300ms var(--ui-ease-spring);
+}
+.ui-search-clear:hover { transform: rotate(90deg) scale(1.1); }
+
+/* Placeholder shimmer */
+.ui-search input::placeholder {
+  background: linear-gradient(90deg, oklch(0.6 0 0), oklch(0.85 0 0), oklch(0.6 0 0));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ui-shimmer 4.5s linear infinite;
+}
+
+/* Mobile variant grows when active */
+.ui-search--mobile:focus-within { width: 100%; }

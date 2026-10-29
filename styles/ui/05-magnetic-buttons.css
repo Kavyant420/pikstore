@@ -1,0 +1,52 @@
+/* 05 - Magnetic pull buttons: chrome that leans toward your cursor */
+.ui-magnet {
+  --mx-off: 0px;
+  --my-off: 0px;
+  position: relative;
+  isolation: isolate;
+  transform: translate3d(var(--mx-off), var(--my-off), 0) perspective(600px);
+  transition: transform 420ms var(--ui-ease-spring);
+  will-change: transform;
+}
+
+.ui-magnet[data-attracting='true'] { transition-duration: 90ms; }
+
+.ui-magnet::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(closest-side, oklch(1 0 0 / 0.16), transparent 70%);
+  opacity: 0;
+  scale: 0.6;
+  transition: opacity 360ms ease, scale 520ms var(--ui-ease-out);
+}
+.ui-magnet:hover::before { opacity: 1; scale: 1; }
+
+.ui-magnet:active {
+  transform: translate3d(var(--mx-off), var(--my-off), 0) scale(0.965);
+  transition-duration: 80ms;
+}
+
+/* Inner label lags one step behind for parallax weight */
+.ui-magnet-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transform: translate3d(calc(var(--mx-off) * 0.35), calc(var(--my-off) * 0.35), 0);
+  transition: transform 500ms var(--ui-ease-spring);
+}
+
+/* Halo ring that snaps tight on hover */
+.ui-magnet-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 1px solid oklch(1 0 0 / 0.35);
+  opacity: 0;
+  transform: scale(1.18);
+  transition: opacity 260ms ease, transform 420ms var(--ui-ease-spring);
+  pointer-events: none;
+}
+.ui-magnet:hover .ui-magnet-ring { opacity: 1; transform: scale(1); }

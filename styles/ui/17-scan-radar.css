@@ -1,0 +1,66 @@
+/* 17 - Scanning radar: sweep beam, grid rings, blips */
+.ui-radar {
+  position: relative;
+  transform-style: preserve-3d;
+  animation: ui-radar-tilt 8s var(--ui-ease-in-out) infinite alternate;
+}
+@keyframes ui-radar-tilt {
+  from { transform: perspective(700px) rotateX(8deg) rotateZ(-2deg); }
+  to   { transform: perspective(700px) rotateX(-4deg) rotateZ(2deg); }
+}
+
+.ui-radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    oklch(1 0 0 / 0.06) 30deg,
+    oklch(1 0 0 / 0.5) 58deg,
+    transparent 60deg
+  );
+  animation: ui-spin-slow 1.5s linear infinite;
+  -webkit-mask: radial-gradient(circle, transparent 58%, #000 60%);
+  mask: radial-gradient(circle, transparent 58%, #000 60%);
+}
+
+.ui-radar-grid {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(circle, oklch(1 0 0 / 0.12) 0 1px, transparent 1px 22%),
+    linear-gradient(oklch(1 0 0 / 0.1), transparent 0) center/1px 100% no-repeat,
+    linear-gradient(oklch(1 0 0 / 0.1), transparent 0) center/100% 1px no-repeat;
+  opacity: 0.7;
+}
+
+/* Blip markers pop where engines report */
+.ui-radar-blip {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: oklch(1 0 0);
+  animation: ui-blip 2.4s var(--ui-ease-out) infinite;
+}
+@keyframes ui-blip {
+  0%, 100% { opacity: 0; transform: scale(0.4); }
+  12%      { opacity: 1; transform: scale(1.4); }
+  30%      { opacity: 0.2; }
+}
+
+/* Scanline crawling over results */
+.ui-scanline {
+  position: absolute;
+  inset-inline: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.9), transparent);
+  box-shadow: 0 0 18px 2px oklch(1 0 0 / 0.5);
+  animation: ui-scan-y 2.6s var(--ui-ease-in-out) infinite;
+}
+@keyframes ui-scan-y {
+  0%, 100% { transform: translateY(-140%); }
+  50%      { transform: translateY(140%); }
+}

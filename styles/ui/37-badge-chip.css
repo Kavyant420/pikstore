@@ -1,0 +1,51 @@
+/* 37 - Badges & chips: live dots, flaps, verdict pops */
+.ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 99px;
+  transition:
+    transform 360ms var(--ui-ease-spring),
+    box-shadow 360ms ease,
+    background-color 300ms ease;
+}
+.ui-chip:hover {
+  transform: translateY(-2px) translateZ(8px) scale(1.04);
+  box-shadow: 0 10px 24px -12px oklch(0 0 0 / 0.9);
+}
+
+/* LIVE dot with expanding sonar ring */
+.ui-live-dot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: oklch(1 0 0);
+}
+.ui-live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 99px;
+  border: 1px solid oklch(1 0 0 / 0.7);
+  animation: ui-sonar 1.8s var(--ui-ease-out) infinite;
+}
+@keyframes ui-sonar {
+  from { transform: scale(1); opacity: 1; }
+  to   { transform: scale(3.2); opacity: 0; }
+}
+
+/* Numeric badges flip like split-flap boards */
+.ui-flap {
+  display: inline-block;
+  transform-style: preserve-3d;
+  animation: ui-flap 420ms var(--ui-ease-out);
+}
+@keyframes ui-flap {
+  0%   { transform: rotateX(0deg); }
+  50%  { transform: rotateX(-90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+/* Verdict chip entrance */
+.ui-verdict { animation: ui-pop-in 480ms var(--ui-ease-spring) both; }

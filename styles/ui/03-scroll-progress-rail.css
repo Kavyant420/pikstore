@@ -1,0 +1,49 @@
+/* 03 - Reading progress rail + orbital indicator */
+.ui-progress-rail {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 10px;
+  width: 3px;
+  z-index: 60;
+  border-radius: 99px;
+  background: oklch(1 0 0 / 0.07);
+  pointer-events: none;
+}
+
+.ui-progress-fill {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: var(--scroll-progress, 0%);
+  border-radius: 99px;
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.9), oklch(1 0 0 / 0.35));
+  box-shadow: 0 0 14px oklch(1 0 0 / 0.45);
+  transition: height 90ms linear;
+}
+
+.ui-progress-dot {
+  position: absolute;
+  left: 50%;
+  top: var(--scroll-progress, 0%);
+  translate: -50% -50%;
+  width: 9px;
+  height: 9px;
+  border-radius: 99px;
+  background: oklch(1 0 0);
+  box-shadow: 0 0 0 4px oklch(1 0 0 / 0.14), 0 0 22px oklch(1 0 0 / 0.6);
+  transition: top 90ms linear, scale 240ms var(--ui-ease-spring);
+}
+
+body:hover .ui-progress-dot { scale: 1.25; }
+
+/* Top hairline progress bar */
+.ui-progress-topline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: var(--scroll-progress, 0%);
+  z-index: 70;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.85));
+  pointer-events: none;
+}

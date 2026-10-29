@@ -1,0 +1,46 @@
+/* 16 - Dialog/sheet entrance: the page dims & falls back */
+.ui-modal-root {
+  animation: ui-modal-pop 560ms var(--ui-ease-spring) both;
+  transform-style: preserve-3d;
+}
+
+@keyframes ui-modal-pop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 36px, -180px) rotateX(12deg) scale(0.94);
+    filter: blur(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotateX(0deg) scale(1);
+    filter: blur(0);
+  }
+}
+
+.ui-modal-backdrop {
+  animation: ui-backdrop-in 420ms ease both;
+  background:
+    radial-gradient(80% 60% at 50% 0%, oklch(1 0 0 / 0.04), transparent 70%),
+    oklch(0 0 0 / 0.62);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+}
+@keyframes ui-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Content rows stagger down after the panel lands */
+.ui-modal-root .stagger-in {
+  opacity: 0;
+  animation: ui-fade-up 640ms var(--ui-ease-out) forwards;
+  animation-delay: calc(var(--row, 0) * 70ms + 260ms);
+}
+
+/* Close button is a spinning latch */
+.ui-modal-close { transition: transform 480ms var(--ui-ease-spring), background-color 240ms ease; }
+.ui-modal-close:hover { transform: rotate(180deg) scale(1.08); background: oklch(1 0 0 / 0.12); }
+
+/* Bottom-sheet variant rises with rubber overshoot */
+.ui-sheet { animation: ui-sheet-rise 640ms cubic-bezier(0.2, 1.2, 0.3, 1) both; }
+@keyframes ui-sheet-rise {
+  from { transform: translateY(103%) rotateX(8deg); }
+  to   { transform: translateY(0) rotateX(0deg); }
+}

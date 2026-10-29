@@ -1,0 +1,41 @@
+/* 34 - List orchestration: staggered entrances everywhere */
+[data-ui-stagger] > * {
+  opacity: 0;
+  transform: translate3d(0, 22px, -40px);
+  transition:
+    opacity 620ms var(--ui-ease-out) calc(var(--stagger-i, 0) * 65ms),
+    transform 780ms var(--ui-ease-aggressive) calc(var(--stagger-i, 0) * 65ms),
+    filter 620ms ease calc(var(--stagger-i, 0) * 65ms);
+  filter: blur(6px);
+}
+
+[data-ui-stagger].is-visible > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
+}
+
+/* Grid variant: even items swing in sideways */
+[data-ui-stagger='grid'] > *:nth-child(even) {
+  transform: translate3d(26px, 12px, -40px) rotateY(-8deg);
+}
+[data-ui-stagger='grid'].is-visible > *:nth-child(even) {
+  transform: translate3d(0, 0, 0) rotateY(0deg);
+}
+
+/* Rows slide from the left with a slight lean */
+[data-ui-stagger='rows'] > * {
+  transform: translate3d(-30px, 0, -20px) rotateY(6deg);
+}
+[data-ui-stagger='rows'].is-visible > * {
+  transform: translate3d(0, 0, 0) rotateY(0deg);
+}
+
+/* Exit choreography when filtering lists out */
+[data-ui-stagger][data-exiting='true'] > * {
+  opacity: 0;
+  transform: translate3d(0, -14px, -60px) scale(0.96);
+  filter: blur(8px);
+  transition-duration: 260ms;
+  transition-delay: calc(var(--stagger-i, 0) * 20ms);
+}

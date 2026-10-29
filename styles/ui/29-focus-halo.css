@@ -1,0 +1,35 @@
+/* 29 - Focus states as luminous halos, not boxes */
+:focus-visible { outline: none; }
+
+.ui-focusable:focus-visible { position: relative; }
+.ui-focusable:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  border: 1px solid oklch(1 0 0 / 0.65);
+  box-shadow: 0 0 0 4px oklch(1 0 0 / 0.08), 0 0 24px oklch(1 0 0 / 0.25);
+  animation: ui-focus-bloom 420ms var(--ui-ease-out) both;
+  pointer-events: none;
+}
+
+@keyframes ui-focus-bloom {
+  from { opacity: 0; transform: scale(1.1); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Keyboard users see targets swell slightly */
+.ui-focusable:focus-visible {
+  transform: translateZ(12px) scale(1.02);
+  transition: transform 260ms var(--ui-ease-spring);
+}
+
+/* Skip link drops in from above with bounce */
+.ui-skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 9999;
+  transition: top 480ms cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.ui-skip-link:focus { top: 16px; }

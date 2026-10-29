@@ -1,0 +1,58 @@
+/* 07 - App cards: layered parallax lift on hover */
+.ui-card3d {
+  transform-style: preserve-3d;
+  transition:
+    transform 560ms var(--ui-ease-out),
+    box-shadow 560ms var(--ui-ease-out);
+  will-change: transform;
+}
+
+.ui-card3d:hover {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.2),
+    0 44px 70px -34px oklch(0 0 0 / 0.95),
+    0 0 0 1px oklch(1 0 0 / 0.07);
+}
+
+/* Layers float at different heights above the card plane */
+.ui-layer-1 { transform: translateZ(calc(16px * var(--ui-depth-scale))); }
+.ui-layer-2 { transform: translateZ(calc(32px * var(--ui-depth-scale))); }
+.ui-layer-3 { transform: translateZ(calc(52px * var(--ui-depth-scale))); }
+
+.ui-card3d [class*='ui-layer-'] { transition: transform 560ms var(--ui-ease-out); }
+.ui-card3d:hover [class*='ui-layer-'] {
+  transform: translateZ(calc(var(--lift, 24px) * var(--ui-depth-scale) * 1.6));
+}
+
+/* Shadow pool that slides under the lifted card */
+.ui-card-shadow-pool {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -14px;
+  height: 22px;
+  border-radius: 50%;
+  background: oklch(0 0 0 / 0.55);
+  filter: blur(14px);
+  opacity: 0;
+  transform: scaleX(0.7);
+  transition: opacity 480ms ease, transform 680ms var(--ui-ease-out);
+  pointer-events: none;
+}
+.ui-card3d:hover .ui-card-shadow-pool { opacity: 1; transform: scaleX(1); }
+
+/* Edge glow follows tilt origin */
+.ui-card-edge-light {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 420ms ease;
+  background: radial-gradient(
+    340px circle at var(--mx, 50%) var(--my, 50%),
+    oklch(1 0 0 / 0.14),
+    transparent 55%
+  );
+}
+.ui-card3d:hover .ui-card-edge-light { opacity: 1; }

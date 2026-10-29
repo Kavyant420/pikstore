@@ -1,0 +1,47 @@
+/* 11 - Typographic reveals: line masks, letter cascades, chrome tides */
+.ui-line-mask { display: block; overflow: hidden; }
+.ui-line-mask > span {
+  display: block;
+  transform: translateY(110%) rotate(3deg);
+  transition: transform 900ms var(--ui-ease-aggressive), opacity 700ms ease;
+  opacity: 0;
+}
+.ui-line-mask[data-visible='true'] > span,
+[data-ui-reveal].is-visible .ui-line-mask > span {
+  transform: translateY(0) rotate(0deg);
+  opacity: 1;
+}
+
+.ui-line-mask:nth-child(2) > span { transition-delay: 90ms; }
+.ui-line-mask:nth-child(3) > span { transition-delay: 180ms; }
+
+/* Letter-by-letter cascade for hero words (.char spans injected by JS) */
+.ui-cascade > .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 0.6em, -40px) rotateX(-70deg);
+  transform-origin: 50% 0%;
+  animation: ui-char-in 800ms var(--ui-ease-out) forwards;
+  animation-delay: calc(var(--char-i, 0) * 32ms + var(--char-shift, 0ms));
+}
+@keyframes ui-char-in {
+  to { opacity: 1; transform: translate3d(0, 0, 0) rotateX(0deg); }
+}
+
+/* Chrome tide: slow moving highlight across big text */
+.ui-chrome-tide {
+  background: linear-gradient(100deg, oklch(1 0 0) 20%, oklch(0.55 0 0) 40%, oklch(1 0 0) 60%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ui-shimmer 7s linear infinite;
+}
+
+/* Outline ghost text that fills on hover */
+.ui-ghost-fill {
+  -webkit-text-stroke: 1px oklch(1 0 0 / 0.5);
+  color: transparent;
+  transition: color 500ms ease, -webkit-text-stroke-color 500ms ease;
+}
+.ui-ghost-fill:hover { color: oklch(1 0 0); -webkit-text-stroke-color: transparent; }
