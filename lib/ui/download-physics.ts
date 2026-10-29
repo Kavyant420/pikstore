@@ -145,7 +145,7 @@ function registerdownload_physics(handle: FoundryHandle): void {
   window.__uiFoundry['download-physics'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registerdownload_physics({
   bind(el) {

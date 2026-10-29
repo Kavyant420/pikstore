@@ -13,7 +13,7 @@ import { useStore } from './store-provider'
 const STEPS = [
   'Resolving the official release',
   'Verifying SHA-256 fingerprint',
-  'Querying antivirus engines',
+  'Running AI + rule engine analysis',
   'Running PikShield AI ensemble',
   'Analyzing file and publisher',
 ]

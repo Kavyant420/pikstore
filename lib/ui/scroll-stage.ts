@@ -107,12 +107,12 @@ function registerscroll_stage(handle: FoundryHandle): void {
   window.__uiFoundry['scroll-stage'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registerscroll_stage({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountScrollStage(el)
+    const off = mountScrollStage()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

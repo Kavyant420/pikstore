@@ -14,7 +14,7 @@ export function mountSheenTracking(): () => void {
     const el = (e.target as HTMLElement | null)?.closest<HTMLElement>('.ui-sheen, .ui-rim, .ui-card3d')
     if (el !== current) {
       if (current) current.removeAttribute('data-active')
-      current = el
+      current = el ?? null
       if (el) el.setAttribute('data-active', 'true')
     }
     if (!current) return
@@ -58,12 +58,12 @@ function registersheen_tracking(handle: FoundryHandle): void {
   window.__uiFoundry['sheen-tracking'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registersheen_tracking({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountSheenTracking(el)
+    const off = mountSheenTracking()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

@@ -81,12 +81,12 @@ function registercursor_spotlight(handle: FoundryHandle): void {
   window.__uiFoundry['cursor-spotlight'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registercursor_spotlight({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountCursorSpotlight(el)
+    const off = mountCursorSpotlight()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

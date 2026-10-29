@@ -3,7 +3,7 @@
  * Any code (or UI event) can raise an island message; this module owns the
  * single fixed element at top-center and its bloom/collapse physics.
  */
-import { IS_BROWSER, emitUi } from './dom'
+import { IS_BROWSER, emitUi, prefersReducedMotion } from './dom'
 
 export interface IslandMessage {
   title: string
@@ -118,12 +118,12 @@ function registerisland_toast(handle: FoundryHandle): void {
   window.__uiFoundry['island-toast'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registerisland_toast({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountIslandToast(el)
+    const off = mountIslandToast()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

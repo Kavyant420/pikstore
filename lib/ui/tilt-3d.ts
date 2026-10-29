@@ -92,12 +92,12 @@ function registertilt_3d(handle: FoundryHandle): void {
   window.__uiFoundry['tilt-3d'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registertilt_3d({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountTilt3d(el)
+    const off = mountTilt3d()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

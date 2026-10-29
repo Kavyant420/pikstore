@@ -73,12 +73,12 @@ function registerskeleton_sheen(handle: FoundryHandle): void {
   window.__uiFoundry['skeleton-sheen'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registerskeleton_sheen({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountSkeletonSheen(el)
+    const off = mountSkeletonSheen()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {

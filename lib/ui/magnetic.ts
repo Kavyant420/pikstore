@@ -86,12 +86,12 @@ function registermagnetic(handle: FoundryHandle): void {
   window.__uiFoundry['magnetic'] = handle
 }
 
-const bound = new WeakMap<HTMLElement, () => void>()
+const bound = new Map<HTMLElement, () => void>()
 
 registermagnetic({
   bind(el) {
     if (bound.has(el)) return
-    const off = mountMagnetic(el)
+    const off = mountMagnetic()
     if (typeof off === 'function') bound.set(el, off)
   },
   release(el) {
