@@ -51,6 +51,19 @@ export const NEXUS_MODEL_MANIFEST: Record<'Q4_K_M' | 'UD-IQ2_XXS', NexusArtifact
 /** Recommended default quant for desktop installs. */
 export const NEXUS_DEFAULT_QUANT: keyof typeof NEXUS_MODEL_MANIFEST = 'Q4_K_M'
 
+/**
+ * One-click silent installer published by the release workflow (stage V0.6+).
+ * A single signed .exe that bundles the llama.cpp engine + pinned Qwen3-0.6B
+ * GGUF and completes setup with zero user interaction (no wizard clicks, no
+ * build steps, no git clone required).
+ */
+export const NEXUS_WINDOWS_INSTALLER_URL = `https://github.com/${NEXUS_APP_ID}/releases/latest/download/NexusAssistant-Setup.exe`
+export const NEXUS_ANDROID_INSTALLER_URL = `https://github.com/${NEXUS_APP_ID}/releases/latest/download/NexusAssistant.apk`
+
+export function nexusInstallerUrl(platform: string): string {
+  return platform === 'android' ? NEXUS_ANDROID_INSTALLER_URL : NEXUS_WINDOWS_INSTALLER_URL
+}
+
 export function isNexusApp(owner: string, repo: string): boolean {
   return `${owner}/${repo}`.toLowerCase() === NEXUS_APP_ID
 }

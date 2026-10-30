@@ -5,7 +5,7 @@ import type { StoreApp } from '@/lib/catalog'
 import { detectArch, detectPlatform, type Platform } from '@/lib/platform'
 import type { ScanReport } from '@/lib/scan-types'
 import { buildTrustProfile, shouldAutoDownload, type TrustProfile } from '@/lib/ai-security'
-import { isNexusApp } from '@/lib/nexus'
+import { isNexusApp, nexusInstallerUrl } from '@/lib/nexus'
 
 export type Notice = { id: number; app: StoreApp; title: string; detail: string }
 
@@ -31,6 +31,7 @@ type StoreContextValue = {
   confirmDownload: () => void
   retryInstall: () => void
   notice: Notice | null
+  downloadInstaller: (url: string) => boolean
 }
 
 const StoreContext = createContext<StoreContextValue | null>(null)
@@ -156,6 +157,12 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     })
   }, [])
 
+  // One-click installer download used by the Nexus popup (.exe / .apk). The
+  // silent setup runs automatically after the file lands — no user steps.
+  const downloadInstaller = useCallback((url: string) => {
+    return startDownload(url)
+  }, [])
+
   const retryInstall = useCallback(() => {
     if (installState) void runScan(installState.app, installState.platform)
   }, [installState, runScan])
@@ -187,6 +194,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       confirmDownload,
       retryInstall,
       notice,
+      downloadInstaller,
     }),
     [
       platform,
@@ -203,6 +211,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       confirmDownload,
       retryInstall,
       notice,
+      downloadInstaller,
     ],
   )
 
