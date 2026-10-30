@@ -9,6 +9,7 @@ import { DownloadIsland } from './download-island'
 import { FeaturedPicks } from './featured-picks'
 import { Hero } from './hero'
 import { MobileTabBar } from './mobile-tab-bar'
+import { NexusPrompt } from './nexus-prompt'
 import { ScanDialog } from './scan-dialog'
 import { SearchField } from './search-field'
 import { SecuritySection } from './security-section'
@@ -103,6 +104,7 @@ export function Storefront() {
       <ScanDialog />
       <DownloadIsland />
       <MobileTabBar />
+      <NexusPrompt />
     </StoreProvider>
     </UiFoundryProvider>
   )
