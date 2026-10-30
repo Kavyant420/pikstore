@@ -1,4 +1,5 @@
 import type { Platform } from './platform'
+import { NEXUS_OWNER, NEXUS_REPO } from './nexus'
 
 export const CATEGORIES = ['All', 'Productivity', 'Utilities', 'Creative', 'Developer', 'Privacy', 'Media'] as const
 export type Category = (typeof CATEGORIES)[number]
@@ -30,6 +31,13 @@ function app(
 }
 
 export const CATALOG: StoreApp[] = [
+  app(NEXUS_OWNER, NEXUS_REPO, {
+    name: 'Nexus Assistant',
+    tagline: 'A private, fully-offline AI assistant. On-device llama.cpp inference, zero cloud.',
+    category: 'Privacy',
+    platforms: ['windows', 'android'],
+    featured: 'Your AI. Your device. No internet required.',
+  }),
   app('obsidianmd', 'obsidian-releases', {
     name: 'Obsidian',
     tagline: 'A private, local-first second brain built on plain Markdown.',
