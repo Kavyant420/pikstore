@@ -2,8 +2,8 @@
 
 import { Brain, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { findCatalogApp } from '@/lib/catalog'
-import { NEXUS_OWNER, NEXUS_REPO } from '@/lib/nexus'
+import { nexusInstallerUrl } from '@/lib/nexus'
+import { detectPlatform } from '@/lib/platform'
 import { useStore } from './store-provider'
 
 const DISMISS_KEY = 'pikstore:nexus-prompt-dismissed'
@@ -12,12 +12,15 @@ const DISMISS_KEY = 'pikstore:nexus-prompt-dismissed'
  * Homepage suggestion popup for Nexus Assistant (first-party PIK Intelligence
  * app). Appears shortly after the homepage loads — unless the visitor already
  * dismissed it before (persisted in localStorage) or has the scan dialog open.
- * "Install" routes through the store's real install pipeline: a PikShield scan
- * that resolves to the Nexus-specific install popup (NexusView in scan-dialog).
+ * "Install" downloads the NexusAssistant-Setup.exe straight from PikStore's
+ * own endpoint (/api/download/nexus-setup) — no GitHub redirect, no git clone.
+ * The .exe then completes setup automatically with zero user interference.
  */
 export function NexusPrompt() {
-  const { install, installState, installOpen, openApp, platform } = useStore()
+  const { downloadInstaller, notice, installState, installOpen } = useStore()
   const [visible, setVisible] = useState(false)
+  // The store's DownloadIsland takes over once the .exe fetch starts.
+  const downloading = !!notice && notice.app.id === 'pik-intelligence/nexus-ai'
 
   // Entrance delay so the popup doesn't fight the hero animation on load.
   useEffect(() => {
@@ -47,14 +50,10 @@ export function NexusPrompt() {
   }
 
   function installNexus() {
-    const nexus = findCatalogApp(NEXUS_OWNER, NEXUS_REPO)
-    if (!nexus) return
-    dismiss()
-    if (platform) {
-      install(nexus, platform)
-    } else {
-      openApp(nexus)
-    }
+    // Direct first-party download of the silent installer — stays on
+    // pikstore.vercel.app, no GitHub redirect. Android gets the .apk.
+    const ok = downloadInstaller(nexusInstallerUrl(detectPlatform() ?? 'windows'))
+    if (ok) dismiss()
   }
 
   if (!shown) return null
@@ -92,17 +91,18 @@ export function NexusPrompt() {
 
         <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
           Gemini-level assistance powered by an on-device Qwen3-0.6B engine. One click downloads the signed
-          NexusAssistant-Setup.exe — it installs and configures everything automatically, no terminal, no
-          source checkout. Scanned clean by PikShield.
+          NexusAssistant-Setup.exe directly from this page — no GitHub redirect, no terminal, no source
+          checkout. After the download finishes, setup completes itself with zero clicks.
         </p>
 
         <div className="flex flex-col gap-2 sm:flex-row">
           <button
             type="button"
             onClick={installNexus}
-            className="btn-primary h-11 flex-1 rounded-full text-sm font-semibold outline-none focus-visible:ring-4 focus-visible:ring-ring"
+            disabled={downloading}
+            className="btn-primary h-11 flex-1 rounded-full text-sm font-semibold outline-none focus-visible:ring-4 focus-visible:ring-ring disabled:opacity-60"
           >
-            Install now
+            {downloading ? 'Downloading — setup will finish itself' : 'Install .exe now'}
           </button>
           <button
             type="button"
