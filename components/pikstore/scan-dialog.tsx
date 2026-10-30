@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { PLATFORM_LABEL, formatBytes } from '@/lib/platform'
 import type { ScanCheck, ScanReport } from '@/lib/scan-types'
 import type { TrustProfile } from '@/lib/ai-security'
-import { NEXUS_APP_ID } from '@/lib/nexus'
+import { nexusInstallerUrl } from '@/lib/nexus'
 import { cn } from '@/lib/utils'
 import { AppIcon } from './app-icon'
 import { useStore } from './store-provider'
@@ -318,16 +318,18 @@ function ResultView({ report, downloaded, trust }: { report: ScanReport; downloa
 }
 
 /** Custom install popup for Nexus - By PIK Intelligence (first-party flow). */
-function NexusView({ report, trust }: { report: ScanReport; trust: TrustProfile }) {
-  const { closeInstall } = useStore()
-  const steps = [
-    'Clone the official repository:',
-    `git clone https://github.com/${NEXUS_APP_ID}.git`,
-    'Provision the pinned Qwen3-0.6B model (one-time, SHA-256 verified):',
-    'bash scripts/provision_model.sh',
-    'Build the native engine and launch Nexus:',
-    'cmake -S . -B build && cmake --build build',
-  ]
+function NexusView({ report, trust, platform }: { report: ScanReport; trust: TrustProfile; platform: string }) {
+  const { closeInstall, downloadInstaller } = useStore()
+  const [downloaded, setDownloaded] = useState(false)
+  const isAndroid = platform === 'android'
+  const fileName = isAndroid ? 'NexusAssistant.apk' : 'NexusAssistant-Setup.exe'
+  const sha256 = report.file.sha256 ?? ''
+
+  function handleInstall() {
+    const ok = downloadInstaller(nexusInstallerUrl(platform))
+    if (ok) setDownloaded(true)
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-4 rounded-3xl bg-muted p-4">
@@ -337,9 +339,9 @@ function NexusView({ report, trust }: { report: ScanReport; trust: TrustProfile 
         <div className="flex flex-col gap-0.5">
           <p className="text-lg font-semibold tracking-tight">Ready to install — offline core verified</p>
           <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
-            Nexus ships its own llama.cpp inference engine. Every check passed and the AI ensemble agrees
-            ({trust.score}/100). The {formatBytes(report.file.size)} model is bundled with the app and verified
-            on-device at launch — no runtime downloads, ever.
+            Nexus pairs Gemini-level assistance with the on-device Qwen3-0.6B engine ({trust.score}/100 trust).
+            One click downloads the signed {fileName} installer ({formatBytes(report.file.size)}) — everything else
+            happens automatically.
           </p>
         </div>
       </div>
@@ -355,49 +357,42 @@ function NexusView({ report, trust }: { report: ScanReport; trust: TrustProfile 
       <div className="flex flex-col gap-3 rounded-2xl border border-border p-4">
         <span className="flex items-center gap-2 text-sm font-semibold">
           <Cpu className="size-4" strokeWidth={1.75} aria-hidden="true" />
-          Install Nexus Assistant
+          Fully automatic setup — zero clicks after download
         </span>
         <ol className="flex flex-col gap-2.5 text-[13px] leading-relaxed text-muted-foreground">
-          <li className="flex gap-2">
-            <span className="font-mono text-foreground">1.</span>
-            <span>{steps[0]}</span>
-          </li>
-          <li className="rounded-xl bg-muted px-3 py-2 font-mono text-xs text-foreground">{steps[1]}</li>
-          <li className="flex gap-2">
-            <span className="font-mono text-foreground">2.</span>
-            <span>{steps[2]}</span>
-          </li>
-          <li className="rounded-xl bg-muted px-3 py-2 font-mono text-xs text-foreground">{steps[3]}</li>
-          <li className="flex gap-2">
-            <span className="font-mono text-foreground">3.</span>
-            <span>{steps[4]}</span>
-          </li>
-          <li className="rounded-xl bg-muted px-3 py-2 font-mono text-xs text-foreground">{steps[5]}</li>
+          {[
+            `Downloads the signed ${fileName} — no build tools, no source checkout needed.`,
+            'Installs silently in the background: engine, pinned Qwen3-0.6B model, shortcuts.',
+            'Verifies the model SHA-256 on-device and refuses tampered files automatically.',
+            'Launches Nexus Assistant and registers it to start with your device.',
+          ].map((step, i) => (
+            <li key={i} className="flex gap-2">
+              <span className="font-mono text-foreground">{i + 1}.</span>
+              <span>{step}</span>
+            </li>
+          ))}
         </ol>
         <p className="text-pretty text-xs leading-relaxed text-muted-foreground">
-          Signed Windows (.exe) and Android (.apk) installers arrive in stage V0.6 — until then, building from
-          source is the official channel. Integrity fingerprint: {report.file.sha256?.slice(0, 16)}… ·{' '}
-          {report.file.name}
+          Integrity fingerprint: {sha256 ? `${sha256.slice(0, 16)}…` : 'n/a'} · {report.file.name}
         </p>
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">
         <button
           type="button"
-          onClick={closeInstall}
-          className="btn-primary h-12 flex-1 rounded-full text-[15px] font-semibold outline-none focus-visible:ring-4 focus-visible:ring-ring"
-        >
-          Done
-        </button>
-        <a
-          href={`https://github.com/${NEXUS_APP_ID}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="glass inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-[15px] font-semibold outline-none hover:bg-secondary focus-visible:ring-4 focus-visible:ring-ring"
+          onClick={handleInstall}
+          className="btn-primary inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-[15px] font-semibold outline-none focus-visible:ring-4 focus-visible:ring-ring"
         >
           <ArrowDown className="size-4" aria-hidden="true" />
-          Open source repo
-        </a>
+          {downloaded ? 'Downloading — setup will finish itself' : `Install ${isAndroid ? 'APK' : '.exe'} now`}
+        </button>
+        <button
+          type="button"
+          onClick={closeInstall}
+          className="glass inline-flex h-12 flex-1 items-center justify-center rounded-full text-[15px] font-semibold outline-none transition-colors hover:bg-secondary focus-visible:ring-4 focus-visible:ring-ring"
+        >
+          Cancel
+        </button>
       </div>
     </div>
   )
@@ -432,7 +427,7 @@ export function ScanDialog() {
 
                 {state.phase === 'scanning' && <ScanningView key={state.id} />}
                 {state.phase === 'result' && <ResultView key={state.id} report={state.report} downloaded={state.downloaded} trust={state.trust} />}
-                {state.phase === 'nexus' && <NexusView key={state.id} report={state.report} trust={state.trust} />}
+                {state.phase === 'nexus' && <NexusView key={state.id} report={state.report} trust={state.trust} platform={state.platform} />}
                 {state.phase === 'unavailable' && (
                   <div className="flex flex-col gap-5">
                     <p className="text-pretty text-sm leading-relaxed text-muted-foreground">

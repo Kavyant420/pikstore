@@ -91,8 +91,9 @@ export function NexusPrompt() {
         </div>
 
         <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
-          A private, fully-offline AI assistant by PIK Intelligence. On-device llama.cpp inference, pinned
-          SHA-256 model integrity, zero cloud calls. Scanned clean by PikShield.
+          Gemini-level assistance powered by an on-device Qwen3-0.6B engine. One click downloads the signed
+          NexusAssistant-Setup.exe — it installs and configures everything automatically, no terminal, no
+          source checkout. Scanned clean by PikShield.
         </p>
 
         <div className="flex flex-col gap-2 sm:flex-row">
