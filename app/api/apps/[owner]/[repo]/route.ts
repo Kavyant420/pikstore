@@ -1,11 +1,45 @@
 import { NextResponse } from 'next/server'
 import { GitHubError, getRepo, isSafeSegment, resolveAllPlatforms } from '@/lib/github'
+import { isNexusApp, NEXUS_MODEL_MANIFEST } from '@/lib/nexus'
 import type { AppDetails } from '@/lib/scan-types'
 
 export async function GET(_request: Request, { params }: { params: Promise<{ owner: string; repo: string }> }) {
   const { owner, repo } = await params
   if (!isSafeSegment(owner) || !isSafeSegment(repo)) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+  }
+
+  // Nexus is first-party: no GitHub releases exist yet (signed installers
+  // land in a later stage), so serve its details from the pinned manifest.
+  if (isNexusApp(owner, repo)) {
+    const desktop = NEXUS_MODEL_MANIFEST.Q4_K_M
+    const mobile = NEXUS_MODEL_MANIFEST['UD-IQ2_XXS']
+    const body: AppDetails = {
+      description: 'A private, fully-offline AI assistant. On-device llama.cpp inference, zero cloud.',
+      stars: 0,
+      license: 'MIT',
+      avatar: '/pikstore-mark.png',
+      homepage: 'https://github.com/pik-intelligence/nexus-ai',
+      builds: {
+        android: {
+          name: mobile.file,
+          size: mobile.bytes,
+          version: 'v0.1 · UD-IQ2_XXS',
+          publishedAt: mobile.provisioned_at,
+          downloads: 0,
+        },
+        ios: null,
+        macos: null,
+        windows: {
+          name: desktop.file,
+          size: desktop.bytes,
+          version: 'v0.1 · Q4_K_M',
+          publishedAt: desktop.provisioned_at,
+          downloads: 0,
+        },
+      },
+    }
+    return NextResponse.json(body, { headers: { 'Cache-Control': 'public, s-maxage=3600' } })
   }
 
   try {

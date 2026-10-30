@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { GitHubError, getRepo, isSafeSegment, resolveAsset } from '@/lib/github'
 import { isPlatform } from '@/lib/platform'
 import { scanAsset } from '@/lib/scanner'
+import { isNexusApp, nexusScanReport } from '@/lib/nexus'
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams
@@ -12,6 +13,13 @@ export async function GET(request: NextRequest) {
 
   if (!isSafeSegment(owner) || !isSafeSegment(repo) || !isPlatform(platform)) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+  }
+
+  // Nexus first-party flow: skip GitHub release resolution and serve the
+  // pinned provisioning manifest straight into the PikShield popup.
+  if (isNexusApp(owner, repo)) {
+    const quant = platform === 'android' ? 'UD-IQ2_XXS' : 'Q4_K_M'
+    return NextResponse.json(nexusScanReport(quant))
   }
 
   try {

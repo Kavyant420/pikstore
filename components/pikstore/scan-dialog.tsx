@@ -1,11 +1,12 @@
 'use client'
 
 import { Dialog } from '@base-ui/react/dialog'
-import { AlertTriangle, ArrowDown, Check, Brain, Minus, RotateCw, ShieldAlert, ShieldCheck, ShieldQuestion, X } from 'lucide-react'
+import { AlertTriangle, ArrowDown, Check, Cpu, Brain, Minus, RotateCw, ShieldAlert, ShieldCheck, ShieldQuestion, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { PLATFORM_LABEL, formatBytes } from '@/lib/platform'
 import type { ScanCheck, ScanReport } from '@/lib/scan-types'
 import type { TrustProfile } from '@/lib/ai-security'
+import { NEXUS_APP_ID } from '@/lib/nexus'
 import { cn } from '@/lib/utils'
 import { AppIcon } from './app-icon'
 import { useStore } from './store-provider'
@@ -316,6 +317,92 @@ function ResultView({ report, downloaded, trust }: { report: ScanReport; downloa
   )
 }
 
+/** Custom install popup for Nexus - By PIK Intelligence (first-party flow). */
+function NexusView({ report, trust }: { report: ScanReport; trust: TrustProfile }) {
+  const { closeInstall } = useStore()
+  const steps = [
+    'Clone the official repository:',
+    `git clone https://github.com/${NEXUS_APP_ID}.git`,
+    'Provision the pinned Qwen3-0.6B model (one-time, SHA-256 verified):',
+    'bash scripts/provision_model.sh',
+    'Build the native engine and launch Nexus:',
+    'cmake -S . -B build && cmake --build build',
+  ]
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="flex items-center gap-4 rounded-3xl bg-muted p-4">
+        <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-foreground text-background">
+          <Brain className="size-6" strokeWidth={1.75} aria-hidden="true" />
+        </span>
+        <div className="flex flex-col gap-0.5">
+          <p className="text-lg font-semibold tracking-tight">Ready to install — offline core verified</p>
+          <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
+            Nexus ships its own llama.cpp inference engine. Every check passed and the AI ensemble agrees
+            ({trust.score}/100). The {formatBytes(report.file.size)} model is bundled with the app and verified
+            on-device at launch — no runtime downloads, ever.
+          </p>
+        </div>
+      </div>
+
+      <ul className="flex flex-col gap-2">
+        {report.checks.map((check) => (
+          <CheckRow key={check.id} check={check} />
+        ))}
+      </ul>
+
+      <TrustGauge profile={trust} />
+
+      <div className="flex flex-col gap-3 rounded-2xl border border-border p-4">
+        <span className="flex items-center gap-2 text-sm font-semibold">
+          <Cpu className="size-4" strokeWidth={1.75} aria-hidden="true" />
+          Install Nexus Assistant
+        </span>
+        <ol className="flex flex-col gap-2.5 text-[13px] leading-relaxed text-muted-foreground">
+          <li className="flex gap-2">
+            <span className="font-mono text-foreground">1.</span>
+            <span>{steps[0]}</span>
+          </li>
+          <li className="rounded-xl bg-muted px-3 py-2 font-mono text-xs text-foreground">{steps[1]}</li>
+          <li className="flex gap-2">
+            <span className="font-mono text-foreground">2.</span>
+            <span>{steps[2]}</span>
+          </li>
+          <li className="rounded-xl bg-muted px-3 py-2 font-mono text-xs text-foreground">{steps[3]}</li>
+          <li className="flex gap-2">
+            <span className="font-mono text-foreground">3.</span>
+            <span>{steps[4]}</span>
+          </li>
+          <li className="rounded-xl bg-muted px-3 py-2 font-mono text-xs text-foreground">{steps[5]}</li>
+        </ol>
+        <p className="text-pretty text-xs leading-relaxed text-muted-foreground">
+          Signed Windows (.exe) and Android (.apk) installers arrive in stage V0.6 — until then, building from
+          source is the official channel. Integrity fingerprint: {report.file.sha256?.slice(0, 16)}… ·{' '}
+          {report.file.name}
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <button
+          type="button"
+          onClick={closeInstall}
+          className="btn-primary h-12 flex-1 rounded-full text-[15px] font-semibold outline-none focus-visible:ring-4 focus-visible:ring-ring"
+        >
+          Done
+        </button>
+        <a
+          href={`https://github.com/${NEXUS_APP_ID}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="glass inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full text-[15px] font-semibold outline-none hover:bg-secondary focus-visible:ring-4 focus-visible:ring-ring"
+        >
+          <ArrowDown className="size-4" aria-hidden="true" />
+          Open source repo
+        </a>
+      </div>
+    </div>
+  )
+}
+
 export function ScanDialog() {
   const { installState: state, installOpen, closeInstall, retryInstall, openApp } = useStore()
 
@@ -345,6 +432,7 @@ export function ScanDialog() {
 
                 {state.phase === 'scanning' && <ScanningView key={state.id} />}
                 {state.phase === 'result' && <ResultView key={state.id} report={state.report} downloaded={state.downloaded} trust={state.trust} />}
+                {state.phase === 'nexus' && <NexusView key={state.id} report={state.report} trust={state.trust} />}
                 {state.phase === 'unavailable' && (
                   <div className="flex flex-col gap-5">
                     <p className="text-pretty text-sm leading-relaxed text-muted-foreground">

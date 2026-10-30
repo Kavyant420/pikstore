@@ -5,6 +5,7 @@ import type { StoreApp } from '@/lib/catalog'
 import { detectArch, detectPlatform, type Platform } from '@/lib/platform'
 import type { ScanReport } from '@/lib/scan-types'
 import { buildTrustProfile, shouldAutoDownload, type TrustProfile } from '@/lib/ai-security'
+import { isNexusApp } from '@/lib/nexus'
 
 export type Notice = { id: number; app: StoreApp; title: string; detail: string }
 
@@ -12,6 +13,7 @@ export type InstallState =
   | { id: number; app: StoreApp; platform: Platform; phase: 'scanning' }
   | { id: number; app: StoreApp; platform: Platform; phase: 'result'; report: ScanReport; downloaded: boolean; trust: TrustProfile }
   | { id: number; app: StoreApp; platform: Platform; phase: 'unavailable' }
+  | { id: number; app: StoreApp; platform: Platform; phase: 'nexus'; report: ScanReport; trust: TrustProfile }
   | { id: number; app: StoreApp; platform: Platform; phase: 'error'; message: string }
 
 type StoreContextValue = {
@@ -91,7 +93,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         const report = body as ScanReport
         // AI security layer: explainable ensemble trust profile
         const trust = buildTrustProfile(app.id, `${app.owner}/${app.repo}`, app.stars ?? 0, report)
-        next = { id, app, platform: target, phase: 'result', report, downloaded: false, trust }
+        // Nexus first-party flow: never blindly fetch a ~400 MB GGUF from the
+        // browser. The popup switches to the custom install-instructions view.
+        next = isNexusApp(app.owner, app.repo)
+          ? { id, app, platform: target, phase: 'nexus', report, trust }
+          : { id, app, platform: target, phase: 'result', report, downloaded: false, trust }
       }
     } catch {
       next = { id, app, platform: target, phase: 'error', message: 'Network error. Check your connection.' }
