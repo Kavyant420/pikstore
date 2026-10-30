@@ -1,0 +1,13 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 29: Odometer Counters
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Digit-roll counters for stats.
+   ============================================================= */
+
+.ad-counter { display: inline-flex; font-family: var(--ad-font-mono); font-weight: 600; letter-spacing: -0.02em; }
+.ad-counter__digit { position: relative; display: inline-block; height: 1em; overflow: hidden; }
+.ad-counter__reel { display: flex; flex-direction: column; transform: translateY(calc(var(--v, 0) * -1em)); transition: transform 0.9s var(--ad-ease-out); }
+.ad-counter__reel span { height: 1em; line-height: 1em; }
+.ad-stat { display: flex; flex-direction: column; gap: 0.35rem; }
+.ad-stat__value { font-size: clamp(2rem, 4vw, 3.2rem); letter-spacing: -0.04em; }
+.ad-stat__label { font-size: 0.8rem; color: var(--ad-fg-dim); }

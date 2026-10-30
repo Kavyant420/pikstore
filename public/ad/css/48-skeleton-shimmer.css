@@ -1,0 +1,12 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 48: Skeleton Shimmers
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Loading placeholders for cards.
+   ============================================================= */
+
+.ad-skeleton { position: relative; overflow: hidden; background: var(--ad-surface); border-radius: 0.6rem; }
+.ad-skeleton::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.08), transparent); animation: skel-run 1.6s var(--ad-ease-in-out) infinite; }
+@keyframes skel-run { to { transform: translateX(100%); } }
+.ad-skeleton--icon { width: 3rem; height: 3rem; border-radius: 0.85rem; }
+.ad-skeleton--line { height: 0.75rem; }
+.ad-skeleton--line.w-60 { width: 60%; } .ad-skeleton--line.w-40 { width: 40%; }

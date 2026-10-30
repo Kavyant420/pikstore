@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 26: Mask Text Reveal
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Line-by-line clipped reveal for paragraphs.
+   ============================================================= */
+
+.reveal-mask { display: block; overflow: hidden; }
+.reveal-mask > span { display: block; transform: translateY(110%); transition: transform 0.9s var(--ad-ease-out); }
+.reveal-mask.is-in > span { transform: translateY(0); }
+.reveal-mask:nth-child(2) > span { transition-delay: 90ms; }
+.reveal-mask:nth-child(3) > span { transition-delay: 180ms; }

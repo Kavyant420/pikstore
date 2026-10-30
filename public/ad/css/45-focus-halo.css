@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 45: Focus Halo Ring
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Keyboard-visible focus treatment.
+   ============================================================= */
+
+:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--ad-bg), 0 0 0 4px oklch(1 0 0 / 0.7), 0 0 22px 2px oklch(1 0 0 / 0.25); border-radius: inherit; }
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 100; padding: 0.8rem 1.2rem; background: var(--ad-fg); color: var(--ad-bg); border-radius: 0 0 0.8rem 0; font-weight: 600; }
+.skip-link:focus { left: 0; }

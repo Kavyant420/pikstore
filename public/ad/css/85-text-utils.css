@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 85: Text Utilities
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Sizes, weights, colors, alignment.
+   ============================================================= */
+
+.text-dim { color: var(--ad-fg-dim); } .text-faint { color: var(--ad-fg-faint); } .text-white { color: var(--ad-fg); }
+.text-xs { font-size: 0.75rem; } .text-sm { font-size: 0.875rem; } .text-lg { font-size: 1.125rem; }
+.font-medium { font-weight: 500; } .font-semibold { font-weight: 600; } .font-bold { font-weight: 700; }
+.uppercase { text-transform: uppercase; } .text-center { text-align: center; } .tracking-wide { letter-spacing: 0.08em; }

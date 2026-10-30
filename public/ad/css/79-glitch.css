@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 79: Glitch Flicker
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Subtle text glitch on hover.
+   ============================================================= */
+
+.glitch { position: relative; }
+.glitch:hover { animation: glitch-skew 0.4s steps(2) 1; }
+@keyframes glitch-skew { 25% { transform: skewX(4deg) translateX(-2px); } 50% { transform: skewX(-3deg) translateX(2px); } 75% { transform: skewX(1deg); } }
+.glitch::selection { background: oklch(0.5 0 0); }

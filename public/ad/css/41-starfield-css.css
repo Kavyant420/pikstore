@@ -1,0 +1,14 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 41: CSS Starfield
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Parallax dot field behind the WebGL stage.
+   ============================================================= */
+
+.ad-stars { position: fixed; inset: 0; z-index: -3; pointer-events: none; }
+.ad-stars i {
+  position: absolute; width: 2px; height: 2px; border-radius: 50%; background: oklch(1 0 0 / 0.7);
+  animation: star-twinkle 4s ease-in-out infinite;
+}
+@keyframes star-twinkle { 50% { opacity: 0.15; transform: scale(0.6); } }
+.ad-stars--near { transform: translate3d(calc(var(--px, 0) * -14px), calc(var(--py, 0) * -14px), 0); }
+.ad-stars--far { transform: translate3d(calc(var(--px, 0) * -6px), calc(var(--py, 0) * -6px), 0); opacity: 0.5; }

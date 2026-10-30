@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 84: Flex Utilities
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Alignment helpers.
+   ============================================================= */
+
+.flex { display: flex; } .inline-flex { display: inline-flex; } .flex-col { flex-direction: column; } .flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; } .items-end { align-items: flex-end; } .justify-between { justify-content: space-between; } .justify-center { justify-content: center; }
+.grid { display: grid; } .place-center { place-items: center; } .relative { position: relative; } .overflow-hidden { overflow: hidden; }

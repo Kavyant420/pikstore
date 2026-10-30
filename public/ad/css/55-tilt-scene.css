@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 55: Scene Parallax Layers
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Mouse-parallax depth layers.
+   ============================================================= */
+
+.parallax-layer { will-change: transform; transition: transform 120ms linear; }
+.pl-fast { --depth: 26; } .pl-med { --depth: 14; } .pl-slow { --depth: 6; }
+@media (prefers-reduced-motion: reduce) { .parallax-layer { transform: none !important; } }

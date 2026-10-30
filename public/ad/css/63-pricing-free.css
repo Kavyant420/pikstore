@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 63: Free Badge Burst
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Price tag with radiating spokes.
+   ============================================================= */
+
+.free-burst { position: relative; display: grid; place-items: center; width: 8.5rem; height: 8.5rem; }
+.free-burst::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: repeating-conic-gradient(oklch(1 0 0 / 0.12) 0deg 6deg, transparent 6deg 12deg); animation: burst-spin 24s linear infinite; }
+.free-burst__core { position: relative; width: 6rem; height: 6rem; border-radius: 50%; background: var(--ad-fg); color: var(--ad-bg); display: grid; place-items: center; font-weight: 700; letter-spacing: -0.03em; box-shadow: 0 0 40px oklch(1 0 0 / 0.35); }
+@keyframes burst-spin { to { transform: rotate(360deg); } }

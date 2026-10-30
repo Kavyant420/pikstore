@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 50: Glow Dividers
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Section breaks with traveling sparks.
+   ============================================================= */
+
+.divider-glow { position: relative; height: 1px; background: var(--ad-line); overflow: visible; }
+.divider-glow::after { content: ''; position: absolute; top: -1px; left: 0; width: 25%; height: 3px; background: linear-gradient(90deg, transparent, var(--ad-fg), transparent); filter: blur(1px); animation: spark-travel 6s var(--ad-ease-in-out) infinite; }
+@keyframes spark-travel { 0% { left: -25%; } 100% { left: 100%; } }

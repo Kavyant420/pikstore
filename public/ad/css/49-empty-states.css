@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 49: Empty States
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: No-results panel art.
+   ============================================================= */
+
+.ad-empty { display: grid; place-items: center; gap: 1rem; padding: 3rem 1.5rem; border: 1px dashed var(--ad-line-strong); border-radius: var(--ad-radius-xl); text-align: center; color: var(--ad-fg-dim); }
+.ad-empty__glyph { width: 3.5rem; height: 3.5rem; border-radius: 50%; border: 1px solid var(--ad-line); display: grid; place-items: center; font-family: var(--ad-font-mono); animation: empty-float 4s ease-in-out infinite; }
+@keyframes empty-float { 50% { transform: translateY(-8px); } }

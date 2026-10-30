@@ -1,0 +1,12 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 51: Feature Bento Grid
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Asymmetric bento layout for site features.
+   ============================================================= */
+
+.bento { display: grid; gap: 1rem; grid-template-columns: repeat(6, 1fr); grid-auto-rows: minmax(9rem, auto); }
+.bento > .b-span2 { grid-column: span 2; } .bento > .b-span3 { grid-column: span 3; } .bento > .b-span4 { grid-column: span 4; } .bento > .b-span6 { grid-column: span 6; }
+.bento > .b-row2 { grid-row: span 2; }
+.bento__cell { position: relative; padding: 1.4rem; border-radius: var(--ad-radius-lg); border: 1px solid var(--ad-line); background: var(--ad-surface); overflow: hidden; transition: border-color var(--ad-dur) ease, transform var(--ad-dur) var(--ad-ease-out); }
+.bento__cell:hover { border-color: var(--ad-line-strong); }
+@media (max-width: 900px) { .bento { grid-template-columns: repeat(2, 1fr); } .bento > .b-span3, .bento > .b-span4, .bento > .b-span6 { grid-column: span 2; } }

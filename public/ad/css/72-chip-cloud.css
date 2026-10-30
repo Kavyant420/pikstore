@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 72: Tag Cloud Scatter
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Scattered tech tags.
+   ============================================================= */
+
+.chipcloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chipcloud .ad-chip { transform: rotate(var(--rot, 0deg)); transition: transform var(--ad-dur) var(--ad-ease-spring); }
+.chipcloud .ad-chip:hover { transform: rotate(0deg) scale(1.08); }

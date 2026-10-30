@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>PikStore — The open-source app store. Verified. Private. Free.</title>
+<meta name="description" content="PikStore advert: download verified open-source apps for Android, iOS, macOS and Windows. Virus-scanned releases, privacy-first alternatives, no account required." />
+<meta name="theme-color" content="#0a0a0a" />
+
+<!-- Monochrome enforcement -->
+<meta name="color-scheme" content="dark light" />
+
+<!-- Fonts: Geist + Geist Mono (storefront voice) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<!-- 96-layer intensive CSS foundry -->
+<link rel="stylesheet" href="css/01-tokens.css" />
+<link rel="stylesheet" href="css/02-reset.css" />
+<link rel="stylesheet" href="css/03-base-typography.css" />
+<link rel="stylesheet" href="css/04-layout-shell.css" />
+<link rel="stylesheet" href="css/05-stage-3d.css" />
+<link rel="stylesheet" href="css/06-grain.css" />
+<link rel="stylesheet" href="css/07-scanlines.css" />
+<link rel="stylesheet" href="css/08-noise-static.css" />
+<link rel="stylesheet" href="css/09-glass.css" />
+<link rel="stylesheet" href="css/10-header-sticky.css" />
+<link rel="stylesheet" href="css/11-logo-lockup.css" />
+<link rel="stylesheet" href="css/12-nav-links.css" />
+<link rel="stylesheet" href="css/13-search-liquid.css" />
+<link rel="stylesheet" href="css/14-btn-primary.css" />
+<link rel="stylesheet" href="css/15-btn-ghost.css" />
+<link rel="stylesheet" href="css/16-magnetic.css" />
+<link rel="stylesheet" href="css/17-spotlight-cursor.css" />
+<link rel="stylesheet" href="css/18-sheen-tracking.css" />
+<link rel="stylesheet" href="css/19-card-hover-3d.css" />
+<link rel="stylesheet" href="css/20-app-icon.css" />
+<link rel="stylesheet" href="css/21-get-button.css" />
+<link rel="stylesheet" href="css/22-category-orbit.css" />
+<link rel="stylesheet" href="css/23-platform-switcher.css" />
+<link rel="stylesheet" href="css/24-hero-cinematic.css" />
+<link rel="stylesheet" href="css/25-scroll-progress.css" />
+<link rel="stylesheet" href="css/26-reveal-mask.css" />
+<link rel="stylesheet" href="css/27-fade-up.css" />
+<link rel="stylesheet" href="css/28-stagger-children.css" />
+<link rel="stylesheet" href="css/29-counter-odometer.css" />
+<link rel="stylesheet" href="css/30-security-pipeline.css" />
+<link rel="stylesheet" href="css/31-radar-scan.css" />
+<link rel="stylesheet" href="css/32-progress-bar.css" />
+<link rel="stylesheet" href="css/33-toast-island.css" />
+<link rel="stylesheet" href="css/34-modal-cinematic.css" />
+<link rel="stylesheet" href="css/35-tabs-underline.css" />
+<link rel="stylesheet" href="css/36-switch-physics.css" />
+<link rel="stylesheet" href="css/37-marquee.css" />
+<link rel="stylesheet" href="css/38-footer-luxury.css" />
+<link rel="stylesheet" href="css/39-mobile-tabbar.css" />
+<link rel="stylesheet" href="css/40-badge-chips.css" />
+<link rel="stylesheet" href="css/41-starfield-css.css" />
+<link rel="stylesheet" href="css/42-aurora-wash.css" />
+<link rel="stylesheet" href="css/43-grid-floor.css" />
+<link rel="stylesheet" href="css/44-glow-ring.css" />
+<link rel="stylesheet" href="css/45-focus-halo.css" />
+<link rel="stylesheet" href="css/46-selection.css" />
+<link rel="stylesheet" href="css/47-scrollbar-luxury.css" />
+<link rel="stylesheet" href="css/48-skeleton-shimmer.css" />
+<link rel="stylesheet" href="css/49-empty-states.css" />
+<link rel="stylesheet" href="css/50-divider-glow.css" />
+<link rel="stylesheet" href="css/51-feature-grid.css" />
+<link rel="stylesheet" href="css/52-orbit-system.css" />
+<link rel="stylesheet" href="css/53-terminal-window.css" />
+<link rel="stylesheet" href="css/54-device-frame.css" />
+<link rel="stylesheet" href="css/55-tilt-scene.css" />
+<link rel="stylesheet" href="css/56-kinetic-type.css" />
+<link rel="stylesheet" href="css/57-outline-text.css" />
+<link rel="stylesheet" href="css/58-ticker-numbers.css" />
+<link rel="stylesheet" href="css/59-waveform.css" />
+<link rel="stylesheet" href="css/60-checkmark-draw.css" />
+<link rel="stylesheet" href="css/61-lockup-stats.css" />
+<link rel="stylesheet" href="css/62-testimonial.css" />
+<link rel="stylesheet" href="css/63-pricing-free.css" />
+<link rel="stylesheet" href="css/64-cta-band.css" />
+<link rel="stylesheet" href="css/65-qr-panel.css" />
+<link rel="stylesheet" href="css/66-step-arrows.css" />
+<link rel="stylesheet" href="css/67-preloader.css" />
+<link rel="stylesheet" href="css/68-cursor-dot.css" />
+<link rel="stylesheet" href="css/69-code-highlight.css" />
+<link rel="stylesheet" href="css/70-shield-badge.css" />
+<link rel="stylesheet" href="css/71-timeline-vertical.css" />
+<link rel="stylesheet" href="css/72-chip-cloud.css" />
+<link rel="stylesheet" href="css/73-image-duotone.css" />
+<link rel="stylesheet" href="css/74-hairline-table.css" />
+<link rel="stylesheet" href="css/75-accordion.css" />
+<link rel="stylesheet" href="css/76-banner-tape.css" />
+<link rel="stylesheet" href="css/77-halftone.css" />
+<link rel="stylesheet" href="css/78-border-beam.css" />
+<link rel="stylesheet" href="css/79-glitch.css" />
+<link rel="stylesheet" href="css/80-float-idle.css" />
+<link rel="stylesheet" href="css/81-shadow-depth.css" />
+<link rel="stylesheet" href="css/82-radius-scale.css" />
+<link rel="stylesheet" href="css/83-spacing-utils.css" />
+<link rel="stylesheet" href="css/84-flex-utils.css" />
+<link rel="stylesheet" href="css/85-text-utils.css" />
+<link rel="stylesheet" href="css/86-media-breakpoints.css" />
+<link rel="stylesheet" href="css/87-print-sheet.css" />
+<link rel="stylesheet" href="css/88-reduced-motion.css" />
+<link rel="stylesheet" href="css/89-high-contrast.css" />
+<link rel="stylesheet" href="css/90-a11y-visually-hidden.css" />
+<link rel="stylesheet" href="css/91-z-index-map.css" />
+<link rel="stylesheet" href="css/92-willpower-perf.css" />
+<link rel="stylesheet" href="css/93-dark-contrast-grade.css" />
+<link rel="stylesheet" href="css/94-section-labels.css" />
+<link rel="stylesheet" href="css/95-anchor-flash.css" />
+<link rel="stylesheet" href="css/96-final-polish.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#discover">Skip to the catalog</a>
+
+<!-- Boot curtain -->
+<div id="ad-preloader" data-preloader aria-hidden="true">
+  <div class="ad-stack items-center">
+    <span class="ad-eyebrow">PikStore · ad unit 001</span>
+    <div class="preloader__pct"><span id="preloader-num">000</span><span class="text-faint">%</span></div>
+    <div class="preloader__bar"><i id="preloader-bar"></i></div>
+    <span class="ad-mono text-faint">compiling monochrome shaders…</span>
+  </div>
+</div>
+
+<!-- Ambient layers -->
+<div id="ad-stage" data-hero-scene-host></div>
+<div class="ad-stars ad-stars--far" data-starfield-layer="far" aria-hidden="true"></div>
+<div class="ad-stars ad-stars--near" data-starfield-layer="near" aria-hidden="true"></div>
+<div class="ad-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="ad-grade" aria-hidden="true"></div>
+<div class="ad-grain" aria-hidden="true"></div>
+<div class="ad-spotlight" data-spotlight aria-hidden="true"></div>
+<div class="ad-cursor-dot" data-cursor aria-hidden="true"></div>
+<div class="ad-cursor-ring" data-cursor-ring aria-hidden="true"></div>
+
+<!-- Scroll rail -->
+<aside class="ad-rail" data-rail aria-hidden="true">
+  <div class="ad-rail__fill"></div>
+  <span class="ad-rail__node" style="top:0%"></span>
+  <span class="ad-rail__node" style="top:25%"></span>
+  <span class="ad-rail__node" style="top:50%"></span>
+  <span class="ad-rail__node" style="top:75%"></span>
+  <span class="ad-rail__node" style="top:100%"></span>
+</aside>
+
+<div class="ad-shell">
+
+  <!-- ============================ HEADER ============================ -->
+  <header class="ad-header" data-header>
+    <div class="ad-header__inner">
+      <a class="ad-logo" href="#" data-hot>
+        <span class="ad-logo__mark" aria-hidden="true"></span>
+        <span class="ad-logo__text">Pik<span class="ad-logo__dim">Store</span></span>
+      </a>
+
+      <nav class="ad-nav ad-nav--desktop" aria-label="Ad sections">
+        <a class="ad-nav__link is-active" href="#discover">Discover</a>
+        <a class="ad-nav__link" href="#security">Security</a>
+        <a class="ad-nav__link" href="#privacy">Privacy</a>
+        <a class="ad-nav__link" href="#catalog">Catalog</a>
+        <a class="ad-nav__link" href="#faq">FAQ</a>
+      </nav>
+
+      <div class="ad-spacer"></div>
+
+      <label class="ad-search hide-sm" data-search>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input class="ad-search__input" type="search" placeholder="Search verified open source…" aria-label="Search apps" data-search-input />
+        <kbd class="ad-search__kbd">⌘K</kbd>
+      </label>
+
+      <a class="btn-primary" href="https://pikstore.vercel.app/" target="_blank" rel="noopener" data-magnetic data-hot>
+        <span class="magnetic-inner">Visit PikStore</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============================ HERO ============================ -->
+    <section class="ad-hero ad-container" id="hero" data-director-key="hero">
+      <div class="ad-scanlines" aria-hidden="true"></div>
+      <div class="ad-gridfloor" aria-hidden="true"></div>
+
+      <div class="ad-hero__copy">
+        <p class="ad-eyebrow animate-rise d-1">Open-source app store · est. in the terminal</p>
+        <h1 class="ad-display animate-rise d-2 kinetic" data-kinetic>Every app <em>vouched for</em>,<br /><span class="text-chrome glitch">verified</span> by humans.</h1>
+        <p class="ad-body text-balance animate-rise d-3">
+          PikStore hand-curates real open-source software — Obsidian, LocalSend, OBS Studio, RustDesk —
+          checks every release with SHA-256 hashes and a live virus scan before it ever touches your device.
+          No account. No telemetry. No dark patterns. Just code you can read.
+        </p>
+        <div class="ad-row flex-wrap gap-3 animate-rise d-4">
+          <a class="btn-primary glow-ring" href="https://pikstore.vercel.app/" target="_blank" rel="noopener" data-magnetic data-hot data-sfx="click">
+            <span class="magnetic-inner">Start exploring →</span>
+          </a>
+          <button class="btn-ghost" data-open-radar data-hot>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v3m0 12v3M3 12h3m12 0h3"/><circle cx="12" cy="12" r="4"/></svg>
+            Watch the virus scan
+          </button>
+        </div>
+        <div class="ad-row gap-6 animate-rise d-5 text-dim text-sm">
+          <span class="ad-mono"><b class="text-white" data-counter data-target="12000">0</b>+ verified releases</span>
+          <span class="ad-mono hide-sm"><b class="text-white" data-counter data-target="4">0</b> platforms</span>
+          <span class="ad-mono"><b class="text-white">$0</b> forever</span>
+        </div>
+      </div>
+
+      <div class="scroll-hint" aria-hidden="true">
+        <span>Scroll</span>
+        <svg class="arrow-bounce" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14m0 0-6-6m6 6 6-6"/></svg>
+      </div>
+    </section>
+
+    <div class="divider-glow" aria-hidden="true"></div>
+
+    <!-- ============================ DISCOVER ============================ -->
+    <section class="ad-section ad-container" id="discover" data-director-key="discover">
+      <span class="section-label">01 — Discover</span>
+
+      <div class="ad-stack gap-6 fade-up" data-reveal>
+        <div class="flex items-end justify-between flex-wrap gap-4">
+          <div class="ad-stack gap-3">
+            <p class="ad-eyebrow">The storefront, reimagined</p>
+            <h2 class="ad-h2 kinetic" data-kinetic>Hand-vouched apps,<br />not an algorithm's dump.</h2>
+          </div>
+          <div class="ad-platforms" data-platforms role="tablist" aria-label="Platform">
+            <span class="ad-platforms__thumb"></span>
+            <button class="ad-platform is-selected" role="tab" aria-selected="true"><span class="ad-platform__dot"></span>All</button>
+            <button class="ad-platform" role="tab" aria-selected="false"><span class="ad-platform__dot"></span>Android</button>
+            <button class="ad-platform" role="tab" aria-selected="false"><span class="ad-platform__dot"></span>iOS</button>
+            <button class="ad-platform" role="tab" aria-selected="false"><span class="ad-platform__dot"></span>macOS</button>
+            <button class="ad-platform" role="tab" aria-selected="false"><span class="ad-platform__dot"></span>Windows</button>
+          </div>
+        </div>
+
+        <div class="ad-categories" data-categories role="tablist" aria-label="Category">
+          <button class="ad-cat-pill is-active" data-cat="all">All</button>
+          <button class="ad-cat-pill" data-cat="productivity">Productivity</button>
+          <button class="ad-cat-pill" data-cat="creative">Creative</button>
+          <button class="ad-cat-pill" data-cat="utilities">Utilities</button>
+          <button class="ad-cat-pill" data-cat="developer">Developer</button>
+          <button class="ad-cat-pill" data-cat="privacy">Privacy</button>
+        </div>
+
+        <div class="ad-grid ad-grid-3 stagger" data-stagger id="catalog-grid"><!-- cards injected --></div>
+
+        <div class="ad-empty" id="empty-state" hidden>
+          <span class="ad-empty__glyph">?</span>
+          <p>No apps match that signal.<br /><span class="text-faint text-sm">Try “notes”, “stream” or “password”.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider-glow" aria-hidden="true"></div>
+
+    <!-- ============================ SECURITY ============================ -->
+    <section class="ad-section ad-container" id="security" data-director-key="security">
+      <span class="section-label">02 — Security</span>
+      <div class="ad-grid ad-grid-2 items-center gap-10">
+        <div class="ad-stack gap-6 fade-up" data-reveal>
+          <p class="ad-eyebrow">SHA-256 pinned · multi-engine scanned</p>
+          <h2 class="ad-h2">Every binary walks<br />the gauntlet.</h2>
+          <div class="ad-pipeline" data-pipeline>
+            <div class="ad-step"><div><p class="ad-step__title">Source provenance</p><p class="ad-step__desc">We clone the upstream GitHub repo and rebuild from tagged source when binaries aren't reproducible.</p></div></div>
+            <div class="ad-step"><div><p class="ad-step__title">Hash verification</p><p class="ad-step__desc">Release assets are checked against author-published SHA-256 signatures before listing.</p></div></div>
+            <div class="ad-step"><div><p class="ad-step__title">Virus scan dialog</p><p class="ad-step__desc">A live radar sweep inspects each installer. You watch it happen — transparency as a feature.</p></div></div>
+            <div class="ad-step"><div><p class="ad-step__title">Human review</p><p class="ad-step__desc">Curators vouch for taglines and permissions. Nothing ships anonymously.</p></div></div>
+          </div>
+          <button class="btn-ghost self-start" data-open-radar data-hot>Run a live scan demo →</button>
+        </div>
+
+        <div class="ad-stack gap-4">
+          <div class="ad-terminal ad-noisy" data-terminal>
+            <div class="ad-terminal__bar"><span class="ad-terminal__dot"></span><span class="ad-terminal__dot"></span><span class="ad-terminal__dot"></span><span class="ad-mono text-faint center-x">pikscan — verifier</span></div>
+            <div class="ad-terminal__body" data-terminal-body></div>
+          </div>
+          <div class="waveform" data-waveform aria-hidden="true"></div>
+          <div class="ad-progress ad-progress--shimmer" data-download-bar><div class="ad-progress__fill"></div></div>
+          <div class="flex justify-between ad-mono text-faint"><span data-download-label>idle</span><span data-download-size>— MB</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="tape" aria-hidden="true"></div>
+
+    <!-- ============================ PRIVACY / BENTO ============================ -->
+    <section class="ad-section ad-container" id="privacy" data-director-key="privacy">
+      <span class="section-label">03 — Privacy</span>
+      <div class="ad-stack gap-8 fade-up" data-reveal>
+        <div class="ad-stack gap-3">
+          <p class="ad-eyebrow">Built like the tools we list</p>
+          <h2 class="ad-h2">Your device stays<br />your device.</h2>
+        </div>
+
+        <div class="bento">
+          <article class="bento__cell b-span3 b-row2 sheen beam-card" data-sheen>
+            <span class="ad-appicon">Ø</span>
+            <h3 class="text-lg font-semibold">No account, ever</h3>
+            <p class="ad-body text-sm">Browse and install without email, phone numbers or analytics IDs. PikStore works offline-first after listing sync.</p>
+            <div class="orbit mt-a" aria-hidden="true">
+              <span class="orbit__core"></span>
+              <span class="orbit__path"><i class="orbit__sat"></i></span>
+              <span class="orbit__path orbit__path--2"><i class="orbit__sat"></i></span>
+              <span class="orbit__path orbit__path--3"><i class="orbit__sat"></i></span>
+            </div>
+          </article>
+          <article class="bento__cell b-span3 sheen" data-sheen>
+            <span class="ad-appicon">{ }</span>
+            <h3 class="text-lg font-semibold">Only open source</h3>
+            <p class="ad-body text-sm">Every listing links its public repository. Read the code, build it yourself, diff the releases.</p>
+          </article>
+          <article class="bento__cell b-span2 sheen" data-sheen>
+            <span class="ad-appicon">⇄</span>
+            <h3 class="font-semibold">Cross-platform</h3>
+            <p class="ad-body text-sm">Android · iOS · macOS · Windows with per-device filtering.</p>
+          </article>
+          <article class="bento__cell b-span2 sheen" data-sheen>
+            <span class="ad-appicon">⬡</span>
+            <h3 class="font-semibold">Hash-pinned updates</h3>
+            <p class="ad-body text-sm">Tampered assets fail verification and never reach you.</p>
+          </article>
+          <article class="bento__cell b-span2 sheen" data-sheen>
+            <div class="shield" aria-hidden="true">
+              <svg class="check-draw" data-checkdraw width="44" height="44" viewBox="0 0 60 60" fill="none" stroke="white" stroke-width="2.5"><path d="M30 6 50 14v14c0 12-8 20-20 26C18 48 10 40 10 28V14L30 6Z"/><path d="m21 30 6 6 12-12"/></svg>
+            </div>
+            <h3 class="font-semibold">Human vouched</h3>
+            <p class="ad-body text-sm">Curated taglines, not scraped ASO spam.</p>
+          </article>
+        </div>
+
+        <div class="statband fade-up" data-reveal>
+          <div class="ad-stat"><span class="ad-stat__value" data-counter data-target="248">0</span><span class="ad-stat__label">curated apps</span></div>
+          <div class="ad-stat"><span class="ad-stat__value" data-counter data-target="12480">0</span><span class="ad-stat__label">scanned releases</span></div>
+          <div class="ad-stat"><span class="ad-stat__value"><span class="ticker"><span class="ticker__col"><span>0</span><span>0</span><span>1</span><span>0</span></span>.00%</span></span><span class="ad-stat__label">telemetry sent</span></div>
+          <div class="ad-stat"><span class="ad-stat__value text-chrome">$0</span><span class="ad-stat__label">cost, permanently</span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ad-marquee" aria-hidden="true">
+      <div class="ad-marquee__track" data-marquee>
+        <span class="ad-marquee__item">◆ OBSIDIAN</span><span class="ad-marquee__item">◆ LOCALESEND</span><span class="ad-marquee__item">◆ OBS STUDIO</span><span class="ad-marquee__item">◆ RUSTDESK</span><span class="ad-marquee__item">◆ LOGSEQ</span><span class="ad-marquee__item">◆ APPFLOWY</span><span class="ad-marquee__item">◆ ZEN BROWSER</span><span class="ad-marquee__item">◆ KEEPASSXC</span><span class="ad-marquee__item">◆ UPSCAYL</span><span class="ad-marquee__item">◆ OLLAMA</span>
+      </div>
+    </div>
+
+    <!-- ============================ CATALOG DEEP-DIVE ============================ -->
+    <section class="ad-section ad-container" id="catalog" data-director-key="catalog">
+      <span class="section-label">04 — Catalog</span>
+      <div class="ad-grid ad-grid-2 gap-10 items-center">
+        <div class="ad-stack gap-6 fade-up" data-reveal>
+          <p class="ad-eyebrow">One tap from curiosity to install</p>
+          <h2 class="ad-h2">Get button physics:<br />fetch → scan → verify → done.</h2>
+          <ol class="timeline">
+            <li class="timeline__item"><span class="timeline__ver">STEP 01</span><p class="font-medium">Fetch signed asset</p><p class="text-sm text-dim">Pulled straight from the author's GitHub release feed.</p></li>
+            <li class="timeline__item"><span class="timeline__ver">STEP 02</span><p class="font-medium">Radar virus scan</p><p class="text-sm text-dim">Watch the sweep; every ping is logged in plain text.</p></li>
+            <li class="timeline__item"><span class="timeline__ver">STEP 03</span><p class="font-medium">Install & rate</p><p class="text-sm text-dim">Then tell the community what actually changed.</p></li>
+          </ol>
+          <div class="chipcloud">
+            <span class="ad-chip" style="--rot:-2deg">Repro builds</span>
+            <span class="ad-chip" style="--rot:1deg">No ads</span>
+            <span class="ad-chip" style="--rot:-1deg">Offline lists</span>
+            <span class="ad-chip ad-chip--verified">SHA-256 pinned</span>
+            <span class="ad-chip" style="--rot:2deg">MIT licensed</span>
+          </div>
+          <div class="ad-row gap-4">
+            <div class="free-burst" aria-label="Free forever"><span class="free-burst__core">FREE</span></div>
+            <div class="qr-card">
+              <div class="qr-code duotone" aria-hidden="true"></div>
+              <span class="ad-mono text-faint">pikstore.vercel.app</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="device-phone float-idle parallax-layer pl-med gpu" data-parallax aria-hidden="true">
+          <div class="device-screen-glow"></div>
+          <div class="ad-stack gap-3" style="padding:3rem 1rem 1rem">
+            <div class="ad-skeleton ad-skeleton--icon"></div>
+            <div class="ad-skeleton ad-skeleton--line w-60"></div>
+            <div class="ad-skeleton ad-skeleton--line w-40"></div>
+            <div class="ad-card" style="gap:.6rem"><div class="ad-skeleton ad-skeleton--line w-60"></div><div class="ad-skeleton ad-skeleton--line"></div></div>
+            <div class="ad-card" style="gap:.6rem"><div class="ad-skeleton ad-skeleton--line w-40"></div><div class="ad-skeleton ad-skeleton--line"></div></div>
+            <div class="mt-a flex justify-between items-end"><div class="ad-skeleton ad-skeleton--line w-60"></div><button class="btn-get">Get</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider-glow" aria-hidden="true"></div>
+
+    <!-- ============================ FAQ ============================ -->
+    <section class="ad-section ad-container" id="faq" data-director-key="faq" style="max-width:46rem">
+      <span class="section-label">05 — FAQ</span>
+      <div class="ad-stack gap-4 fade-up" data-reveal>
+        <h2 class="ad-h2">Questions, answered plainly.</h2>
+        <div data-accordion>
+          <div class="ad-acc">
+            <button class="ad-acc__q" data-hot>Is PikStore itself open source?<span class="ad-acc__icon">＋</span></button>
+            <div class="ad-acc__a"><div><p>Yes. Every listing links its upstream repository, and so does the store itself. Read it, fork it, run your own mirror.</p></div></div>
+          </div>
+          <div class="ad-acc">
+            <button class="ad-acc__q" data-hot>How does the virus scan work?<span class="ad-acc__icon">＋</span></button>
+            <div class="ad-acc__a"><div><p>Each release asset is hashed and swept through automated scanners plus curator review. The hash is shown next to every download so you can verify independently.</p></div></div>
+          </div>
+          <div class="ad-acc">
+            <button class="ad-acc__q" data-hot>Do I need an account or payment?<span class="ad-acc__icon">＋</span></button>
+            <div class="ad-acc__a"><div><p>Neither. The entire catalog is free because every app it distributes is free and open source.</p></div></div>
+          </div>
+          <div class="ad-acc">
+            <button class="ad-acc__q" data-hot>Which devices are supported?<span class="ad-acc__icon">＋</span></button>
+            <div class="ad-acc__a"><div><p>Android, iOS, macOS and Windows. The platform switcher filters listings to exactly what runs on your machine.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================ FINALE CTA ============================ -->
+    <section class="ad-section ad-container">
+      <div class="cta-band fade-up" data-reveal>
+        <p class="ad-eyebrow" style="margin-bottom:1rem">pikstore.vercel.app</p>
+        <h2 class="ad-display">Software you can <span class="text-chrome">trust</span><br />starts with code you can <span class="text-outline">read</span>.</h2>
+        <p class="ad-body center-x text-center" style="margin-top:1.25rem">Open the store. Inspect anything. Install with receipts.</p>
+        <div class="ad-row justify-center flex-wrap gap-4" style="margin-top:2rem">
+          <a class="btn-primary glow-ring magnetic" href="https://pikstore.vercel.app/" target="_blank" rel="noopener" data-magnetic data-hot data-sfx="success" style="position:relative;z-index:1">
+            <span class="magnetic-inner">Open PikStore now</span>
+          </a>
+          <button class="btn-ghost" data-demo-get style="position:relative;z-index:1">Try the Get-button demo</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="ad-footer">
+    <div class="ad-container">
+      <div class="ad-footer__grid">
+        <div>
+          <a class="ad-logo" href="#"><span class="ad-logo__mark" aria-hidden="true"></span><span class="ad-logo__text">Pik<span class="ad-logo__dim">Store</span></span></a>
+          <p class="text-sm text-dim" style="margin-top:1rem;max-width:26ch">The open-source app store. Verified releases, honest taglines, zero telemetry.</p>
+        </div>
+        <div><p class="ad-footer__heading">Store</p><a class="ad-footer__link" href="https://pikstore.vercel.app/" target="_blank" rel="noopener">Discover</a><a class="ad-footer__link" href="https://pikstore.vercel.app/" target="_blank" rel="noopener">Categories</a><a class="ad-footer__link" href="https://pikstore.vercel.app/" target="_blank" rel="noopener">Trending</a></div>
+        <div><p class="ad-footer__heading">Trust</p><a class="ad-footer__link" href="#security">Verification</a><a class="ad-footer__link" href="#privacy">Privacy policy</a><a class="ad-footer__link" href="#faq">FAQ</a></div>
+        <div><p class="ad-footer__heading">This ad</p><span class="ad-footer__link">96 CSS layers · 40 JS modules</span><span class="ad-footer__link">three.js · monochrome only</span><span class="ad-footer__link">no color. just contrast.</span></div>
+      </div>
+      <hr class="ad-divider" style="margin-block:2.5rem" />
+      <div class="flex justify-between flex-wrap gap-2 text-faint ad-mono">
+        <span>© 2026 PikStore ad unit — fictional promo build</span>
+        <span>B&amp;W ∙ three.js ∙ vanilla ES modules</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile tab bar -->
+  <nav class="ad-tabbar" aria-label="Quick nav">
+    <div class="ad-tabbar__inner">
+      <a class="ad-tabbar__item is-active" href="#discover">▦ Store</a>
+      <a class="ad-tabbar__item" href="#security">◉ Scan</a>
+      <a class="ad-tabbar__item" href="#privacy">◇ Privacy</a>
+      <a class="ad-tabbar__item" href="https://pikstore.vercel.app/" target="_blank" rel="noopener">↗ Open</a>
+    </div>
+  </nav>
+
+  <!-- Toast island -->
+  <output class="ad-island" data-island aria-live="polite">
+    <span class="ad-island__pulse"></span><span data-island-text>Ready.</span>
+  </output>
+
+  <!-- Radar modal -->
+  <div class="ad-modal" data-radar-modal role="dialog" aria-modal="true" aria-label="Live virus scan demo">
+    <div class="ad-modal__backdrop" data-close-radar></div>
+    <div class="ad-modal__panel" style="padding:2rem">
+      <div class="ad-stack gap-6 items-center">
+        <p class="ad-eyebrow">Live verification · obs-studio-installer.dmg</p>
+        <div class="ad-radar" data-radar>
+          <span class="ad-radar__ring"></span><span class="ad-radar__ring ad-radar__ring--2"></span><span class="ad-radar__ring ad-radar__ring--3"></span>
+          <span class="ad-radar__sweep"></span>
+          <span class="ad-radar__blip" style="left:30%;top:40%"></span>
+          <span class="ad-radar__blip" style="left:62%;top:30%;animation-delay:.8s"></span>
+          <span class="ad-radar__blip" style="left:55%;top:66%;animation-delay:1.5s"></span>
+        </div>
+        <div class="w-full">
+          <div class="ad-progress"><div class="ad-progress__fill" data-radar-fill></div></div>
+          <div class="flex justify-between ad-mono text-faint" style="margin-top:.6rem"><span data-radar-status>scanning engine 1/4…</span><span>0 threats</span></div>
+        </div>
+        <button class="btn-ghost" data-close-radar data-hot>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap entry (loads the 40-module foundry) -->
+<script type="module" src="js/lib/40-mainEntry.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>

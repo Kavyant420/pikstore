@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 68: Custom Cursor Dot
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Ring + dot hybrid cursor.
+   ============================================================= */
+
+.ad-cursor-dot, .ad-cursor-ring { position: fixed; top: 0; left: 0; z-index: 900; pointer-events: none; border-radius: 50%; translate: -50% -50%; }
+.ad-cursor-dot { width: 6px; height: 6px; background: var(--ad-fg); }
+.ad-cursor-ring { width: 34px; height: 34px; border: 1px solid oklch(1 0 0 / 0.45); transition: width 0.25s ease, height 0.25s ease, background 0.25s ease; }
+.ad-cursor-ring.is-hot { width: 52px; height: 52px; background: oklch(1 0 0 / 0.08); }
+@media (hover: none) { .ad-cursor-dot, .ad-cursor-ring { display: none; } }

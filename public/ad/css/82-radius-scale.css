@@ -1,0 +1,7 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 82: Radius Scale Utilities
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Consistent rounding tokens.
+   ============================================================= */
+
+.r-sm { border-radius: var(--ad-radius-sm); } .r-md { border-radius: var(--ad-radius); } .r-lg { border-radius: var(--ad-radius-lg); } .r-xl { border-radius: var(--ad-radius-xl); } .r-2xl { border-radius: var(--ad-radius-2xl); } .r-full { border-radius: 999px; }

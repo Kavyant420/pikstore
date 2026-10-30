@@ -1,0 +1,17 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 43: Perspective Grid Floor
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Tron-like floor lines under the hero.
+   ============================================================= */
+
+.ad-gridfloor {
+  position: absolute; inset-inline: -60%; bottom: -10%; height: 55vh; z-index: -1; pointer-events: none;
+  background-image:
+    linear-gradient(oklch(1 0 0 / 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(1 0 0 / 0.14) 1px, transparent 1px);
+  background-size: 56px 56px;
+  transform: perspective(420px) rotateX(66deg);
+  mask-image: linear-gradient(to top, black, transparent 78%);
+  animation: floor-scroll 9s linear infinite;
+}
+@keyframes floor-scroll { to { background-position: 0 56px, 0 0; } }

@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 54: Device Frames
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Phone/laptop frames for showcase.
+   ============================================================= */
+
+.device-phone { width: 15rem; aspect-ratio: 9/19; border-radius: 2.4rem; border: 6px solid oklch(0.2 0 0); background: var(--ad-bg-deep); box-shadow: 0 40px 80px -30px oklch(0 0 0 / 0.9), inset 0 0 0 1px oklch(1 0 0 / 0.12); position: relative; overflow: hidden; }
+.device-phone::before { content: ''; position: absolute; top: 0.7rem; left: 50%; transform: translateX(-50%); width: 30%; height: 1rem; border-radius: 999px; background: oklch(0.12 0 0); }
+.device-laptop { width: 100%; max-width: 30rem; aspect-ratio: 16/10; border-radius: 0.8rem 0.8rem 0 0; border: 6px solid oklch(0.2 0 0); border-bottom-width: 10px; background: var(--ad-bg-deep); position: relative; }
+.device-screen-glow { position: absolute; inset: 0; background: radial-gradient(80% 60% at 50% 0%, oklch(1 0 0 / 0.08), transparent 70%); }
