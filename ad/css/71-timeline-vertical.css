@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 71: Version Timeline
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Release timeline spine.
+   ============================================================= */
+
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before { content: ''; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 1px; background: linear-gradient(var(--ad-fg), var(--ad-line) 30%, var(--ad-line)); }
+.timeline__item { position: relative; padding-bottom: 1.8rem; }
+.timeline__item::before { content: ''; position: absolute; left: -2rem; top: 6px; width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--ad-fg); background: var(--ad-bg); }
+.timeline__ver { font-family: var(--ad-font-mono); font-size: 0.75rem; color: var(--ad-fg-faint); }

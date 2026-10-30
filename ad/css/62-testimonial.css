@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 62: Testimonial Cards
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Quote cards with avatar coins.
+   ============================================================= */
+
+.ad-quote-card { padding: 1.5rem; border-radius: var(--ad-radius-lg); border: 1px solid var(--ad-line); background: var(--ad-surface); display: flex; flex-direction: column; gap: 1rem; }
+.ad-quote-card p { font-size: 0.95rem; color: var(--ad-fg); line-height: 1.6; }
+.ad-quote-card footer { display: flex; align-items: center; gap: 0.7rem; font-size: 0.8rem; color: var(--ad-fg-dim); }

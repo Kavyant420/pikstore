@@ -1,0 +1,13 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 17: Cursor Spotlight
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Radial light following the pointer across sections.
+   ============================================================= */
+
+.ad-spotlight {
+  position: fixed; inset: 0; z-index: 55; pointer-events: none; opacity: 0;
+  transition: opacity var(--ad-dur-slow) ease;
+  background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), oklch(1 0 0 / 0.05), transparent 65%);
+}
+.ad-spotlight.is-on { opacity: 1; }
+@media (hover: none) { .ad-spotlight { display: none; } }

@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 69: Code Block Styling
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Hash-checked installer snippet look.
+   ============================================================= */
+
+.ad-code { font-family: var(--ad-font-mono); font-size: 0.8rem; background: oklch(0.07 0 0); border: 1px solid var(--ad-line); border-radius: 0.7rem; padding: 1rem 1.2rem; color: var(--ad-fg-dim); overflow-x: auto; }
+.ad-code .k { color: var(--ad-fg); font-weight: 600; }
+.ad-code .c { color: var(--ad-fg-faint); font-style: italic; }

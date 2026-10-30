@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 89: High Contrast Mode
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Forced-colors adjustments.
+   ============================================================= */
+
+@media (forced-colors: active) {
+  .ad-card, .ad-glass, .btn-primary, .btn-ghost { border: 1px solid CanvasText; }
+  .ad-grain, .ad-aurora, .ad-scanlines { display: none; }
+}

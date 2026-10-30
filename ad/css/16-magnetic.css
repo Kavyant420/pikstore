@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 16: Magnetic Cursor Pull
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Elements drift toward the cursor when hovered.
+   ============================================================= */
+
+[data-magnetic] { will-change: transform; transition: transform 240ms var(--ad-ease-out); }
+[data-magnetic].is-magnetized { transition: transform 60ms linear; }
+.magnetic-inner { display: inline-block; will-change: transform; transition: transform 320ms var(--ad-ease-out); }
+[data-magnetic]:hover .magnetic-inner { transform: scale(1.04); }
+@media (hover: none) { [data-magnetic] { transform: none !important; } }

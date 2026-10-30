@@ -1,0 +1,19 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 12: Nav Links
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Underline-grow navigation with magnetic hover.
+   ============================================================= */
+
+.ad-nav { display: flex; align-items: center; gap: 1.75rem; }
+.ad-nav__link {
+  position: relative; font-size: 0.875rem; font-weight: 500; color: var(--ad-fg-dim);
+  padding-block: 0.35rem; transition: color var(--ad-dur-fast) ease;
+}
+.ad-nav__link::after {
+  content: ''; position: absolute; left: 0; bottom: 0; height: 1.5px; width: 100%;
+  background: var(--ad-fg); transform: scaleX(0); transform-origin: right; 
+  transition: transform var(--ad-dur) var(--ad-ease-out);
+}
+.ad-nav__link:hover, .ad-nav__link.is-active { color: var(--ad-fg); }
+.ad-nav__link:hover::after, .ad-nav__link.is-active::after { transform: scaleX(1); transform-origin: left; }
+@media (max-width: 760px) { .ad-nav--desktop { display: none; } }

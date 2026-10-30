@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 40: Badges & Chips
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Verified, platform and category chips.
+   ============================================================= */
+
+.ad-chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.22rem 0.65rem; border-radius: 999px; border: 1px solid var(--ad-line); font-family: var(--ad-font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ad-fg-dim); }
+.ad-chip--solid { background: var(--ad-fg); color: var(--ad-bg); border-color: transparent; }
+.ad-chip--verified { border-color: var(--ad-line-strong); color: var(--ad-fg); }
+.ad-chip--verified::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--ad-fg); box-shadow: 0 0 8px oklch(1 0 0 / 0.8); }

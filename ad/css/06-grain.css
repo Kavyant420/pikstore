@@ -1,0 +1,20 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 06: Film Grain Overlay
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Animated SVG-noise grain for cinematic depth.
+   ============================================================= */
+
+.ad-grain {
+  position: fixed; inset: -50%; z-index: 60; pointer-events: none; opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.7s steps(4) infinite;
+  mix-blend-mode: overlay;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1.5%); }
+  50% { transform: translate(1.5%, -2%); }
+  75% { transform: translate(-1%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .ad-grain { animation: none; } }

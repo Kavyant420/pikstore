@@ -1,0 +1,13 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 52: Orbit System
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: CSS planets orbiting a product core.
+   ============================================================= */
+
+.orbit { position: relative; width: min(26rem, 80vw); aspect-ratio: 1; margin-inline: auto; }
+.orbit__path { position: absolute; inset: 0; margin: auto; border: 1px dashed var(--ad-line); border-radius: 50%; animation: orbit-spin var(--t, 18s) linear infinite; }
+.orbit__path--2 { width: 70%; height: 70%; --t: 13s; animation-direction: reverse; }
+.orbit__path--3 { width: 40%; height: 40%; --t: 9s; }
+.orbit__sat { position: absolute; top: -14px; left: 50%; width: 28px; height: 28px; margin-left: -14px; border-radius: 50%; background: var(--ad-fg); box-shadow: 0 0 16px oklch(1 0 0 / 0.6); }
+.orbit__core { position: absolute; inset: 0; margin: auto; width: 34%; height: 34%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, oklch(0.9 0 0), oklch(0.2 0 0) 70%); box-shadow: 0 0 60px oklch(1 0 0 / 0.25); }
+@keyframes orbit-spin { to { transform: rotate(360deg); } }

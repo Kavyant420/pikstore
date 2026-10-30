@@ -1,0 +1,17 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 07: CRT Scanlines
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Faint horizontal scanlines sweeping the hero.
+   ============================================================= */
+
+.ad-scanlines {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.06; z-index: 2;
+  background: repeating-linear-gradient(to bottom, oklch(1 0 0 / 0.5) 0 1px, transparent 1px 4px);
+  mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+}
+.ad-scanlines::after {
+  content: ''; position: absolute; inset-inline: 0; height: 18%;
+  background: linear-gradient(to bottom, transparent, oklch(1 0 0 / 0.08), transparent);
+  animation: scanline-sweep 7.5s var(--ad-ease-in-out) infinite;
+}
+@keyframes scanline-sweep { 0% { top: -20%; } 100% { top: 110%; } }
