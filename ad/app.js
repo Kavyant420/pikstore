@@ -26,11 +26,10 @@ const APPS = [
   { id: 'microsoft/vscode', name: 'VSCodium', initial: '</>', tagline: 'Code editing. Redefined. Telemetry-free build.', category: 'developer', platforms: ['macos', 'windows'], sizeMb: 132, hash: '0d9fe…77c1' },
   { id: 'zen-browser/desktop', name: 'Zen Browser', initial: '禅', tagline: 'Beautifully designed, privacy-focused browser.', category: 'privacy', platforms: ['macos', 'windows'], sizeMb: 88, hash: 'ff102…a5b9' },
   { id: 'keepassx-reboot/keepassxc', name: 'KeePassXC', initial: '⚿', tagline: 'Offline password manager that never calls home.', category: 'privacy', platforms: ['macos', 'windows'], sizeMb: 19, hash: '3c7d8…e2f4' },
-  { id: 'audacity/audacity', name: 'Audacity', initial: ∼ || '~', tagline: 'Free, easy-to-use multitrack audio editor.', category: 'creative', platforms: ['macos', 'windows'], sizeMb: 56, hash: '88ab1…04de' },
+  { id: 'audacity/audacity', name: 'Audacity', initial: '∿', tagline: 'Free, easy-to-use multitrack audio editor.', category: 'creative', platforms: ['macos', 'windows'], sizeMb: 56, hash: '88ab1…04de' },
   { id: 'upscayl/upscayl', name: 'Upscayl', initial: 'U', tagline: 'AI image upscaling, fully local, lossless feel.', category: 'creative', platforms: ['macos', 'windows'], sizeMb: 121, hash: '6e0c3…92fa' },
   { id: 'ollama/ollama', name: 'Ollama', initial: 'λ', tagline: 'Run large language models on your own hardware.', category: 'developer', platforms: ['macos', 'windows'], sizeMb: 74, hash: 'd5b77…1c08' },
 ];
-APPS[9].initial = '∿';
 
 /* ------------------------------------------------ toast island */
 const island = $('[data-island]');
