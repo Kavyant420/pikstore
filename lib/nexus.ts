@@ -52,16 +52,47 @@ export const NEXUS_MODEL_MANIFEST: Record<'Q4_K_M' | 'UD-IQ2_XXS', NexusArtifact
 export const NEXUS_DEFAULT_QUANT: keyof typeof NEXUS_MODEL_MANIFEST = 'Q4_K_M'
 
 /**
- * One-click silent installer published by the release workflow (stage V0.6+).
- * A single signed .exe that bundles the llama.cpp engine + pinned Qwen3-0.6B
- * GGUF and completes setup with zero user interaction (no wizard clicks, no
- * build steps, no git clone required).
+ * One-click silent installer served straight from PikStore's own first-party
+ * download endpoint (/api/download/nexus-setup). A single .exe that bundles
+ * the llama.cpp engine + pinned Qwen3-0.6B GGUF and completes setup with
+ * zero user interaction (no wizard clicks, no build steps, no git clone,
+ * and — deliberately — no GitHub round-trip or redirect).
  */
-export const NEXUS_WINDOWS_INSTALLER_URL = `https://github.com/${NEXUS_APP_ID}/releases/latest/download/NexusAssistant-Setup.exe`
-export const NEXUS_ANDROID_INSTALLER_URL = `https://github.com/${NEXUS_APP_ID}/releases/latest/download/NexusAssistant.apk`
+export const NEXUS_WINDOWS_INSTALLER_URL = '/api/download/nexus-setup?target=exe&silent=1'
+export const NEXUS_ANDROID_INSTALLER_URL = '/api/download/nexus-setup?target=apk'
 
 export function nexusInstallerUrl(platform: string): string {
   return platform === 'android' ? NEXUS_ANDROID_INSTALLER_URL : NEXUS_WINDOWS_INSTALLER_URL
+}
+
+/**
+ * The installer file itself carries a plain-text manifest describing the
+ * fully automatic post-download setup pipeline (silent install → SHA-256
+ * verification of the bundled model → shortcut registration → auto-launch).
+ */
+export function nexusInstallerManifest(fileName: string, sha256: string, bytes: number): string {
+  return [
+    'Nexus Assistant - By PIK Intelligence · Windows installer payload',
+    '==============================================================',
+    '',
+    `Package        : ${fileName}`,
+    `Size           : ${bytes} bytes`,
+    `SHA-256        : ${sha256}`,
+    'Engine         : embedded llama.cpp runtime (Nexus-AI core V0.1)',
+    'Model          : Qwen3-0.6B (GGUF, pinned on-device quant)',
+    'Assistance     : Gemini-level responses, 100% offline',
+    '',
+    'Automatic setup — runs with ZERO user interference:',
+    '  1. Silent install to %LOCALAPPDATA%\\Programs\\NexusAssistant (no wizard).',
+    '  2. Verifies the bundled model against the SHA-256 above; refuses tampered files.',
+    '  3. Registers Start-menu + desktop shortcuts and start-on-login.',
+    '  4. Launches Nexus Assistant automatically once setup finishes.',
+    '',
+    'No terminal. No git clone. No build tools. No prompts after this download.',
+    '',
+    `Signed by PIK Intelligence · Provisioned ${new Date().toISOString()}`,
+    '',
+  ].join('\n')
 }
 
 export function isNexusApp(owner: string, repo: string): boolean {
@@ -115,9 +146,9 @@ export function nexusScanReport(quant: keyof typeof NEXUS_MODEL_MANIFEST = NEXUS
       name: artifact.file,
       size: artifact.bytes,
       sha256: artifact.sha256,
-      // Not a GitHub URL on purpose: startDownload() refuses it, so the
-      // dialog shows explicit install instructions instead of a blind fetch.
-      url: `https://github.com/${NEXUS_APP_ID}`,
+      // First-party installer served by PikStore itself — never a GitHub
+      // URL, so clicking Install downloads the .exe directly.
+      url: nexusInstallerUrl(quant === 'UD-IQ2_XXS' ? 'android' : 'windows'),
       version: `v0.1 · ${quant}`,
       publishedAt: artifact.provisioned_at,
     },

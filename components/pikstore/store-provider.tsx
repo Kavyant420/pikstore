@@ -39,9 +39,14 @@ const noopSubscribe = () => () => {}
 const MIN_SCAN_MS = 2600
 
 function startDownload(url: string) {
-  if (!/^https:\/\/github\.com\//.test(url)) return false
+  // Third-party app assets must come from GitHub releases; first-party
+  // installers (Nexus .exe / .apk) are served by PikStore itself and must
+  // download directly — never via a redirect to GitHub.
+  const allowed = /^https:\/\/github\.com\//.test(url) || /^\/api\/download\//.test(url)
+  if (!allowed) return false
   const link = document.createElement('a')
   link.href = url
+  link.download = /nexus-setup/i.test(url) ? (url.includes('target=apk') ? 'NexusAssistant.apk' : 'NexusAssistant-Setup.exe') : ''
   link.rel = 'noopener noreferrer'
   document.body.appendChild(link)
   link.click()
