@@ -1,3 +1,10 @@
-node_modules/
-tsconfig.tsbuildinfo
-.next/
+android-ndk-r26c/
+*.o
+*.so
+*.a
+*.dll
+*.exe
+*.out
+*.obj
+*.log
+*.err
