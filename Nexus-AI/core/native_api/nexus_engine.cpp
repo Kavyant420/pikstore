@@ -104,8 +104,9 @@ extern "C" NEXUS_API nexus_engine_t * nexus_engine_create(const char * model_pat
     json info;
     info["file"]         = model_path;
     info["quantization"] = qname;
-    info["n_vocab"]      = (int64_t) llama_n_vocab(eng->model);
-    info["n_ctx_train"]  = (int64_t) llama_n_ctx_train(eng->model);
+    const llama_vocab * v = llama_model_get_vocab(eng->model);
+    info["n_vocab"]      = (int64_t) llama_vocab_n_tokens(v);
+    info["n_ctx_train"]  = (int64_t) llama_model_n_ctx_train(eng->model);
     info["n_ctx"]        = (int64_t) llama_n_ctx(eng->ctx);
     info["offline"]      = true;
     {
