@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 39: Mobile Tab Bar
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Floating bottom nav for small screens.
+   ============================================================= */
+
+.ad-tabbar { position: fixed; bottom: 0; inset-inline: 0; z-index: 58; display: none; }
+@media (max-width: 720px) { .ad-tabbar { display: block; } }
+.ad-tabbar__inner { display: flex; justify-content: space-around; margin: 0 1rem 1rem; padding: 0.5rem; border-radius: 999px; background: oklch(0.11 0 0 / 0.85); border: 1px solid var(--ad-line); backdrop-filter: blur(16px); box-shadow: var(--ad-shadow-key); }
+.ad-tabbar__item { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; padding: 0.45rem 0.9rem; border-radius: 999px; font-size: 0.65rem; color: var(--ad-fg-dim); transition: all var(--ad-dur-fast) ease; }
+.ad-tabbar__item.is-active { background: var(--ad-fg); color: var(--ad-bg); }

@@ -1,0 +1,15 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 22: Category Orbit Bar
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Pill rail with sliding active indicator.
+   ============================================================= */
+
+.ad-categories { display: flex; gap: 0.5rem; overflow-x: auto; scrollbar-width: none; padding-block: 0.25rem; }
+.ad-categories::-webkit-scrollbar { display: none; }
+.ad-cat-pill {
+  flex-shrink: 0; padding: 0.45rem 1rem; border-radius: 999px;
+  border: 1px solid transparent; color: var(--ad-fg-dim); font-size: 0.85rem; font-weight: 500;
+  transition: all var(--ad-dur-fast) ease;
+}
+.ad-cat-pill:hover { color: var(--ad-fg); background: var(--ad-surface); }
+.ad-cat-pill.is-active { color: var(--ad-bg); background: var(--ad-fg); border-color: var(--ad-fg); box-shadow: 0 6px 18px -8px oklch(1 0 0 / 0.5); }

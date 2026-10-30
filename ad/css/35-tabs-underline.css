@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 35: Tabs With 3D Underline
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Sliding indicator tabs for app sheets.
+   ============================================================= */
+
+.ad-tabs { position: relative; display: flex; gap: 1.5rem; border-bottom: 1px solid var(--ad-line); }
+.ad-tab { padding: 0.7rem 0.1rem; font-size: 0.9rem; font-weight: 500; color: var(--ad-fg-dim); transition: color var(--ad-dur-fast) ease; }
+.ad-tab.is-active { color: var(--ad-fg); }
+.ad-tabs__ink { position: absolute; bottom: -1px; height: 2px; background: var(--ad-fg); box-shadow: 0 0 10px oklch(1 0 0 / 0.6); transition: left var(--ad-dur) var(--ad-ease-spring), width var(--ad-dur) var(--ad-ease-spring); }

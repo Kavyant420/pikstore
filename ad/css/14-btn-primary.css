@@ -1,0 +1,22 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 14: Primary Button Physics
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Press-depth, glow-ring and sheen on the CTA.
+   ============================================================= */
+
+.btn-primary {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.8rem 1.6rem; border-radius: 999px;
+  background: var(--ad-fg); color: var(--ad-bg);
+  font-weight: 600; font-size: 0.95rem; overflow: hidden;
+  box-shadow: 0 8px 24px -10px oklch(1 0 0 / 0.4), inset 0 -2px 0 oklch(0 0 0 / 0.18);
+  transition: transform var(--ad-dur-fast) var(--ad-ease-spring), box-shadow var(--ad-dur) ease;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px -10px oklch(1 0 0 / 0.5); }
+.btn-primary:active { transform: translateY(1px) scale(0.98); }
+.btn-primary::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: -40%; width: 40%;
+  background: linear-gradient(100deg, transparent, oklch(0 0 0 / 0.18), transparent);
+  transform: skewX(-18deg); transition: left var(--ad-dur-slow) var(--ad-ease-out);
+}
+.btn-primary:hover::after { left: 130%; }

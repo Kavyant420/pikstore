@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 25: Scroll Progress Rail
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Right-edge reading rail with node ticks.
+   ============================================================= */
+
+.ad-rail { position: fixed; right: 1.25rem; top: 22vh; bottom: 22vh; width: 2px; z-index: 40; background: var(--ad-line); border-radius: 2px; }
+.ad-rail__fill { position: absolute; inset-inline: 0; top: 0; height: var(--progress, 0%); background: var(--ad-fg); border-radius: 2px; box-shadow: 0 0 12px oklch(1 0 0 / 0.5); }
+.ad-rail__node { position: absolute; left: 50%; width: 8px; height: 8px; border-radius: 50%; background: var(--ad-bg); border: 1.5px solid var(--ad-line-strong); transform: translate(-50%, -50%); transition: all var(--ad-dur) ease; }
+.ad-rail__node.is-passed { background: var(--ad-fg); border-color: var(--ad-fg); }
+@media (max-width: 900px) { .ad-rail { display: none; } }

@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 70: Shield Verified Badge
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Pulsing shield emblem.
+   ============================================================= */
+
+.shield { position: relative; display: grid; place-items: center; width: 4.5rem; height: 4.5rem; }
+.shield svg { position: relative; z-index: 1; }
+.shield::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: oklch(1 0 0 / 0.08); animation: shield-pulse 2.6s var(--ad-ease-out) infinite; }
+@keyframes shield-pulse { 0% { transform: scale(0.7); opacity: 1; } 100% { transform: scale(1.4); opacity: 0; } }

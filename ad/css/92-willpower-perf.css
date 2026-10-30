@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 92: Performance Guards
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Compositing hints and paint containment.
+   ============================================================= */
+
+.ad-card, .ad-island, .ad-header, .parallax-layer, [data-magnetic] { contain: layout paint style; }
+.gpu { transform: translateZ(0); backface-visibility: hidden; }
+body.no-webgl #ad-stage { display: none; }

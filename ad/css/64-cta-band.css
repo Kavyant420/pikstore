@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 64: CTA Band Finale
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Closing call-to-action slab.
+   ============================================================= */
+
+.cta-band { position: relative; overflow: hidden; border-radius: var(--ad-radius-2xl); border: 1px solid var(--ad-line-strong); padding: clamp(2.5rem, 6vw, 5rem); text-align: center; background: radial-gradient(120% 140% at 50% 0%, oklch(0.22 0 0), oklch(0.08 0 0) 70%); }
+.cta-band::after { content: ''; position: absolute; inset-inline: 0; bottom: 0; height: 40%; background: linear-gradient(to top, oklch(1 0 0 / 0.06), transparent); }
+.cta-band .ad-display { position: relative; z-index: 1; }

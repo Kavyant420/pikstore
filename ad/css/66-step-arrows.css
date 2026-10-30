@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 66: Directional Arrow Bounce
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Scroll hint arrows.
+   ============================================================= */
+
+.arrow-bounce { animation: abounce 2s var(--ad-ease-in-out) infinite; }
+@keyframes abounce { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(10px); opacity: 1; } }
+.scroll-hint { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-family: var(--ad-font-mono); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--ad-fg-faint); }

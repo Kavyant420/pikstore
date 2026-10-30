@@ -1,0 +1,8 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 76: Caution Tape Banner
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Diagonal stripe announcement tape.
+   ============================================================= */
+
+.tape { --stripe: repeating-linear-gradient(-45deg, oklch(1 0 0 / 0.9) 0 12px, oklch(0.1 0 0) 12px 24px); height: 26px; background-image: var(--stripe); animation: tape-run 1.6s linear infinite; }
+@keyframes tape-run { to { background-position: 34px 0; } }

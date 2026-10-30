@@ -1,0 +1,8 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 77: Halftone Dots
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Dot-matrix texture panels.
+   ============================================================= */
+
+.halftone { background-image: radial-gradient(oklch(1 0 0 / 0.18) 1px, transparent 1.4px); background-size: 10px 10px; }
+.halftone--soft { background-image: radial-gradient(oklch(1 0 0 / 0.08) 1px, transparent 1.4px); }

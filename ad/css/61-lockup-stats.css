@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 61: Stat Lockup Row
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Horizontal stat band styling.
+   ============================================================= */
+
+.statband { display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); gap: 1px; background: var(--ad-line); border: 1px solid var(--ad-line); border-radius: var(--ad-radius-lg); overflow: hidden; }
+.statband > div { background: var(--ad-bg); padding: 1.6rem 1.25rem; display: flex; flex-direction: column; gap: 0.3rem; transition: background var(--ad-dur) ease; }
+.statband > div:hover { background: var(--ad-surface); }

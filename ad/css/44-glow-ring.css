@@ -1,0 +1,13 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 44: Glow Rings & Halos
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Concentric pulsing halos for CTAs.
+   ============================================================= */
+
+.glow-ring { position: relative; }
+.glow-ring::before, .glow-ring::after {
+  content: ''; position: absolute; inset: -8px; border-radius: inherit; pointer-events: none;
+  border: 1px solid oklch(1 0 0 / 0.35); opacity: 0; animation: halo-out 3.2s var(--ad-ease-out) infinite;
+}
+.glow-ring::after { animation-delay: 1.6s; }
+@keyframes halo-out { 0% { transform: scale(0.9); opacity: 0.8; } 100% { transform: scale(1.35); opacity: 0; } }

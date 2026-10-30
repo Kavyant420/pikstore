@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 65: QR Download Panel
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Pixel QR placeholder card.
+   ============================================================= */
+
+.qr-card { display: grid; gap: 1rem; place-items: center; padding: 1.5rem; border-radius: var(--ad-radius-xl); border: 1px solid var(--ad-line); background: var(--ad-surface); }
+.qr-code { width: 9rem; height: 9rem; background:
+  conic-gradient(var(--ad-fg) 25%, transparent 0 50%, var(--ad-fg) 0 75%, transparent 0) 0 0 / 1.5rem 1.5rem,
+  var(--ad-bg); border: 6px solid var(--ad-fg); image-rendering: pixelated; }

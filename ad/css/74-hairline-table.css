@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 74: Spec Table Hairlines
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Comparison table rules.
+   ============================================================= */
+
+.ad-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.ad-table th, .ad-table td { text-align: left; padding: 0.8rem 1rem; border-bottom: 1px solid var(--ad-line); }
+.ad-table th { font-family: var(--ad-font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ad-fg-faint); }
+.ad-table tr:hover td { background: var(--ad-surface); }

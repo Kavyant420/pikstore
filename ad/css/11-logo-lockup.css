@@ -1,0 +1,21 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 11: Logo Lockup
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Wordmark with animated chrome sweep.
+   ============================================================= */
+
+.ad-logo { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 700; letter-spacing: -0.04em; font-size: 1.1rem; }
+.ad-logo__mark {
+  position: relative; width: 2rem; height: 2rem; border-radius: 0.6rem;
+  background: linear-gradient(145deg, oklch(0.98 0 0), oklch(0.72 0 0) 55%, oklch(0.95 0 0));
+  box-shadow: inset 0 1px 2px oklch(1 0 0 / 0.9), inset 0 -2px 4px oklch(0 0 0 / 0.5), 0 4px 14px oklch(0 0 0 / 0.5);
+  overflow: hidden;
+}
+.ad-logo__mark::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 30%, oklch(1 0 0 / 0.85) 48%, transparent 62%);
+  transform: translateX(-120%);
+  animation: logo-sheen 5.5s var(--ad-ease-in-out) infinite;
+}
+@keyframes logo-sheen { 0%, 62% { transform: translateX(-120%); } 82%, 100% { transform: translateX(120%); } }
+.ad-logo__text .ad-logo__dim { color: var(--ad-fg-dim); font-weight: 500; }

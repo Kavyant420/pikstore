@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 46: Selection Highlight
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Monochrome ::selection styling.
+   ============================================================= */
+
+::selection { background: oklch(0.97 0 0); color: oklch(0.1 0 0); }
+.ad-quote { font-size: 1.4rem; line-height: 1.35; letter-spacing: -0.02em; }
+.ad-quote cite { display: block; margin-top: 0.8rem; font-style: normal; font-family: var(--ad-font-mono); font-size: 0.75rem; color: var(--ad-fg-faint); }

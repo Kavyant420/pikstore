@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 58: Live Stat Ticker
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Vertical number ticker rows.
+   ============================================================= */
+
+.ticker { height: 1.4em; overflow: hidden; position: relative; display: inline-block; vertical-align: bottom; }
+.ticker__col { display: flex; flex-direction: column; animation: tick-roll 8s var(--ad-ease-in-out) infinite; }
+@keyframes tick-roll { 0%, 18% { transform: translateY(0); } 25%, 43% { transform: translateY(-100%); } 50%, 68% { transform: translateY(-200%); } 75%, 93% { transform: translateY(-300%); } 100% { transform: translateY(0); } }
+.ticker__col > span { height: 1.4em; line-height: 1.4em; }

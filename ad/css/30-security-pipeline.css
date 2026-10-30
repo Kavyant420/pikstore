@@ -1,0 +1,20 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 30: Security Pipeline Steps
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Sequential verification pipeline visuals.
+   ============================================================= */
+
+.ad-pipeline { display: flex; flex-direction: column; gap: 0; counter-reset: step; }
+.ad-step { position: relative; display: flex; gap: 1.25rem; padding-block: 1.4rem; padding-left: 0.25rem; }
+.ad-step::before {
+  counter-increment: step; content: '0' counter(step);
+  font-family: var(--ad-font-mono); font-size: 0.75rem; color: var(--ad-fg);
+  width: 2.4rem; height: 2.4rem; border-radius: 50%; border: 1px solid var(--ad-line-strong);
+  display: grid; place-items: center; flex-shrink: 0; background: var(--ad-bg-deep);
+  transition: all var(--ad-dur) ease;
+}
+.ad-step::after { content: ''; position: absolute; left: 1.55rem; top: 3.9rem; bottom: -0.6rem; width: 1px; background: var(--ad-line); }
+.ad-step:last-child::after { display: none; }
+.ad-step.is-live::before { background: var(--ad-fg); color: var(--ad-bg); border-color: var(--ad-fg); box-shadow: 0 0 0 6px oklch(1 0 0 / 0.08); }
+.ad-step__title { font-weight: 600; font-size: 1.05rem; }
+.ad-step__desc { color: var(--ad-fg-dim); font-size: 0.9rem; max-width: 44ch; }
