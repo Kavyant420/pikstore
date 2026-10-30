@@ -1,0 +1,8 @@
+{
+  "file": "Qwen3-0.6B-UD-IQ2_XXS.gguf",
+  "sha256": "55e0d0b88ae021edf15d2f0cec5ab2c47552b6a5f388dfab869f1e67240263c3",
+  "bytes": 234074816,
+  "repo": "unsloth/Qwen3-0.6B-GGUF",
+  "source_url": "https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-UD-IQ2_XXS.gguf",
+  "provisioned_at": "2026-10-30T17:45:06Z"
+}

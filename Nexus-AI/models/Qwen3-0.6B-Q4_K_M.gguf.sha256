@@ -1,0 +1,8 @@
+{
+  "file": "Qwen3-0.6B-Q4_K_M.gguf",
+  "sha256": "ac2d97712095a558e31573f62f466a3f9d93990898b0ec79d7c974c1780d524a",
+  "bytes": 396705472,
+  "repo": "unsloth/Qwen3-0.6B-GGUF",
+  "source_url": "https://huggingface.co/unsloth/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf",
+  "provisioned_at": "2026-10-30T17:45:56Z"
+}
