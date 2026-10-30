@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 80: Idle Float Loop
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Weightless hovering for device mockups.
+   ============================================================= */
+
+.float-idle { animation: floaty 6s var(--ad-ease-in-out) infinite; }
+.float-idle--slow { animation-duration: 8s; animation-delay: -2s; }
+@keyframes floaty { 50% { transform: translateY(-14px) rotate(-0.6deg); } }

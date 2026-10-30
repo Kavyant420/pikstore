@@ -1,0 +1,12 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 08: Static Noise Field
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Per-element speckle noise for surfaces.
+   ============================================================= */
+
+.ad-noisy { position: relative; }
+.ad-noisy::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  opacity: 0.045; mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+}

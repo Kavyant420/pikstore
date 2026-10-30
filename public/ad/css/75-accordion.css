@@ -1,0 +1,14 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 75: FAQ Accordion
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Smooth open/close rows.
+   ============================================================= */
+
+.ad-acc { border-bottom: 1px solid var(--ad-line); }
+.ad-acc__q { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 0.2rem; font-size: 1rem; font-weight: 500; text-align: left; }
+.ad-acc__icon { transition: transform var(--ad-dur) var(--ad-ease-out); flex-shrink: 0; }
+.ad-acc.is-open .ad-acc__icon { transform: rotate(45deg); }
+.ad-acc__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--ad-dur) var(--ad-ease-out); }
+.ad-acc.is-open .ad-acc__a { grid-template-rows: 1fr; }
+.ad-acc__a > div { overflow: hidden; }
+.ad-acc__a p { padding-bottom: 1.2rem; color: var(--ad-fg-dim); font-size: 0.92rem; }

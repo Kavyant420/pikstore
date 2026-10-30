@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 73: Duotone Imagery
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Force grayscale + contrast grade.
+   ============================================================= */
+
+.duotone { filter: grayscale(1) contrast(1.15) brightness(0.95); }
+.duotone--lift { filter: grayscale(1) contrast(1.3) brightness(1.05); }
+img { user-select: none; -webkit-user-drag: none; }

@@ -1,0 +1,17 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 02: Reset & Normalize
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Cross-browser reset tuned for the ad canvas.
+   ============================================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { min-height: 100%; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+img, svg, video { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; background: transparent; border: 0; }
+button { cursor: pointer; touch-action: manipulation; }
+ul, ol { list-style: none; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4 { font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; }
+p { line-height: 1.6; }
+::placeholder { color: var(--ad-fg-faint); opacity: 1; }

@@ -1,0 +1,19 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 23: Platform Switcher Orbit
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Device selector with orbiting satellite dots.
+   ============================================================= */
+
+.ad-platforms { position: relative; display: inline-flex; gap: 0.35rem; padding: 0.35rem; border-radius: 999px; border: 1px solid var(--ad-line); background: var(--ad-surface); }
+.ad-platforms__thumb {
+  position: absolute; top: 0.35rem; bottom: 0.35rem; border-radius: 999px; background: var(--ad-fg);
+  transition: left var(--ad-dur) var(--ad-ease-spring), width var(--ad-dur) var(--ad-ease-spring);
+  pointer-events: none;
+}
+.ad-platform {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.5rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 500; color: var(--ad-fg-dim);
+  transition: color var(--ad-dur-fast) ease;
+}
+.ad-platform.is-selected { color: var(--ad-bg); }
+.ad-platform__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.5; }

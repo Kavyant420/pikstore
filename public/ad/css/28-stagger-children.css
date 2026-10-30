@@ -1,0 +1,16 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 28: Stagger Children
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Auto-delay grids of entering cards.
+   ============================================================= */
+
+.stagger > * { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ad-ease-out), transform 0.7s var(--ad-ease-out); }
+.stagger.is-in > * { opacity: 1; transform: none; }
+.stagger.is-in > :nth-child(1) { transition-delay: 40ms; }
+.stagger.is-in > :nth-child(2) { transition-delay: 110ms; }
+.stagger.is-in > :nth-child(3) { transition-delay: 180ms; }
+.stagger.is-in > :nth-child(4) { transition-delay: 250ms; }
+.stagger.is-in > :nth-child(5) { transition-delay: 320ms; }
+.stagger.is-in > :nth-child(6) { transition-delay: 390ms; }
+.stagger.is-in > :nth-child(7) { transition-delay: 460ms; }
+.stagger.is-in > :nth-child(8) { transition-delay: 530ms; }

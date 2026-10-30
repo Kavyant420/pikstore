@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 67: Preloader Curtain
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Boot curtain with progress percent.
+   ============================================================= */
+
+#ad-preloader { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; background: var(--ad-bg-deep); transition: opacity 0.8s ease, visibility 0.8s; }
+#ad-preloader.is-done { opacity: 0; visibility: hidden; }
+.preloader__pct { font-family: var(--ad-font-mono); font-size: 3rem; letter-spacing: -0.04em; }
+.preloader__bar { width: min(20rem, 60vw); height: 2px; background: var(--ad-line); margin-top: 1.2rem; overflow: hidden; }
+.preloader__bar i { display: block; height: 100%; width: 0%; background: var(--ad-fg); transition: width 0.3s ease; }

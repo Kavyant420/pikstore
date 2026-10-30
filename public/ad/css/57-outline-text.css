@@ -1,0 +1,9 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 57: Outline Display Text
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Hollow stroke giant text.
+   ============================================================= */
+
+.text-outline { color: transparent; -webkit-text-stroke: 1px oklch(1 0 0 / 0.4); }
+.text-outline--thick { -webkit-text-stroke: 2px oklch(1 0 0 / 0.25); }
+.text-outline:hover { color: oklch(1 0 0 / 0.06); }

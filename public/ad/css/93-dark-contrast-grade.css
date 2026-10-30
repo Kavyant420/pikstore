@@ -1,0 +1,7 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 93: Contrast Grading
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Global tone curve via overlays.
+   ============================================================= */
+
+.ad-grade { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(180deg, oklch(0 0 0 / 0.35), transparent 30%, transparent 70%, oklch(0 0 0 / 0.5)); }

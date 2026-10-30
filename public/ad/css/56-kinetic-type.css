@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 56: Kinetic Headline FX
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Letter-split hover wave.
+   ============================================================= */
+
+.kinetic span { display: inline-block; transition: transform var(--ad-dur) var(--ad-ease-spring); transition-delay: calc(var(--i, 0) * 22ms); }
+.kinetic:hover span { transform: translateY(-0.14em) rotate(-2deg); }
+.kinetic-wave span { animation: kwave 2.8s ease-in-out infinite; animation-delay: calc(var(--i, 0) * 90ms); }
+@keyframes kwave { 50% { transform: translateY(-0.12em); } }

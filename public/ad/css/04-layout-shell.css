@@ -1,0 +1,16 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 04: Layout Shell
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Page frame, container widths and vertical rhythm.
+   ============================================================= */
+
+.ad-shell { position: relative; isolation: isolate; overflow-x: clip; }
+.ad-container { width: 100%; max-width: 76rem; margin-inline: auto; padding-inline: var(--ad-gutter); }
+.ad-section { position: relative; padding-block: clamp(4rem, 10vh, 7rem); scroll-margin-top: 6rem; }
+.ad-stack { display: flex; flex-direction: column; gap: 1.5rem; }
+.ad-row { display: flex; align-items: center; gap: 1.25rem; }
+.ad-grid { display: grid; gap: 1rem; }
+.ad-grid-2 { grid-template-columns: repeat(auto-fit, minmax(min(28rem, 100%), 1fr)); }
+.ad-grid-3 { grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr)); }
+.ad-divider { height: 1px; background: var(--ad-line); border: 0; }
+.ad-spacer { flex: 1; }

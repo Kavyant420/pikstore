@@ -1,0 +1,13 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 18: Sheen Tracking Cards
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Glossy highlight anchored to pointer position.
+   ============================================================= */
+
+.sheen { position: relative; overflow: hidden; }
+.sheen::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(420px circle at var(--sx, 50%) var(--sy, 50%), oklch(1 0 0 / 0.12), transparent 60%);
+  transition: opacity var(--ad-dur) ease;
+}
+.sheen:hover::after { opacity: 1; }

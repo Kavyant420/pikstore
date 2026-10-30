@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 88: Reduced Motion
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Respect prefers-reduced-motion globally.
+   ============================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .animate-rise, .fade-up, .stagger > * { opacity: 1 !important; transform: none !important; }
+}

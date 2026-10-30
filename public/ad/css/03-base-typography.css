@@ -1,0 +1,25 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 03: Base Typography
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Type scale mirroring the PikStore storefront voice.
+   ============================================================= */
+
+body {
+  font-family: var(--ad-font-sans);
+  font-size: 16px;
+  color: var(--ad-fg);
+  background: var(--ad-bg);
+}
+.ad-display { font-size: clamp(2.6rem, 7vw, 5rem); line-height: 0.95; letter-spacing: -0.045em; font-weight: 600; }
+.ad-h2 { font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1.0; letter-spacing: -0.04em; }
+.ad-eyebrow {
+  font-family: var(--ad-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ad-fg-dim);
+}
+.ad-body { color: var(--ad-fg-dim); font-size: 1rem; line-height: 1.65; max-width: 46ch; }
+.ad-mono { font-family: var(--ad-font-mono); font-size: 0.8rem; }
+.text-balance { text-wrap: balance; }
+.text-pretty { text-wrap: pretty; }

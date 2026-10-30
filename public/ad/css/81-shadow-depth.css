@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 81: Elevation Shadows
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Layered depth shadow utilities.
+   ============================================================= */
+
+.elev-1 { box-shadow: 0 2px 6px -2px oklch(0 0 0 / 0.6); }
+.elev-2 { box-shadow: 0 10px 24px -8px oklch(0 0 0 / 0.7); }
+.elev-3 { box-shadow: 0 26px 60px -18px oklch(0 0 0 / 0.85); }
+.elev-inset { box-shadow: inset 0 2px 12px oklch(0 0 0 / 0.6); }

@@ -1,0 +1,8 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 94: Section Label Rails
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Numbered side labels per section.
+   ============================================================= */
+
+.section-label { position: absolute; left: -3.2rem; top: 0; writing-mode: vertical-rl; font-family: var(--ad-font-mono); font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--ad-fg-faint); }
+@media (max-width: 1100px) { .section-label { display: none; } }

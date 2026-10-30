@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 96: Final Polish
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Micro details: hyphens, orphans, ligatures.
+   ============================================================= */
+
+html { hyphens: manual; }
+p, li { orphans: 3; widows: 3; }
+body { font-variant-ligatures: common-ligatures contextual; font-kerning: normal; }
+.ad-display em { font-style: normal; font-family: var(--ad-font-mono); font-size: 0.55em; vertical-align: 0.4em; color: var(--ad-fg-dim); }

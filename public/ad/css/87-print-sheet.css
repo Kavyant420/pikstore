@@ -1,0 +1,11 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 87: Print Styles
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Clean print fallback for the ad.
+   ============================================================= */
+
+@media print {
+  #ad-stage, .ad-grain, .ad-aurora, .ad-stars, .ad-scanlines, .ad-cursor-dot, .ad-cursor-ring, #ad-preloader { display: none !important; }
+  body { background: #fff; color: #000; }
+  .ad-glass, .ad-card { border: 1px solid #999; background: #fff; }
+}

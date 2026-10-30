@@ -1,0 +1,20 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 19: 3D Tilt App Cards
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Perspective tilt with layered shadow lift.
+   ============================================================= */
+
+.ad-card {
+  position: relative; display: flex; flex-direction: column; gap: 0.9rem;
+  padding: 1.25rem; border-radius: var(--ad-radius-lg);
+  border: 1px solid var(--ad-line); background: var(--ad-surface);
+  transform-style: preserve-3d;
+  transition: border-color var(--ad-dur) ease, background var(--ad-dur) ease, box-shadow var(--ad-dur) ease;
+  will-change: transform;
+}
+.ad-card:hover {
+  border-color: var(--ad-line-strong);
+  background: var(--ad-surface-2);
+  box-shadow: 0 30px 60px -30px oklch(0 0 0 / 0.9), inset 0 1px 0 oklch(1 0 0 / 0.08);
+}
+.ad-card__depth { transform: translateZ(34px); transform-style: preserve-3d; }

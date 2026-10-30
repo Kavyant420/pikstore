@@ -1,0 +1,32 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 01: Design Tokens
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Core monochrome palette, radii, spacing and typography scales.
+   ============================================================= */
+
+:root {
+  --ad-bg: oklch(0.105 0 0);
+  --ad-bg-deep: oklch(0.07 0 0);
+  --ad-fg: oklch(0.97 0 0);
+  --ad-fg-dim: oklch(0.66 0 0);
+  --ad-fg-faint: oklch(0.44 0 0);
+  --ad-surface: oklch(1 0 0 / 0.035);
+  --ad-surface-2: oklch(1 0 0 / 0.06);
+  --ad-line: oklch(1 0 0 / 0.10);
+  --ad-line-strong: oklch(1 0 0 / 0.22);
+  --ad-radius: 1rem;
+  --ad-radius-sm: calc(var(--ad-radius) * 0.6);
+  --ad-radius-lg: calc(var(--ad-radius) * 1.4);
+  --ad-radius-xl: calc(var(--ad-radius) * 1.8);
+  --ad-radius-2xl: calc(var(--ad-radius) * 2.2);
+  --ad-font-sans: 'Geist', system-ui, -apple-system, sans-serif;
+  --ad-font-mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+  --ad-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ad-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ad-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ad-dur-fast: 160ms;
+  --ad-dur: 320ms;
+  --ad-dur-slow: 640ms;
+  --ad-shadow-key: 0 24px 60px -20px oklch(0 0 0 / 0.85);
+  --ad-gutter: clamp(1.25rem, 4vw, 2.5rem);
+}

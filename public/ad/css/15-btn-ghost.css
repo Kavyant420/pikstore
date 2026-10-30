@@ -1,0 +1,24 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 15: Ghost & Outline Buttons
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Low-emphasis secondary actions.
+   ============================================================= */
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.3rem;
+  border-radius: 999px; border: 1px solid var(--ad-line);
+  color: var(--ad-fg-dim); font-size: 0.9rem; font-weight: 500;
+  transition: color var(--ad-dur-fast) ease, border-color var(--ad-dur-fast) ease, background var(--ad-dur-fast) ease, transform var(--ad-dur-fast) ease;
+}
+.btn-ghost:hover { color: var(--ad-fg); border-color: var(--ad-line-strong); background: var(--ad-surface); transform: translateY(-1px); }
+.btn-link {
+  font-size: 0.9rem; font-weight: 500; color: var(--ad-fg-dim);
+  text-underline-offset: 4px; transition: color var(--ad-dur-fast) ease;
+}
+.btn-link:hover { color: var(--ad-fg); text-decoration: underline; }
+.btn-icon {
+  display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 999px;
+  border: 1px solid var(--ad-line); color: var(--ad-fg-dim);
+  transition: all var(--ad-dur-fast) ease;
+}
+.btn-icon:hover { color: var(--ad-fg); background: var(--ad-surface-2); }

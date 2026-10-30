@@ -1,0 +1,10 @@
+/* =============================================================
+   PIKSTORE AD — UI Foundry Layer 86: Responsive Breakpoints
+   Strict monochrome (black/white/greys only). Part of 96 layers.
+   Purpose: Adaptive section behavior.
+   ============================================================= */
+
+@media (max-width: 640px) { .ad-hero { align-items: flex-end; } .hide-sm { display: none; } }
+@media (min-width: 641px) { .only-sm { display: none !important; } }
+@media (max-width: 1024px) { .ad-section { padding-block: 4rem; } }
+@media (min-width: 1400px) { .ad-container { max-width: 82rem; } }
