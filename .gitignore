@@ -1,10 +1,3 @@
-android-ndk-r26c/
-*.o
-*.so
-*.a
-*.dll
-*.exe
-*.out
-*.obj
-*.log
-*.err
+node_modules/
+.next/
+out/
